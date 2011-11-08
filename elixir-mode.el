@@ -5,7 +5,7 @@
 ;; URL: https://github.com/secondplanet/elixir-mode
 ;; Created: Mon Nov 7 2011
 ;; Keywords: languages elixir
-;; Version: 0.0.3
+;; Version: 0.1.0
 
 ;; This file is not a part of GNU Emacs.
 ;; It is distributed under the MIT license.
@@ -17,9 +17,9 @@
 
 ;;; Code:
 
-(defconst elixir-mode-version "0.0.3"
+(defconst elixir-mode-version "0.1.0"
 	"Elixir mode version number.")
-(defconst elixir-mode-date "2011-11-07"
+(defconst elixir-mode-date "2011-11-08"
 	"Elixir mode version date.")
 
 (defvar elixir-mode-hook nil)
@@ -141,7 +141,7 @@
 
 (defun elixir-mode ()
   "Major mode for editing Elixir files."
-    (intercative)
+    (interactive)
       (kill-all-local-variables)
       (set-syntax-table elixir-mode-syntax-table)
       (set (make-local-variable 'indent-line-function) 'elixir-mode-indent-line)
