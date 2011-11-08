@@ -1,6 +1,0 @@
-(defvar elixir-mode-hook nil)
-(defvar elixir-mode-map
-	(let ((elixir-mode-map (make-keymap)))
-		(define-key elixir-mode-map "\C-j" 'newline-and-indent)
-		elixir-mode-map)
-	"Keymap for Elixir major mode.")
