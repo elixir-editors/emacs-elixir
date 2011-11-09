@@ -5,7 +5,7 @@
 ;; URL: https://github.com/secondplanet/elixir-mode
 ;; Created: Mon Nov 7 2011
 ;; Keywords: languages elixir
-;; Version: 0.1.0
+;; Version: 0.1.1
 
 ;; This file is not a part of GNU Emacs.
 ;; It is distributed under the MIT license.
@@ -17,7 +17,7 @@
 
 ;;; Code:
 
-(defconst elixir-mode-version "0.1.0"
+(defconst elixir-mode-version "0.1.1"
 	"Elixir mode version number.")
 (defconst elixir-mode-date "2011-11-08"
 	"Elixir mode version date.")
