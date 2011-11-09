@@ -84,14 +84,14 @@
 (defconst elixir-mode-font-lock-defaults
   (list
     '("%.*$" . font-lock-comment-face)
-       '("~~.*~~" . font-lock-string-face)
-       '("\".*\"" . font-lock-string-face)
-       '("^\\s *def\\s +\\([^( \t\n]+\\)" . font-lock-function-name-face)
-       `(,(concat "\\<" (regexp-opt elixir-mode-keyword-names t) "\\>") . font-lock-keyowrd-face)
-       `(,(concat "\\<" (regexp-opt elixir-mode-builtin-names t) "\\>") . font-lock-builtin-face)
-       `(,(concat "\\<" (regexp-opt elixir-mode-module-names t) "\\>") . font-lock-type-face)
-       '("\\(\\w*\\)\\s-*:?=" . font-lock-variable-name-face)
-       '("\\<\\(true\\|false\\|nil\\)\\>" . font-lock-constant-face))
+    '("~~.*~~" . font-lock-string-face)
+    '("\".*\"" . font-lock-string-face)
+    '("^\\s *def\\s +\\([^( \t\n]+\\)" . font-lock-function-name-face)
+    `(,(concat "\\<" (regexp-opt elixir-mode-keyword-names t) "\\>") . font-lock-keyowrd-face)
+    `(,(concat "\\<" (regexp-opt elixir-mode-builtin-names t) "\\>") . font-lock-builtin-face)
+    `(,(concat "\\<" (regexp-opt elixir-mode-module-names t) "\\>") . font-lock-type-face)
+    '("\\(\\w*\\)\\s-*:?=" . font-lock-variable-name-face)
+    '("\\<\\(true\\|false\\|nil\\)\\>" . font-lock-constant-face))
 "Highlighting for Elixir mode.")
 
 (defun elixir-mode-indent-line ()
