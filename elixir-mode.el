@@ -85,7 +85,7 @@
   (list
     '("%.*$" . font-lock-comment-face)
     '("^\\s *def\\s +\\([^( \t\n]+\\)" . font-lock-function-name-face)
-    `(,(concat "\\<" (regexp-opt elixir-mode-keyword-names t) "\\>") . font-lock-keyowrd-face)
+    `(,(concat "\\<" (regexp-opt elixir-mode-keyword-names t) "\\>") . font-lock-keyword-face)
     `(,(concat "\\<" (regexp-opt elixir-mode-builtin-names t) "\\>") . font-lock-builtin-face)
     `(,(concat "\\<" (regexp-opt elixir-mode-module-names t) "\\>") . font-lock-type-face)
     '("\\(\\w*\\)\\s-*:?=" . font-lock-variable-name-face)
