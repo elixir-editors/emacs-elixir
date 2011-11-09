@@ -109,7 +109,7 @@
         (if (< cur-indent 0)
           (setq cur-indent 0)))
        (save-excursion
-         (while-not-indented
+         (while not-indented
            (forward-line -1)
              (if (looking-at "^[ \t]*end$")
                (progn
