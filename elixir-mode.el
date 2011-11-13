@@ -325,3 +325,5 @@
 (add-to-list 'auto-mode-alist '("\\.ex\\'" . elixir-mode))
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.exs\\'" . elixir-mode))
+
+;;; elixir-mode.el ends here
