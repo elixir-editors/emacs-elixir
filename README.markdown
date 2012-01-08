@@ -106,7 +106,7 @@ Should operators be colored? (Currently not working properly.)
 Should Cygwin paths be used on Windows?
 
 #### elixir-mode-cygwin-prefix (string)
-##### Default: `"/cygdrive/C"
+##### Default: `"/cygdrive/C"`
 
 The prefix for Cygwin-style paths.
 
