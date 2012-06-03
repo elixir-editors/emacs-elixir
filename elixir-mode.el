@@ -213,7 +213,7 @@
                  (if (looking-at "^[ \t]*\\(do\\|after\\|module\\|def\\|if\\|case\\|else\\|elsif\\|receive\\|after\\|try\\|catch\\)")
                    (progn
                      (setq cur-indent (+ (current-indentation) default-tab-width))
-                     (setq not-idented nil))
+                     (setq not-indented nil))
                  (if (bobp)
                    (setq not-indented nil)))))))
       (if cur-indent
