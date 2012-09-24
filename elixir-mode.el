@@ -307,7 +307,8 @@
     (set (make-local-variable 'font-lock-defaults) '(elixir-mode-font-lock-defaults))
     (setq major-mode 'elixir-mode)
     (setq mode-name "Elixir")
-    (run-hooks 'elixir-mode-hook))
+    (run-hooks 'elixir-mode-hook)
+    (run-hooks 'prog-mode-hook))
 
 (define-minor-mode elixir-cos-mode
 	"Elixir mode toggle compile on save."
