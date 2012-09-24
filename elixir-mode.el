@@ -1,4 +1,4 @@
-;;; elixir-mode.el -- Major mode for editing Elixir files
+;;; elixir-mode.el --- Major mode for editing Elixir files
 
 ;; Copyright (c) 2011 secondplanet
 ;; Author: Humza Yaqoob
