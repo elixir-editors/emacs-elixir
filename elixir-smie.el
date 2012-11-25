@@ -110,10 +110,7 @@
     ;; (`(:after . ,(or `"end"))
     ;;  (- elixir-smie-indent-basic))
     (`(:list-intro . ,(or `"do"))
-     t)
-    (`(:before . "if")
-     (and (not (smie-rule-bolp)) (smie-rule-prev-p "else")
-          (smie-rule-parent))))))
+     t))))
 
 (define-minor-mode elixir-smie-mode
   "SMIE-based indentation and syntax for Elixir"
