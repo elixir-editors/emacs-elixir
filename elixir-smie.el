@@ -20,9 +20,11 @@
                                  "{}" "[]"                                                        ; container2
                                  "<" ">"                                                          ; comp1
                                  "+" "-" "*" "/" "=" "|" "!" "^" "@"                              ; op1
-                                 "&&" "||" "<>" "++" "--" "**" "//" "::" "<-" "->" ".." "/>" "=~" ; op2
+                                 "&&" "||" "<>" "++" "--" "**" "//" "::" "<-"  ".." "/>" "=~"     ; op2 (minus ->)
                                  )
-  (elixir-smie-define-regexp dot "\\."))
+  (elixir-smie-define-regexp dot "\\.")
+  (elixir-smie-define-regexp number "-?[0-9]+(\.[0-9]*)?")
+  (elixir-smie-define-regexp -> "->"))
 
 (defvar elixir-tokenizer-syntax-table (let ((table (copy-syntax-table elixir-mode-syntax-table)))
                                         (modify-syntax-entry ?\n ".")
@@ -76,7 +78,7 @@
            ("try" "do" statements "catch" match-statements "end")
            ("try" "do" statements "end")
            ("case" expr "do" match-statements "end")
-           ("fn" expr "end")
+           ("fn" match-statements "end")
            ("function" "do" match-statements "end")
            (expr)
            )
@@ -100,7 +102,10 @@
     (`(:elem . basic) elixir-smie-indent-basic)
     (`(,_ . ",") (smie-rule-separator kind))
     (`(:after . "=") elixir-smie-indent-basic)
-    (`(:after . ,(or `"do" `"->" `"function"))
+    (`(:after . "->")
+     (when (smie-rule-hanging-p)
+       elixir-smie-indent-basic))
+    (`(:after . ,(or `"do"))
      elixir-smie-indent-basic)
     ;; (`(:after . ,(or `"end"))
     ;;  (- elixir-smie-indent-basic))
