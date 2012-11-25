@@ -14,22 +14,28 @@
          (pushnew `(,',regex-name . ,(upcase (symbol-name ',name))) elixir-syntax-class-names))))
 
   (elixir-smie-define-regexp-opt op
-                             "<<<" ">>>" "^^^" "~~~" "&&&" "|||"                              ; op3
-                             "===" "!=="                                                      ; comp3
-                             "==" "!=" "<=" ">="                                              ; comp2
-                             "{}" "[]"                                                        ; container2
-                             "<" ">"                                                          ; comp1
-                             "+" "-" "*" "/" "=" "|" "!" "^" "@"                              ; op1
-                             "&&" "||" "<>" "++" "--" "**" "//" "::" "<-" "->" ".." "/>" "=~" ; op2
-                             )
+                                 "<<<" ">>>" "^^^" "~~~" "&&&" "|||"                              ; op3
+                                 "===" "!=="                                                      ; comp3
+                                 "==" "!=" "<=" ">="                                              ; comp2
+                                 "{}" "[]"                                                        ; container2
+                                 "<" ">"                                                          ; comp1
+                                 "+" "-" "*" "/" "=" "|" "!" "^" "@"                              ; op1
+                                 "&&" "||" "<>" "++" "--" "**" "//" "::" "<-" "->" ".." "/>" "=~" ; op2
+                                 )
   (elixir-smie-define-regexp dot "\\."))
+
+(defvar elixir-tokenizer-syntax-table (let ((table (copy-syntax-table elixir-mode-syntax-table)))
+                                        (modify-syntax-entry ?\n ".")
+                                        table))
 
 (defun elixir-smie-token-navigator (regex-match match-bound char-position sexp-movement)
   (let ((found-token-class (find-if
                             (lambda (class-def)
                               (funcall regex-match (symbol-value (car class-def))))
                             elixir-syntax-class-names)))
-    (cond (found-token-class
+    (cond ((eq ?\n (funcall char-position))
+           "\n")
+          (found-token-class
            (goto-char (funcall match-bound 0))
            (cdr found-token-class))
           ((when (= ?\" (char-syntax (funcall char-position)))
@@ -37,20 +43,22 @@
              "STRING")))))
 
 (defun elixir-smie-forward-token ()
-  (forward-comment (point-max))
-  (or (elixir-smie-token-navigator 'looking-at 'match-end 'following-char 'forward-sexp)
-      (buffer-substring-no-properties
-       (point)
-       (progn (skip-syntax-forward "'w_")
-              (point)))))
+  (with-syntax-table elixir-tokenizer-syntax-table
+    (forward-comment (point-max))
+    (or (elixir-smie-token-navigator 'looking-at 'match-end 'following-char 'forward-sexp)
+        (buffer-substring-no-properties
+         (point)
+         (progn (skip-syntax-forward "'w_")
+                (point))))))
 
 (defun elixir-smie-backward-token ()
-  (forward-comment (- (point)))
-  (or (elixir-smie-token-navigator '(lambda (regexp) (looking-back regexp nil t)) 'match-beginning 'preceding-char 'backward-sexp)
-      (buffer-substring-no-properties
-       (point)
-       (progn (skip-syntax-backward "'w_")
-              (point)))))
+  (with-syntax-table elixir-tokenizer-syntax-table
+    (forward-comment (- (point)))
+    (or (elixir-smie-token-navigator '(lambda (regexp) (looking-back regexp nil t)) 'match-beginning 'preceding-char 'backward-sexp)
+        (buffer-substring-no-properties
+         (point)
+         (progn (skip-syntax-backward "'w_")
+                (point))))))
 
 (setq elixir-smie-grammar
       (smie-prec2->grammar
@@ -75,13 +83,14 @@
           (expr
            ("<<" expr ">>")
            (expr "OP" expr)
-           (expr "," expr))
+           (expr "," expr)
+           ("STRING"))
           (match-statements
            (match-statement "\n" match-statement)
            (match-statement))
           (match-statement
            (statement "->" statements)))
-        '((assoc "," "->" "OP")))))
+        '((assoc "->") (assoc ",") (assoc "OP") (assoc "\n")))))
 
 (defvar elixir-smie-indent-basic 2)
 
@@ -91,10 +100,10 @@
     (`(:elem . basic) elixir-smie-indent-basic)
     (`(,_ . ",") (smie-rule-separator kind))
     (`(:after . "=") elixir-smie-indent-basic)
-    (`(:before . ,(or `"do" `"->" `"function"))
+    (`(:after . ,(or `"do" `"->" `"function"))
      elixir-smie-indent-basic)
-    (`(:before . ,(or `"after" `"else" `"catch" `"end"))
-     0)
+    ;; (`(:after . ,(or `"end"))
+    ;;  (- elixir-smie-indent-basic))
     (`(:list-intro . ,(or `"do"))
      t)
     (`(:before . "if")
@@ -109,3 +118,5 @@
   (smie-setup elixir-smie-grammar 'elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token))
+
+(define-key elixir-mode-map (kbd "C-M-d") 'smie-down-list)
