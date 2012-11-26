@@ -46,24 +46,22 @@
              (funcall sexp-movement)
              "STRING")))))
 
-(setq elixir-smie-block-intro-keywords '(do else catch after -> COMMA))
+(setq elixir-smie-block-intro-keywords '(do else catch after rescue -> COMMA))
 
-(defun elixir-smie-next-token (forwardp &optional nested)
+(defun elixir-smie-next-token-no-lookaround (forwardp nested)
   ;; First, skip comments but determine if newline-as-whitespace is
   ;; significant:
-  (if (and (not nested)
-           (member
-            (intern
-             (save-excursion
-               (elixir-smie-next-token nil t)))
-            elixir-smie-block-intro-keywords))
-      (if forwardp
-          (forward-comment (point-max))
-        (forward-comment (- (point))))
-    (with-syntax-table elixir-tokenizer-syntax-table
-      (if forwardp
-          (forward-comment (point-max))
-        (forward-comment (- (point))))))
+  (with-syntax-table (if (and (not nested)
+                              (member
+                               (intern
+                                (save-excursion
+                                  (elixir-smie-next-token-no-lookaround nil t)))
+                               elixir-smie-block-intro-keywords))
+                         elixir-mode-syntax-table
+                       elixir-tokenizer-syntax-table)
+    (if forwardp
+        (forward-comment (point-max))
+      (forward-comment (- (point)))))
   (let* ((found-token-class (find-if
                              (lambda (class-def)
                                (let ((regex (symbol-value (car class-def))))
@@ -101,6 +99,42 @@
             (progn (skip-syntax-backward "'w_")
                    (point))))))))
 
+(defun elixir-smie-next-token (forwardp)
+  ;; When reading match statements (the ones with expr -> statements),
+  ;; we need to drop non-; delimiters so the parser knows when a
+  ;; match statement ends and another begins, so scan around point to
+  ;; see if there are any -> within the current block's scope.
+
+  ;; If the current token is a ";", scan forward to see if the current
+  ;; potential statement contains a "->". If so, scan back to find a
+  ;; "do". If there is a -> there, emit a match-statement-delimiter
+  ;; instead of the ";".
+  (let ((current-token (elixir-smie-next-token-no-lookaround forwardp nil)))
+    (if (and (string= ";" current-token)
+             ;; Scan ahead:
+             (let ((level 0)
+                   token)
+               (save-excursion
+                 (block nil
+                   (while (and (not (= (point) (point-max))) (not (string= "" token)) (not (string= ";" token)))
+                     (setq token (elixir-smie-next-token-no-lookaround t nil))
+                     (cond ((and (= level 0) (string= "->" token))
+                            (return t))
+                           ((find token '("DO" "FN") :test 'string=)
+                            (incf level))
+                           ((string= token "END")
+                            (decf level)))))))
+             ;; Scan behind:
+             (let (token)
+               (save-excursion
+                 (block nil
+                   (while (and (not (= (point) (point-min))) (not (string= "" token)) (not (string= "do" token)) (not (string= "fn" token)))
+                     (setq token (elixir-smie-next-token-no-lookaround nil nil))
+                     (when (string= "->" token)
+                       (return t)))))))
+        "MATCH-STATEMENT-DELIMITER"
+      current-token)))
+
 (defun elixir-smie-forward-token ()
   (elixir-smie-next-token t))
 
@@ -115,28 +149,32 @@
            (statement)
            (statement ";" statements))
           (statement
-           (expr "->" statements)
-           ("if" naked-expr "do" statements "else" statements "end")
-           ("if" naked-expr "do" statements "end")
+           ("if" non-block-expr "do" statements "else" statements "end")
+           ("if" non-block-expr "do" statements "end")
            ("try" "do" statements "after" statements "end")
-           ("try" "do" statements "catch" statements "end")
+           ("try" "do" statements "catch" match-statements "end")
            ("try" "do" statements "end")
-           ("case" naked-expr "do" statements "end")
-           ("fn" statement "end")
+           ("case" non-block-expr "do" match-statements "end")
+           ("fn" match-statement "end")
            ("function" "do" statements "end")
            (expr)
            )
-          (naked-expr
-           ("<<" naked-expr ">>")
-           (naked-expr "OP" naked-expr)
-           (naked-expr "DOT" naked-expr)
-           (naked-expr "COMMA" naked-expr)
+          (non-block-expr
+           ("<<" non-block-expr ">>")
+           (non-block-expr "OP" non-block-expr)
+           (non-block-expr "DOT" non-block-expr)
+           (non-block-expr "COMMA" non-block-expr)
            ("(" expr ")")
            ("STRING"))
+          (match-statements
+           (match-statement "MATCH-STATEMENT-DELIMITER" match-statements)
+           (match-statement))
+          (match-statement
+           (non-block-expr "->" statements))
           (expr
-           (naked-expr)
-           (naked-expr "do" statements "end")))
-        '((assoc "->") (assoc "DOT") (assoc "COMMA") (assoc "OP") (assoc ";")))))
+           (non-block-expr)
+           (non-block-expr "do" statements "end")))
+        '((assoc "DOT") (assoc "COMMA") (assoc "OP") (assoc "->" ";")))))
 
 (defvar elixir-smie-indent-basic 2)
 
@@ -148,11 +186,11 @@
 (defun elixir-smie-rules (kind token)
   (pcase (cons kind token)
     (`(:elem . basic) elixir-smie-indent-basic)
-    (`(,_ . ,(or `"COMMA" `"->")) (smie-rule-separator kind))
+    (`(:after . "->")
+     (when (smie-rule-hanging-p)
+       elixir-smie-indent-basic))
+    (`(,_ . ,(or `"COMMA")) (smie-rule-separator kind))
     (`(:after . "=") elixir-smie-indent-basic)
-    ;; (`(:after . "->")
-    ;;  (when (smie-rule-hanging-p)
-    ;;    elixir-smie-indent-basic))
     (`(:after . ,(or `"do"))
      elixir-smie-indent-basic)
     (`(:list-intro . ,(or `"do"))
@@ -163,7 +201,7 @@
   nil nil nil nil
   (set (make-local-variable 'comment-start) "# ")
   (set (make-local-variable 'comment-end) "")
-  (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules
+  (smie-setup elixir-smie-grammar 'elixir-smie-rules ; 'verbose-elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token))
 
