@@ -142,7 +142,7 @@
 
 (defun verbose-elixir-smie-rules (kind token)
   (let ((value (elixir-smie-rules kind token)))
-    (message "%s '%s'; s:%s p:%s == %s" kind token (ignore-errors (smie-rule-sibling-p)) nil value)
+    (message "%s '%s'; s:%s p:%s == %s" kind token (ignore-errors (smie-rule-sibling-p)) (ignore-errors smie--parent) value)
     value))
 
 (defun elixir-smie-rules (kind token)
