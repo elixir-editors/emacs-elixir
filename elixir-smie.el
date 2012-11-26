@@ -23,11 +23,14 @@
                                  "&&" "||" "<>" "++" "--" "**" "//" "::" "<-"  ".." "/>" "=~"     ; op2 (minus ->)
                                  )
   (elixir-smie-define-regexp dot "\\.")
-  (elixir-smie-define-regexp number "-?[0-9]+(\.[0-9]*)?")
-  (elixir-smie-define-regexp -> "->"))
+  (elixir-smie-define-regexp comma ",")
+  (elixir-smie-define-regexp semicolon ";")
+  (elixir-smie-define-regexp -> "->")
+  (elixir-smie-define-regexp << "<<")
+  (elixir-smie-define-regexp >> ">>"))
 
 (defvar elixir-tokenizer-syntax-table (let ((table (copy-syntax-table elixir-mode-syntax-table)))
-                                        (modify-syntax-entry ?\n ".")
+                                        (modify-syntax-entry ?\n "." table)
                                         table))
 
 (defun elixir-smie-token-navigator (regex-match match-bound char-position sexp-movement)
@@ -44,23 +47,65 @@
              (funcall sexp-movement)
              "STRING")))))
 
-(defun elixir-smie-forward-token ()
-  (with-syntax-table elixir-tokenizer-syntax-table
-    (forward-comment (point-max))
-    (or (elixir-smie-token-navigator 'looking-at 'match-end 'following-char 'forward-sexp)
+(setq elixir-smie-block-intro-keywords '(do else catch after -> COMMA))
+
+(defun elixir-smie-next-token (forwardp &optional nested)
+  ;; First, skip comments but determine if newline-as-whitespace is
+  ;; significant:
+  (if (and (not nested)
+           (member
+            (intern
+             (save-excursion
+               (elixir-smie-next-token nil t)))
+            elixir-smie-block-intro-keywords))
+      (if forwardp
+            (forward-comment (point-max))
+          (forward-comment (- (point))))
+      (with-syntax-table elixir-tokenizer-syntax-table
+        (if forwardp
+            (forward-comment (point-max))
+          (forward-comment (- (point))))))
+  (let* ((found-token-class (find-if
+                             (lambda (class-def)
+                               (let ((regex (symbol-value (car class-def))))
+                                 (if forwardp
+                                     (looking-at regex)
+                                   (looking-back regex nil t))))
+                             elixir-syntax-class-names))
+         (maybe-token (cond ((member (if forwardp
+                                         (following-char)
+                                       (preceding-char))
+                                     '(?\n ?\;))
+                             (if forwardp
+                                 (forward-char)
+                               (backward-char))
+                             ";")
+                            (found-token-class
+                             (goto-char (if forwardp
+                                            (match-end 0)
+                                          (match-beginning 0)))
+                             (cdr found-token-class))
+                            ((when (= ?\" (char-syntax (if forwardp
+                                                           (following-char)
+                                                         (preceding-char))))
+                               (if forwardp
+                                   (forward-sexp)
+                                 (backward-sexp))
+                               "STRING")))))
+    (or maybe-token
         (buffer-substring-no-properties
          (point)
-         (progn (skip-syntax-forward "'w_")
-                (point))))))
+         (if forwardp
+             (progn (skip-syntax-forward "'w_")
+                    (point))
+           (progn (skip-syntax-backward "'w_")
+                  (point)))))))
+
+(defun elixir-smie-forward-token ()
+  (elixir-smie-next-token t))
 
 (defun elixir-smie-backward-token ()
-  (with-syntax-table elixir-tokenizer-syntax-table
-    (forward-comment (- (point)))
-    (or (elixir-smie-token-navigator '(lambda (regexp) (looking-back regexp nil t)) 'match-beginning 'preceding-char 'backward-sexp)
-        (buffer-substring-no-properties
-         (point)
-         (progn (skip-syntax-backward "'w_")
-                (point))))))
+  (elixir-smie-next-token nil))
 
 (setq elixir-smie-grammar
       (smie-prec2->grammar
@@ -68,31 +113,30 @@
         '((id)
           (statements
            (statement)
-           (statement "\n" statement)
-           (statement "," statement))
+           (statement ";" statements))
           (statement
            (expr "->" statements)
-           ("if" expr "do" statements "else" statements "end")
-           ("if" expr "do" statements "end")
+           ("if" naked-expr "do" statements "else" statements "end")
+           ("if" naked-expr "do" statements "end")
            ("try" "do" statements "after" statements "end")
-           ("try" "do" statements "catch" match-statements "end")
+           ("try" "do" statements "catch" statements "end")
            ("try" "do" statements "end")
-           ("case" expr "do" match-statements "end")
-           ("fn" match-statements "end")
-           ("function" "do" match-statements "end")
+           ("case" naked-expr "do" statements "end")
+           ("fn" statement "end")
+           ("function" "do" statements "end")
            (expr)
            )
-          (expr
-           ("<<" expr ">>")
-           (expr "OP" expr)
-           (expr "," expr)
+          (naked-expr
+           ("<<" naked-expr ">>")
+           (naked-expr "OP" naked-expr)
+           (naked-expr "DOT" naked-expr)
+           (naked-expr "COMMA" naked-expr)
+           ("(" expr ")")
            ("STRING"))
-          (match-statements
-           (match-statement "\n" match-statement)
-           (match-statement))
-          (match-statement
-           (statement "->" statements)))
-        '((assoc "->") (assoc ",") (assoc "OP") (assoc "\n")))))
+          (expr
+           (naked-expr)
+           (naked-expr "do" statements "end")))
+        '((assoc "->") (assoc "DOT") (assoc "COMMA") (assoc "OP") (assoc ";")))))
 
 (defvar elixir-smie-indent-basic 2)
 
@@ -100,11 +144,11 @@
   (message "kind: %s token: %s" kind token)
   (pcase (cons kind token)
     (`(:elem . basic) elixir-smie-indent-basic)
-    (`(,_ . ",") (smie-rule-separator kind))
+    (`(,_ . ,(or `"COMMA" `"->")) (smie-rule-separator kind))
     (`(:after . "=") elixir-smie-indent-basic)
-    (`(:after . "->")
-     (when (smie-rule-hanging-p)
-       elixir-smie-indent-basic))
+    ;; (`(:after . "->")
+    ;;  (when (smie-rule-hanging-p)
+    ;;    elixir-smie-indent-basic))
     (`(:after . ,(or `"do"))
      elixir-smie-indent-basic)
     (`(:list-intro . ,(or `"do"))
