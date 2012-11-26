@@ -59,12 +59,12 @@
                (elixir-smie-next-token nil t)))
             elixir-smie-block-intro-keywords))
       (if forwardp
-            (forward-comment (point-max))
-          (forward-comment (- (point))))
-      (with-syntax-table elixir-tokenizer-syntax-table
-        (if forwardp
-            (forward-comment (point-max))
-          (forward-comment (- (point))))))
+          (forward-comment (point-max))
+        (forward-comment (- (point))))
+    (with-syntax-table elixir-tokenizer-syntax-table
+      (if forwardp
+          (forward-comment (point-max))
+        (forward-comment (- (point))))))
   (let* ((found-token-class (find-if
                              (lambda (class-def)
                                (let ((regex (symbol-value (car class-def))))
