@@ -166,7 +166,7 @@
         "For use with operators."
         :group 'font-lock-faces)
 
-(defvar font-lock-atom-face 'font-lock-atom-face)
+(defvar font-lock-atom-face 'default)
 (defface font-lock-operator-face
         '((((type tty) (class color)) nil)
                 (((class color) (background light))
