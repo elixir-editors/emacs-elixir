@@ -24,7 +24,6 @@
                                  )
   (elixir-smie-define-regexp dot "\\.")
   (elixir-smie-define-regexp comma ",")
-  (elixir-smie-define-regexp semicolon ";")
   (elixir-smie-define-regexp -> "->")
   (elixir-smie-define-regexp << "<<")
   (elixir-smie-define-regexp >> ">>"))
