@@ -140,8 +140,12 @@
 
 (defvar elixir-smie-indent-basic 2)
 
+(defun verbose-elixir-smie-rules (kind token)
+  (let ((value (elixir-smie-rules kind token)))
+    (message "%s '%s'; s:%s p:%s == %s" kind token (ignore-errors (smie-rule-sibling-p)) nil value)
+    value))
+
 (defun elixir-smie-rules (kind token)
-  (message "kind: %s token: %s" kind token)
   (pcase (cons kind token)
     (`(:elem . basic) elixir-smie-indent-basic)
     (`(,_ . ,(or `"COMMA" `"->")) (smie-rule-separator kind))
@@ -159,7 +163,7 @@
   nil nil nil nil
   (set (make-local-variable 'comment-start) "# ")
   (set (make-local-variable 'comment-end) "")
-  (smie-setup elixir-smie-grammar 'elixir-smie-rules
+  (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token))
 
