@@ -75,8 +75,8 @@
   "do"
   "after"
   "for"
-  "module"
-        "private"
+  "defmodule"
+  "private"
   "def"
   "if"
   "when"
@@ -178,15 +178,15 @@
 (defconst elixir-mode-font-lock-defaults
   (list
     '("#.*$" . font-lock-comment-face)                                                                                                  ; comments
-    '("^\\s *def\\s +\\([^( \t\n]+\\)" . font-lock-function-name-face)                                                                  ; methods
+    '("^\\<def\\s_+\\([^( \t\n]+\\)" . font-lock-function-name-face)                                                                  ; methods
     `(,(concat "\\<" (regexp-opt elixir-mode-keyword-names t) "\\>") . font-lock-keyword-face)                                          ; keywords
     `(,(concat "\\<" (regexp-opt elixir-mode-builtin-names t) "\\>") . font-lock-builtin-face)                                          ; builtins
     `(,(concat "\\<" (regexp-opt elixir-mode-module-names t) "\\>") . font-lock-type-face)                                              ; core modules
-                (when elixir-mode-highlight-operators `(,(concat "\\<" (regexp-opt elixir-mode-operator-names t) "\\>") . font-lock-operator-face)) ; operators
+    (when elixir-mode-highlight-operators `(,(concat "\\<" (regexp-opt elixir-mode-operator-names t) "\\>") . font-lock-operator-face)) ; operators
     '("\\(\\w*\\)\\s-*:?=" . font-lock-variable-name-face)                                                                              ; variables
-                '("-[Rr].*[ \n\t]" . font-lock-constant-face)                                                                                       ; regexes
+    '("-[Rr].*[ \n\t]" . font-lock-constant-face)                                                                                       ; regexes
     '("\\<\\(true\\|false\\|nil\\)\\>" . font-lock-atom-face)                                                                           ; atoms, boolean
-                '("'\\w*" . font-lock-atom-face))                                                                                                   ; atoms, generic
+    '("'\\w*" . font-lock-atom-face))                                                                                                   ; atoms, generic
 "Highlighting for Elixir mode.")
 
 (defun elixir-mode-indent-line ()
