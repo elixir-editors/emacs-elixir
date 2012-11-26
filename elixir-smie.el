@@ -77,8 +77,8 @@
                                        (preceding-char))
                                      '(?\n ?\;))
                              (if forwardp
-                                 (forward-char)
-                               (backward-char))
+                                 (forward-comment (point-max))
+                               (forward-comment (- (point))))
                              ";")
                             (found-token-class
                              (goto-char (if forwardp
