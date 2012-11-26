@@ -92,13 +92,14 @@
                                  (backward-sexp))
                                "STRING")))))
     (or maybe-token
-        (buffer-substring-no-properties
-         (point)
-         (if forwardp
-             (progn (skip-syntax-forward "'w_")
-                    (point))
-           (progn (skip-syntax-backward "'w_")
-                  (point)))))))
+        (downcase
+         (buffer-substring-no-properties
+          (point)
+          (if forwardp
+              (progn (skip-syntax-forward "'w_")
+                     (point))
+            (progn (skip-syntax-backward "'w_")
+                   (point))))))))
 
 (defun elixir-smie-forward-token ()
   (elixir-smie-next-token t))
