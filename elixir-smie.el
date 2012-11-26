@@ -107,10 +107,8 @@
        elixir-smie-indent-basic))
     (`(:after . ,(or `"do"))
      elixir-smie-indent-basic)
-    ;; (`(:after . ,(or `"end"))
-    ;;  (- elixir-smie-indent-basic))
     (`(:list-intro . ,(or `"do"))
-     t))))
+     t)))
 
 (define-minor-mode elixir-smie-mode
   "SMIE-based indentation and syntax for Elixir"
