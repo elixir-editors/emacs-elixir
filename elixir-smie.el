@@ -131,7 +131,9 @@
                    (while (and (not (= (point) (point-min))) (not (string= "" token)) (not (string= "do" token)) (not (string= "fn" token)))
                      (setq token (elixir-smie-next-token-no-lookaround nil nil))
                      (when (string= "->" token)
-                       (return t)))))))
+                       (return t)))
+                   (when (or (string= token "do"))
+                     t)))))
         "MATCH-STATEMENT-DELIMITER"
       current-token)))
 
@@ -156,7 +158,8 @@
            ("try" "do" statements "end")
            ("case" non-block-expr "do" match-statements "end")
            ("fn" match-statement "end")
-           ("function" "do" statements "end")
+           ("function" "do" match-statements "end")
+           (non-block-expr "do" statements "end")
            (expr)
            )
           (non-block-expr
@@ -164,16 +167,13 @@
            (non-block-expr "OP" non-block-expr)
            (non-block-expr "DOT" non-block-expr)
            (non-block-expr "COMMA" non-block-expr)
-           ("(" expr ")")
+           ("(" statements ")")
            ("STRING"))
           (match-statements
            (match-statement "MATCH-STATEMENT-DELIMITER" match-statements)
            (match-statement))
           (match-statement
-           (non-block-expr "->" statements))
-          (expr
-           (non-block-expr)
-           (non-block-expr "do" statements "end")))
+           (non-block-expr "->" statements)))
         '((assoc "DOT") (assoc "COMMA") (assoc "OP") (assoc "->" ";")))))
 
 (defvar elixir-smie-indent-basic 2)
