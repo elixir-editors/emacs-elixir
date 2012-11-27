@@ -120,9 +120,9 @@
                      (setq token (elixir-smie-next-token-no-lookaround t nil))
                      (cond ((and (= level 0) (string= "->" token))
                             (return t))
-                           ((find token '("DO" "FN") :test 'string=)
+                           ((find token '("do" "fn") :test 'string=)
                             (incf level))
-                           ((string= token "END")
+                           ((string= token "end")
                             (decf level)))))))
              ;; Scan behind:
              (let (token)
