@@ -206,3 +206,5 @@
               :backward-token 'elixir-smie-backward-token))
 
 (define-key elixir-mode-map (kbd "C-M-d") 'smie-down-list)
+
+(provide 'elixir-smie)

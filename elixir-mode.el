@@ -189,37 +189,6 @@
     '("'\\w*" . font-lock-atom-face))                                                                                                   ; atoms, generic
 "Highlighting for Elixir mode.")
 
-(defun elixir-mode-indent-line ()
-  "Indent current line as Elixir code."
-  (interactive)
-  (beginning-of-line)
-  (if (bobp)
-    (indent-line-to 0)
-    (let ((not-indented t) cur-indent)
-      (if (looking-at "^[ \t]*end$")
-        (progn
-          (save-excursion
-            (forward-line -1)
-            (setq cur-indent (- (current-indentation) default-tab-width)))
-        (if (< cur-indent 0)
-          (setq cur-indent 0)))
-       (save-excursion
-         (while not-indented
-           (forward-line -1)
-             (if (looking-at "^[ \t]*end$")
-               (progn
-                 (setq cur-indent (current-indentation))
-                 (setq not-indented nil))
-                 (if (looking-at "^[ \t]*\\(do\\|after\\|module\\|def\\|if\\|case\\|else\\|elsif\\|receive\\|after\\|try\\|catch\\)")
-                   (progn
-                     (setq cur-indent (+ (current-indentation) default-tab-width))
-                     (setq not-indented nil))
-                 (if (bobp)
-                   (setq not-indented nil)))))))
-      (if cur-indent
-        (indent-line-to cur-indent)
-        (indent-line-to 0)))))
-
 (defun elixir-mode-cygwin-path (expanded-file-name)
         "Elixir mode get Cygwin absolute path name."
         (replace-regexp-in-string "^[a-zA-Z]:" elixir-mode-cygwin-prefix expanded-file-name t))
@@ -291,26 +260,30 @@
 (easy-menu-define elixir-mode-menu elixir-mode-map
   "Elixir mode menu."
   '("Elixir"
-    ["Indent line" elixir-mode-indent-line]
-                ["Compile file" elixir-mode-compile-file]
-                ["IEX" elixir-mode-iex]
-                "---"
-                ["elixir-mode on GitHub" elixir-mode-open-modegithub]
-                ["Elixir homepage" elixir-mode-open-elixirhome]
+    ["Indent line" smie-indent-line]
+    ["Compile file" elixir-mode-compile-file]
+    ["IEX" elixir-mode-iex]
+    "---"
+    ["elixir-mode on GitHub" elixir-mode-open-modegithub]
+    ["Elixir homepage" elixir-mode-open-elixirhome]
     ["About" elixir-mode-show-version]
-  ))
+    ))
 
 (defun elixir-mode ()
   "Major mode for editing Elixir files."
-    (interactive)
-    (kill-all-local-variables)
-    (set-syntax-table elixir-mode-syntax-table)
-    (set (make-local-variable 'indent-line-function) 'elixir-mode-indent-line)
-    (set (make-local-variable 'font-lock-defaults) '(elixir-mode-font-lock-defaults))
-    (setq major-mode 'elixir-mode)
-    (setq mode-name "Elixir")
-    (run-hooks 'elixir-mode-hook)
-    (run-hooks 'prog-mode-hook))
+  (interactive)
+  (kill-all-local-variables)
+  (set-syntax-table elixir-mode-syntax-table)
+  (set (make-local-variable 'font-lock-defaults) '(elixir-mode-font-lock-defaults))
+  (setq major-mode 'elixir-mode)
+  (setq mode-name "Elixir")
+  (set (make-local-variable 'comment-start) "# ")
+  (set (make-local-variable 'comment-end) "")
+  (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules ; 'elixir-smie-rules
+              :forward-token 'elixir-smie-forward-token
+              :backward-token 'elixir-smie-backward-token)
+  (run-hooks 'elixir-mode-hook)
+  (run-hooks 'prog-mode-hook))
 
 (define-minor-mode elixir-cos-mode
         "Elixir mode toggle compile on save."
@@ -321,6 +294,8 @@
          (t
                 (remove-hook 'after-save-hook 'elixir-mode-compile-file t))))
 
+(require 'elixir-smie)
+
 (provide 'elixir-mode)
 
 ;; automatically opening ex and exs in elixir-mode
@@ -328,5 +303,6 @@
 (add-to-list 'auto-mode-alist '("\\.ex\\'" . elixir-mode))
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.exs\\'" . elixir-mode))
+
 
 ;;; elixir-mode.el ends here
