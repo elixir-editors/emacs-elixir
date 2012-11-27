@@ -26,7 +26,8 @@
   (elixir-smie-define-regexp comma ",")
   (elixir-smie-define-regexp -> "->")
   (elixir-smie-define-regexp << "<<")
-  (elixir-smie-define-regexp >> ">>"))
+  (elixir-smie-define-regexp >> ">>")
+  (elixir-smie-define-regexp-opt parens "(" ")" "{" "}" "[" "]" "<<" ">>"))
 
 (defvar elixir-tokenizer-syntax-table (let ((table (copy-syntax-table elixir-mode-syntax-table)))
                                         (modify-syntax-entry ?\n "." table)
@@ -81,7 +82,9 @@
                              (goto-char (if forwardp
                                             (match-end 0)
                                           (match-beginning 0)))
-                             (cdr found-token-class))
+                             (if (string= "PARENS" (cdr found-token-class))
+                                 (buffer-substring-no-properties (match-beginning 0) (match-end 0))
+                               (cdr found-token-class)))
                             ((when (= ?\" (char-syntax (if forwardp
                                                            (following-char)
                                                          (preceding-char))))
@@ -163,11 +166,12 @@
            (expr)
            )
           (non-block-expr
-           ("<<" non-block-expr ">>")
            (non-block-expr "OP" non-block-expr)
            (non-block-expr "DOT" non-block-expr)
            (non-block-expr "COMMA" non-block-expr)
            ("(" statements ")")
+           ("{" statements "}")
+           ("[" statements "]")
            ("STRING"))
           (match-statements
            (match-statement "MATCH-STATEMENT-DELIMITER" match-statements)
