@@ -33,20 +33,6 @@
                                         (modify-syntax-entry ?\n "." table)
                                         table))
 
-(defun elixir-smie-token-navigator (regex-match match-bound char-position sexp-movement)
-  (let ((found-token-class (find-if
-                            (lambda (class-def)
-                              (funcall regex-match (symbol-value (car class-def))))
-                            elixir-syntax-class-names)))
-    (cond ((eq ?\n (funcall char-position))
-           "\n")
-          (found-token-class
-           (goto-char (funcall match-bound 0))
-           (cdr found-token-class))
-          ((when (= ?\" (char-syntax (funcall char-position)))
-             (funcall sexp-movement)
-             "STRING")))))
-
 (setq elixir-smie-block-intro-keywords '(do else catch after rescue -> COMMA))
 
 (defun elixir-smie-next-token-no-lookaround (forwardp nested)
