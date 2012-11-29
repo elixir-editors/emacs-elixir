@@ -142,6 +142,8 @@
           (statement
            ("if" non-block-expr "do" statements "else" statements "end")
            ("if" non-block-expr "do" statements "end")
+           ("if" non-block-expr "COMMA" "do:" statement)
+           ("if" non-block-expr "COMMA" "do:" statement "COMMA" "else:" statement)
            ("try" "do" statements "after" statements "end")
            ("try" "do" statements "catch" match-statements "end")
            ("try" "do" statements "end")
@@ -164,7 +166,7 @@
            (match-statement))
           (match-statement
            (non-block-expr "->" statements)))
-        '((assoc "DOT") (assoc "COMMA") (assoc "OP") (assoc "->" ";")))))
+        '((assoc "DOT") (assoc "if") (assoc "do:") (assoc "else:") (assoc "COMMA") (assoc "OP") (assoc "->" ";")))))
 
 (defvar elixir-smie-indent-basic 2)
 
