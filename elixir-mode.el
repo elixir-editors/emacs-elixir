@@ -70,65 +70,113 @@
         :type 'string
         :group 'elixir)
 
+(defvar elixir-mode-define-names '(
+  "def"
+  "defdelegate"
+  "defimpl"
+  "defmacro"
+  "defmacrop"
+  "defmodule"
+  "defoverridable"
+  "defp"
+  "defprotocol"
+  "defrecord"
+  "destructure")
+"Elixir mode def-like keywords.")
 (defvar elixir-mode-keyword-names '(
   "->"
+  "bc"
+  "lc"
+  "in"
+  "inbits"
+  "inlist"
+  "quote"
+  "unquote"
+  "unquote_splicing"
+  "var"
   "do"
   "after"
   "for"
-  "defmodule"
-  "private"
   "def"
+  "defdelegate"
+  "defimpl"
+  "defmacro"
+  "defmacrop"
+  "defmodule"
+  "defoverridable"
+  "defp"
+  "defprotocol"
+  "defrecord"
+  "destructure"
+  "alias"
+  "refer"
+  "require"
+  "import"
+  "use"
   "if"
+  "true"
+  "false"
   "when"
   "case"
-  "match"
+  "cond"
+  "throw"
   "then"
   "else"
   "elsif"
   "try"
   "catch"
+  "rescue"
+  "fn"
+  "receive"
   "end")
 "Elixir mode keywords.")
 (defvar elixir-mode-module-names '(
-  "Atom"
-  "BitString"
+  "Behavior"
+  "Binary"
+  "Bitwise"
+  "Builtin"
+  "Elixir"
   "Code"
-  "Date"
-  "DateTime"
   "EEx"
-  "ETS"
+  "Enum"
   "ExUnit"
+  "Exception"
   "File"
-  "Float"
+  "GenServer"
   "Function"
   "GenServer"
   "GenTCP"
-  "IEX"
-  "Integer"
+  "HashDict"
   "IO"
+  "Keyword"
   "List"
   "Math"
-  "Method"
   "Module"
-  "Numeric"
-  "OrderedDict"
-  "OS"
+  "Node"
+  "OptrionParser"
+  "OrdDict"
   "Port"
   "Process"
   "Record"
-  "Reference"
   "Regexp"
-  "Set"
-  "String"
-  "Timer"
+  "System"
   "Tuple"
+  "URI"
   "UnboundMethod")
 "Elixir mode modules.")
 (defvar elixir-mode-builtin-names '(
-  "Erlang")
+  "Erlang"
+  "__MODULE__"
+  "__FUNCTION__"
+  "__LINE__"
+  "__FILE__"
+  "__LOCAL__"
+)
 "Elixir mode builtins.")
 (defvar elixir-mode-operator-names '(
   "+"
+        "++"
+        "<>"
         "-"
         "/"
         "*"
@@ -156,6 +204,9 @@
         ":="
         "<-")
 "Elixir mode operators.")
+(defvar elixir-basic-offset 2)
+(defvar elixir-key-label-offset 0)
+(defvar elixir-match-label-offset 2)
 
 (defvar font-lock-operator-face 'font-lock-operator-face)
 (defface font-lock-operator-face
@@ -166,27 +217,19 @@
         "For use with operators."
         :group 'font-lock-faces)
 
-(defvar font-lock-atom-face 'default)
-(defface font-lock-operator-face
-        '((((type tty) (class color)) nil)
-                (((class color) (background light))
-                (:foreground "magenta"))
-        (t nil))
-        "For use with atoms."
-        :group 'font-lock-faces)
-
 (defconst elixir-mode-font-lock-defaults
   (list
     '("#.*$" . font-lock-comment-face)                                                                                                  ; comments
-    '("^\\<def\\s_+\\([^( \t\n]+\\)" . font-lock-function-name-face)                                                                  ; methods
+    `(,(concat "^\\s *\\<" (regexp-opt elixir-mode-define-names t) "\\>\\s +\\([^( \t\n]+\\)") 2 font-lock-function-name-face)          ; methods
     `(,(concat "\\<" (regexp-opt elixir-mode-keyword-names t) "\\>") . font-lock-keyword-face)                                          ; keywords
     `(,(concat "\\<" (regexp-opt elixir-mode-builtin-names t) "\\>") . font-lock-builtin-face)                                          ; builtins
     `(,(concat "\\<" (regexp-opt elixir-mode-module-names t) "\\>") . font-lock-type-face)                                              ; core modules
     (when elixir-mode-highlight-operators `(,(concat "\\<" (regexp-opt elixir-mode-operator-names t) "\\>") . font-lock-operator-face)) ; operators
     '("\\(\\w*\\)\\s-*:?=" . font-lock-variable-name-face)                                                                              ; variables
     '("-[Rr].*[ \n\t]" . font-lock-constant-face)                                                                                       ; regexes
-    '("\\<\\(true\\|false\\|nil\\)\\>" . font-lock-atom-face)                                                                           ; atoms, boolean
-    '("'\\w*" . font-lock-atom-face))                                                                                                   ; atoms, generic
+    '("\\<\\(true\\|false\\|nil\\)\\>" . font-lock-reference-face)                                                                           ; atoms, boolean
+    '("\\w*:\s" . font-lock-reference-face)
+    '(":\\w*" . font-lock-reference-face))                                                                                                   ; atoms, generic
 "Highlighting for Elixir mode.")
 
 (defun elixir-mode-cygwin-path (expanded-file-name)
