@@ -9,14 +9,15 @@ Simply add to your load path and require the mode to install.
 In your shell...
 
 ```shell
-% git clone git://github.com/secondplanet/elixir-mode ~/.emacs.d/elixir-mode
+% git clone git://github.com/elixir/emacs-elixir ~/.emacs.d/emacs-elixir
 % $EDITOR ~/.emacs
 ```
 In the editor...
 
 ```lisp
-(add-to-list 'load-path "~/.emacs.d/elixir-mode")
-(require 'elixir-mode)
+(add-to-list 'load-path "~/.emacs.d/emacs-elixir)
+(require 'elixir-mode-setup)
+(elixir-mode-setup)
 ```
 
 Save and reload with `M-x load-file` `~/.emacs`.
