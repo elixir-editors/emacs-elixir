@@ -136,3 +136,8 @@ experience, you can add the following to your `elixir-mode-hook`:
                (set (make-variable-buffer-local 'ruby-end-check-statement-modifiers) nil)
                (ruby-end-mode +1)))
 ```
+
+## History
+
+This mode is based on the
+[Emacs mode by secondplanet](https://github.com/secondplanet/elixir-mode).
