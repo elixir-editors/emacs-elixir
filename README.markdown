@@ -1,6 +1,6 @@
 # elixir-mode -- Emacs major mode for [Elixir](https://github.com/josevalim/elixir)
 
-![elixir-mode](https://img.skitch.com/20111112-tyhx1d5wqus29rx644f46ciu5c.png)
+![elixir-mode](http://cl.ly/image/0I3h1h1v2740/Screen%20Shot%202013-04-06%20at%205.40.05%20PM.png)
 
 ## Installation
 
@@ -24,12 +24,13 @@ Save and reload with `M-x load-file` `~/.emacs`.
 
 ## Usage
 
-Any file that matches the glob `*.ex[s]` is automatically opened in
-Elixir mode, but you can change this functionality easily.
+Any file that matches the glob `*.ex[s]` or `*.elixir` is
+automatically opened in Elixir mode, but you can change this
+functionality easily.
 
 ```lisp
-;; Highlights *.elixir as well
-(add-to-list 'auto-mode-alist '("\\.elixir\\'" . elixir-mode))
+;; Highlights *.elixir2 as well
+(add-to-list 'auto-mode-alist '("\\.elixir2\\'" . elixir-mode))
 ```
 
 ### Commands
