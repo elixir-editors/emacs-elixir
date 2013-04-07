@@ -18,6 +18,7 @@
     (modify-syntax-entry ?\[ "(]" elixir-mode-syntax-table)
     (modify-syntax-entry ?\] ")[" elixir-mode-syntax-table)
     (modify-syntax-entry ?\: "'" elixir-mode-syntax-table)
+    (modify-syntax-entry ?\@ "'" elixir-mode-syntax-table)
     elixir-mode-syntax-table)
   "Elixir mode syntax table.")
 

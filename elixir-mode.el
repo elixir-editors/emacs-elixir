@@ -258,7 +258,7 @@
    '("\\<\\(true\\|false\\|nil\\)\\>" . font-lock-reference-face)
 
    ;; atoms, generic
-   '(":\\w*" . font-lock-reference-face)
+   '("[@:]\\w*" . font-lock-reference-face)
    '("\\w*:\s" . font-lock-reference-face)
    '(":\\w*" . font-lock-reference-face))
   "Highlighting for Elixir mode.")
