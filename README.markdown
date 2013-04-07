@@ -119,11 +119,18 @@ There are no keyboard shortcuts included by default.
 
 This is still very alpha software; there are probably several
 bugs. Right now the indentation implementation needs some work, and
-the operator and atom font-locking doesn't appear to be working
-correctly.
+the IEX mode appears entirely untested.
 
 ## Notes
 
-This is my first Emacs mode, so please excuse some of the messy bits
-in the implementation. To help me out I had a look at and borrowed a
-bit of code from io-mode, ruby-mode, and coffee-mode.
+If you want to use `ruby-end-mode` for a more comfortable editing
+experience, you can add the following to your `elixir-mode-hook`:
+
+```lisp
+(add-to-list 'elixir-mode-hook
+             (defun auto-activate-ruby-end-mode-for-elixir-mode ()
+               (set (make-variable-buffer-local 'ruby-end-expand-keywords-before-re)
+                    "\\(?:^\\|\\s-+\\)\\(?:do\\)")
+               (set (make-variable-buffer-local 'ruby-end-check-statement-modifiers) nil)
+               (ruby-end-mode +1)))
+```
