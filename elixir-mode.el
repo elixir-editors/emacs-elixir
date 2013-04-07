@@ -319,6 +319,8 @@
   (setq mode-name "Elixir")
   (set (make-local-variable 'comment-start) "# ")
   (set (make-local-variable 'comment-end) "")
+  (set (make-variable-buffer-local 'tab-width) elixir-basic-offset)
+  (set (make-variable-buffer-local 'default-tab-width) elixir-basic-offset)
   (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules ; 'elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token)
