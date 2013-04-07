@@ -1,4 +1,25 @@
+;;; elixir-smie.el --- Structural syntax support for elixir-mode
+
 (require 'smie)
+
+(defvar elixir-smie-verbose-p nil
+  "Emit context information about the current syntax state.")
+
+(defvar elixir-mode-syntax-table
+  (let ((elixir-mode-syntax-table (make-syntax-table)))
+    (modify-syntax-entry ?_ "w" elixir-mode-syntax-table)
+    (modify-syntax-entry ?' "\"" elixir-mode-syntax-table)
+    (modify-syntax-entry ?# "<" elixir-mode-syntax-table)
+    (modify-syntax-entry ?\n ">" elixir-mode-syntax-table)
+    (modify-syntax-entry ?\( "()" elixir-mode-syntax-table)
+    (modify-syntax-entry ?\) ")(" elixir-mode-syntax-table)
+    (modify-syntax-entry ?\{ "(}" elixir-mode-syntax-table)
+    (modify-syntax-entry ?\} "){" elixir-mode-syntax-table)
+    (modify-syntax-entry ?\[ "(]" elixir-mode-syntax-table)
+    (modify-syntax-entry ?\] ")[" elixir-mode-syntax-table)
+    (modify-syntax-entry ?\: "'" elixir-mode-syntax-table)
+    elixir-mode-syntax-table)
+  "Elixir mode syntax table.")
 
 (progn
   (setq elixir-syntax-class-names nil)
@@ -172,7 +193,8 @@
 
 (defun verbose-elixir-smie-rules (kind token)
   (let ((value (elixir-smie-rules kind token)))
-    (message "%s '%s'; s:%s p:%s == %s" kind token (ignore-errors (smie-rule-sibling-p)) (ignore-errors smie--parent) value)
+    (when elixir-smie-verbose-p
+      (message "%s '%s'; s:%s p:%s == %s" kind token (ignore-errors (smie-rule-sibling-p)) (ignore-errors smie--parent) value))
     value))
 
 (defun elixir-smie-rules (kind token)
