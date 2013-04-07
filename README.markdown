@@ -1,4 +1,4 @@
-# elixir-mode -- Emacs major mode for [Elixir](https://github.com/josevalim/elixir)
+# elixir-mode -- Emacs major mode for [Elixir](http://elixir-lang.org/)
 
 ![elixir-mode](http://cl.ly/image/0I3h1h1v2740/Screen%20Shot%202013-04-06%20at%205.40.05%20PM.png)
 
