@@ -1,6 +1,6 @@
-# elixir-mode -- Emacs major mode for [Elixir](https://github.com/josevalim/elixir)
+# elixir-mode -- Emacs major mode for [Elixir](http://elixir-lang.org/)
 
-![elixir-mode](https://img.skitch.com/20111112-tyhx1d5wqus29rx644f46ciu5c.png)
+![elixir-mode](http://cl.ly/image/0I3h1h1v2740/Screen%20Shot%202013-04-06%20at%205.40.05%20PM.png)
 
 ## Installation
 
@@ -9,26 +9,28 @@ Simply add to your load path and require the mode to install.
 In your shell...
 
 ```shell
-% git clone git://github.com/secondplanet/elixir-mode ~/.emacs.d/elixir-mode
+% git clone git://github.com/elixir/emacs-elixir ~/.emacs.d/emacs-elixir
 % $EDITOR ~/.emacs
 ```
 In the editor...
 
 ```lisp
-(add-to-list 'load-path "~/.emacs.d/elixir-mode")
-(require 'elixir-mode)
+(add-to-list 'load-path "~/.emacs.d/emacs-elixir)
+(require 'elixir-mode-setup)
+(elixir-mode-setup)
 ```
 
 Save and reload with `M-x load-file` `~/.emacs`.
 
 ## Usage
 
-Any file that matches the glob `*.ex[s]` is automatically opened in
-Elixir mode, but you can change this functionality easily.
+Any file that matches the glob `*.ex[s]` or `*.elixir` is
+automatically opened in Elixir mode, but you can change this
+functionality easily.
 
 ```lisp
-;; Highlights *.elixir as well
-(add-to-list 'auto-mode-alist '("\\.elixir\\'" . elixir-mode))
+;; Highlights *.elixir2 as well
+(add-to-list 'auto-mode-alist '("\\.elixir2\\'" . elixir-mode))
 ```
 
 ### Commands
@@ -119,11 +121,23 @@ There are no keyboard shortcuts included by default.
 
 This is still very alpha software; there are probably several
 bugs. Right now the indentation implementation needs some work, and
-the operator and atom font-locking doesn't appear to be working
-correctly.
+the IEX mode appears entirely untested.
 
 ## Notes
 
-This is my first Emacs mode, so please excuse some of the messy bits
-in the implementation. To help me out I had a look at and borrowed a
-bit of code from io-mode, ruby-mode, and coffee-mode.
+If you want to use `ruby-end-mode` for a more comfortable editing
+experience, you can add the following to your `elixir-mode-hook`:
+
+```lisp
+(add-to-list 'elixir-mode-hook
+             (defun auto-activate-ruby-end-mode-for-elixir-mode ()
+               (set (make-variable-buffer-local 'ruby-end-expand-keywords-before-re)
+                    "\\(?:^\\|\\s-+\\)\\(?:do\\)")
+               (set (make-variable-buffer-local 'ruby-end-check-statement-modifiers) nil)
+               (ruby-end-mode +1)))
+```
+
+## History
+
+This mode is based on the
+[Emacs mode by secondplanet](https://github.com/secondplanet/elixir-mode).
