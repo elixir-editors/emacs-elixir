@@ -81,15 +81,11 @@
 (defvar elixir-mode-define-names
   '("def"
     "defdelegate"
-    "defimpl"
     "defmacro"
     "defmacrop"
-    "defmodule"
     "defoverridable"
     "defp"
-    "defprotocol"
-    "defrecord"
-    "destructure")
+    "defmacrop")
   "Elixir mode def-like keywords.")
 (defvar elixir-mode-keyword-names
   '("->"
