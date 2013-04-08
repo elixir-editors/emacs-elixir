@@ -1,33 +1,21 @@
 (require 'ert)
 (require 'ert-x)
 
-(defmacro reindenting-elixir-smie-mode-buffer (initial-contents &rest body)
-  `(with-temp-buffer
-     (insert ,initial-contents)
-     (elixir-mode)
-     (indent-region (point-min) (point-max))
-     (let ((buffer-contents (buffer-substring-no-properties (point-min) (point-max))))
-       ,@body)))
-
-(defmacro* elixir-deftest (name args &optional docstr &body body)
+(defmacro* elixir-deftest (name args &body body)
   (declare (indent 2)
            (&define :name test name sexp
                     [&optional [":documentation" stringp]]
                     [&optional [":expected-result" sexp]]
                     def-body))
-  `(ert-deftest ,(intern (format "elixir-ert-%s" name)) ,args
-     ,docstr
+  `(ert-deftest ,(intern (format "elixir-ert-%s" name)) ()
+     ""
+     ,@args
      (let ((elixir-smie-verbose-p t))
        ,@body)))
 
-(defun elixir-tests-explain-string-incompatibility (got expected)
-  (if (equal got expected)
-      nil
-    ()))
-
-(defmacro* elixir-def-indentation-test (name initial-contents expected-output)
-  (declare (indent 1))
-  `(elixir-deftest ,name ()
+(defmacro* elixir-def-indentation-test (name args initial-contents expected-output)
+  (declare (indent 2))
+  `(elixir-deftest ,name ,args
      (ert-with-test-buffer (:name ,(format "(Expected)" name))
        (elixir-mode)
        (insert ,initial-contents)
@@ -39,7 +27,7 @@
            (insert indented)
            (should (equal indented ,expected-output)))))))
 
-(elixir-def-indentation-test indents-do-blocks
+(elixir-def-indentation-test indents-do-blocks ()
   "
 defmodule Foo do
 def foobar do
@@ -55,7 +43,7 @@ defmodule Foo do
   end
 end")
 
-(elixir-def-indentation-test indents-function-calls-without-parens
+(elixir-def-indentation-test indents-function-calls-without-parens ()
   "
 test \"foo\" do
 assert true, \"should be true\"
@@ -69,7 +57,7 @@ test \"foo\" do
 end
 ")
 
-(elixir-def-indentation-test indents-records-correctly
+(elixir-def-indentation-test indents-records-correctly ()
   "
 defrecord Money, [:currency_unit, :amount] do
 foo
@@ -81,7 +69,7 @@ defrecord Money, [:currency_unit, :amount] do
 end
 ")
 
-(elixir-def-indentation-test indents-continuation-lines
+(elixir-def-indentation-test indents-continuation-lines ()
   "
 has_something(x) &&
 has_something(y) ||
@@ -94,6 +82,7 @@ has_something(x) &&
 ")
 
 (elixir-def-indentation-test indents-continuation-lines-with-comments/1
+  (:expected-result :failed)
   "
 has_something(x) &&  # foo
 has_something(y) ||
@@ -105,7 +94,7 @@ has_something(x) &&  # foo
   has_something(z)
 ")
 
-(elixir-def-indentation-test indents-continuation-lines-with-comments/2
+(elixir-def-indentation-test indents-continuation-lines-with-comments/2 ()
   "
 has_something(x) &&
 has_something(y) || # foo
@@ -117,7 +106,7 @@ has_something(x) &&
   has_something(z)
 ")
 
-(elixir-def-indentation-test indents-if
+(elixir-def-indentation-test indents-if ()
   "
 if condition do
 yes
@@ -127,7 +116,7 @@ if condition do
   yes
 end")
 
-(elixir-def-indentation-test indents-if-else
+(elixir-def-indentation-test indents-if-else ()
   "
 if condition do
 yes
@@ -141,7 +130,7 @@ else
   no
 end")
 
-(elixir-def-indentation-test indents-try
+(elixir-def-indentation-test indents-try ()
   "
 try do
 foo
@@ -153,7 +142,7 @@ try do
   bar
 end")
 
-(elixir-def-indentation-test indents-try/after
+(elixir-def-indentation-test indents-try/after ()
   "
 try do
 foo
@@ -171,7 +160,7 @@ after
   post_that()
 end")
 
-(elixir-def-indentation-test indents-try/catch/after
+(elixir-def-indentation-test indents-try/catch/after ()
   "
 try do
 foo
@@ -199,7 +188,7 @@ after
   post_that()
 end")
 
-(elixir-def-indentation-test indents-function
+(elixir-def-indentation-test indents-function ()
   "
 function do
 a,b,c ->
@@ -221,7 +210,7 @@ function do
 end
 ")
 
-(elixir-def-indentation-test indents-fn
+(elixir-def-indentation-test indents-fn ()
   "
 f = fn x, y ->
 x + y
