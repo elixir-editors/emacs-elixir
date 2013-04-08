@@ -39,10 +39,10 @@
                                  "<<<" ">>>" "^^^" "~~~" "&&&" "|||"                              ; op3
                                  "===" "!=="                                                      ; comp3
                                  "==" "!=" "<=" ">="                                              ; comp2
-                                 "{}" "[]"                                                        ; container2
                                  "<" ">"                                                          ; comp1
                                  "+" "-" "*" "/" "=" "|" "!" "^" "@"                              ; op1
                                  "&&" "||" "<>" "++" "--" "**" "//" "::" "<-"  ".." "/>" "=~"     ; op2 (minus ->)
+                                 "xor" "|>"                                                       ; http://elixir-lang.org/docs/stable/Kernel.html
                                  )
   (elixir-smie-define-regexp dot "\\.")
   (elixir-smie-define-regexp comma ",")
@@ -78,28 +78,30 @@
                                      (looking-at regex)
                                    (looking-back regex nil t))))
                              elixir-syntax-class-names))
-         (maybe-token (cond ((member (if forwardp
-                                         (following-char)
-                                       (preceding-char))
-                                     '(?\n ?\;))
-                             (if forwardp
-                                 (forward-comment (point-max))
-                               (forward-comment (- (point))))
-                             ";")
-                            (found-token-class
-                             (goto-char (if forwardp
-                                            (match-end 0)
-                                          (match-beginning 0)))
-                             (if (string= "PARENS" (cdr found-token-class))
-                                 (buffer-substring-no-properties (match-beginning 0) (match-end 0))
-                               (cdr found-token-class)))
-                            ((when (= ?\" (char-syntax (if forwardp
-                                                           (following-char)
-                                                         (preceding-char))))
-                               (if forwardp
-                                   (forward-sexp)
-                                 (backward-sexp))
-                               "STRING")))))
+         (maybe-token
+          (let ((current-char (if forwardp
+                                  (following-char)
+                                (preceding-char))))
+            (cond ((member current-char
+                           '(?\n ?\;))
+                   (if forwardp
+                       (forward-comment (point-max))
+                     (forward-comment (- (point))))
+                   (string current-char))
+                  (found-token-class
+                   (goto-char (if forwardp
+                                  (match-end 0)
+                                (match-beginning 0)))
+                   (if (string= "PARENS" (cdr found-token-class))
+                       (buffer-substring-no-properties (match-beginning 0) (match-end 0))
+                     (cdr found-token-class)))
+                  ((when (= ?\" (char-syntax (if forwardp
+                                                 (following-char)
+                                               (preceding-char))))
+                     (if forwardp
+                         (forward-sexp)
+                       (backward-sexp))
+                     "STRING"))))))
     (or maybe-token
         (downcase
          (buffer-substring-no-properties
@@ -111,42 +113,60 @@
                    (point))))))))
 
 (defun elixir-smie-next-token (forwardp)
-  ;; When reading match statements (the ones with expr -> statements),
-  ;; we need to drop non-; delimiters so the parser knows when a
-  ;; match statement ends and another begins, so scan around point to
-  ;; see if there are any -> within the current block's scope.
+  (block elixir-smie-next-token
+    (let ((current-token (elixir-smie-next-token-no-lookaround forwardp nil)))
+      (when (string= "\n" current-token)
+        ;; This is a newline; if the previous token isn't an OP2, this
+        ;; means the line end marks the end of a statement & we get to
+        ;; scan forward until there's a non-newline token; otherwise,
+        ;; make this line ending something that probably ends the
+        ;; statement (but see below).
+        (if (save-excursion
+              (block nil
+               (let ((token (elixir-smie-next-token-no-lookaround nil nil)))
+                 (while (and (not (= (point) (point-min))) (not (string= "" token)) (string= "\n" token))
+                   (setq token (elixir-smie-next-token-no-lookaround nil nil)))
+                 (when (string= "OP" token)
+                   (return t)))))
+            ;; it's a continuation line, return the next token after the newline:
+            (return-from elixir-smie-next-token (elixir-smie-next-token forwardp))
+          (setq current-token ";")))
 
-  ;; If the current token is a ";", scan forward to see if the current
-  ;; potential statement contains a "->". If so, scan back to find a
-  ;; "do". If there is a -> there, emit a match-statement-delimiter
-  ;; instead of the ";".
-  (let ((current-token (elixir-smie-next-token-no-lookaround forwardp nil)))
-    (if (and (string= ";" current-token)
-             ;; Scan ahead:
-             (let ((level 0)
-                   token)
-               (save-excursion
-                 (block nil
-                   (while (and (not (= (point) (point-max))) (not (string= "" token)) (not (string= ";" token)))
-                     (setq token (elixir-smie-next-token-no-lookaround t nil))
-                     (cond ((and (= level 0) (string= "->" token))
-                            (return t))
-                           ((find token '("do" "fn") :test 'string=)
-                            (incf level))
-                           ((string= token "end")
-                            (decf level)))))))
-             ;; Scan behind:
-             (let (token)
-               (save-excursion
-                 (block nil
-                   (while (and (not (= (point) (point-min))) (not (string= "" token)) (not (string= "do" token)) (not (string= "fn" token)))
-                     (setq token (elixir-smie-next-token-no-lookaround nil nil))
-                     (when (string= "->" token)
-                       (return t)))
-                   (when (or (string= token "do"))
-                     t)))))
-        "MATCH-STATEMENT-DELIMITER"
-      current-token)))
+      ;; When reading match statements (the ones with expr -> statements),
+      ;; we need to drop non-; delimiters so the parser knows when a
+      ;; match statement ends and another begins, so scan around point to
+      ;; see if there are any -> within the current block's scope.
+
+      ;; If the current token is a ";", scan forward to see if the current
+      ;; potential statement contains a "->". If so, scan back to find a
+      ;; "do". If there is a -> there, emit a match-statement-delimiter
+      ;; instead of the ";".
+      (if (and (string= ";" current-token)
+               ;; Scan ahead:
+               (let ((level 0)
+                     token)
+                 (save-excursion
+                   (block nil
+                     (while (and (not (= (point) (point-max))) (not (string= "" token)) (not (or (string= "\n" token) (string= ";" token))))
+                       (setq token (elixir-smie-next-token-no-lookaround t nil))
+                       (cond ((and (= level 0) (string= "->" token))
+                              (return t))
+                             ((find token '("do" "fn") :test 'string=)
+                              (incf level))
+                             ((string= token "end")
+                              (decf level)))))))
+               ;; Scan behind:
+               (let (token)
+                 (save-excursion
+                   (block nil
+                     (while (and (not (= (point) (point-min))) (not (string= "" token)) (not (string= "do" token)) (not (string= "fn" token)))
+                       (setq token (elixir-smie-next-token-no-lookaround nil nil))
+                       (when (string= "->" token)
+                         (return t)))
+                     (when (or (string= token "do"))
+                       t)))))
+          "MATCH-STATEMENT-DELIMITER"
+        current-token))))
 
 (defun elixir-smie-forward-token ()
   (elixir-smie-next-token t))
@@ -201,6 +221,9 @@
 (defun elixir-smie-rules (kind token)
   (pcase (cons kind token)
     (`(:elem . basic) elixir-smie-indent-basic)
+    (`(:after . "OP")
+     (unless (smie-rule-sibling-p)
+       elixir-smie-indent-basic))
     (`(:after . "->")
      (when (smie-rule-hanging-p)
        elixir-smie-indent-basic))
