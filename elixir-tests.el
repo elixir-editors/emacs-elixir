@@ -93,7 +93,7 @@ has_something(x) &&
   has_something(z)
 ")
 
-(elixir-def-indentation-test indents-continuation-lines-with-comments
+(elixir-def-indentation-test indents-continuation-lines-with-comments/1
   "
 has_something(x) &&  # foo
 has_something(y) ||
@@ -104,3 +104,129 @@ has_something(x) &&  # foo
   has_something(y) ||
   has_something(z)
 ")
+
+(elixir-def-indentation-test indents-continuation-lines-with-comments/2
+  "
+has_something(x) &&
+has_something(y) || # foo
+has_something(z)
+"
+  "
+has_something(x) &&
+  has_something(y) || # foo
+  has_something(z)
+")
+
+(elixir-def-indentation-test indents-if
+  "
+if condition do
+yes
+end"
+  "
+if condition do
+  yes
+end")
+
+(elixir-def-indentation-test indents-if-else
+  "
+if condition do
+yes
+else
+no
+end"
+  "
+if condition do
+  yes
+else
+  no
+end")
+
+(elixir-def-indentation-test indents-try
+  "
+try do
+foo
+bar
+end"
+  "
+try do
+  foo
+  bar
+end")
+
+(elixir-def-indentation-test indents-try/after
+  "
+try do
+foo
+bar
+after
+after_everything()
+post_that()
+end"
+  "
+try do
+  foo
+  bar
+after
+  after_everything()
+  post_that()
+end")
+
+(elixir-def-indentation-test indents-try/catch/after
+  "
+try do
+foo
+bar
+catch
+baz ->
+nope
+[yeah] ->
+maybe
+after
+after_everything()
+post_that()
+end"
+  "
+try do
+  foo
+  bar
+catch
+  baz ->
+    nope
+  [yeah] ->
+    maybe
+after
+  after_everything()
+  post_that()
+end")
+
+(elixir-def-indentation-test indents-function
+  "
+function do
+a,b,c ->
+three_args
+a,b ->
+two_args
+[a|rest] ->
+one_arg_list
+end
+"
+  "
+function do
+  a,b,c ->
+    three_args
+  a,b ->
+    two_args
+  [a|rest] ->
+    one_arg_list
+end
+")
+
+(elixir-def-indentation-test indents-fn
+  "
+f = fn x, y ->
+x + y
+end"
+  "
+f = fn x, y ->
+         x + y
+    end")
