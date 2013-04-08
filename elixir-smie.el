@@ -57,66 +57,74 @@
   (elixir-smie-define-regexp >> ">>")
   (elixir-smie-define-regexp-opt parens "(" ")" "{" "}" "[" "]" "<<" ">>"))
 
-(defvar elixir-tokenizer-syntax-table (let ((table (copy-syntax-table elixir-mode-syntax-table)))
-                                        (modify-syntax-entry ?\n "." table)
-                                        table))
+(defconst elixir-smie-block-intro-keywords
+  '(do else catch after rescue -> COMMA OP)
+  "Keywords in which newlines cause confusion for the parser.")
 
-(setq elixir-smie-block-intro-keywords '(do else catch after rescue -> COMMA))
+(defun elixir-skip-comment-backward ()
+  "Skip backwards over all whitespace and comments.
+
+Return non-nil if any line breaks were skipped."
+  (let ((start-line-no (line-number-at-pos (point))))
+    (forward-comment (- (point)))
+    (/= start-line-no (line-number-at-pos (point)))))
+
+(defun elixir-skip-comment-forward ()
+  "Skip forward over any whitespace and comments.
+
+Return non-nil if any line breaks were skipped."
+  (let ((start-line-no (line-number-at-pos (point))))
+    (forward-comment (point))
+    (/= start-line-no (line-number-at-pos (point)))))
 
 (defun elixir-smie-next-token-no-lookaround (forwardp nested)
-  ;; First, skip comments but determine if newline-as-whitespace is
-  ;; significant:
-  (with-syntax-table (if (and (not nested)
-                              (member
-                               (intern
-                                (save-excursion
-                                  (elixir-smie-next-token-no-lookaround nil t)))
-                               elixir-smie-block-intro-keywords))
-                         elixir-mode-syntax-table
-                       elixir-tokenizer-syntax-table)
-    (if forwardp
-        (forward-comment (point-max))
-      (forward-comment (- (point)))))
-  (let* ((found-token-class (find-if
-                             (lambda (class-def)
-                               (let ((regex (symbol-value (car class-def))))
-                                 (if forwardp
-                                     (looking-at regex)
-                                   (looking-back regex nil t))))
-                             elixir-syntax-class-names))
-         (maybe-token
-          (let ((current-char (if forwardp
-                                  (following-char)
-                                (preceding-char))))
-            (cond ((member current-char
-                           '(?\n ?\;))
-                   (if forwardp
-                       (forward-comment (point-max))
-                     (forward-comment (- (point))))
-                   (string current-char))
-                  (found-token-class
-                   (goto-char (if forwardp
-                                  (match-end 0)
-                                (match-beginning 0)))
-                   (if (string= "PARENS" (cdr found-token-class))
-                       (buffer-substring-no-properties (match-beginning 0) (match-end 0))
-                     (cdr found-token-class)))
-                  ((when (= ?\" (char-syntax (if forwardp
-                                                 (following-char)
-                                               (preceding-char))))
+  (block elixir-smie-next-token-no-lookaround
+    ;; First, skip comments; but if any comments / newlines were
+    ;; skipped, the upper level needs to check if they were significant:
+    (when (if forwardp
+              (elixir-skip-comment-forward)
+            (elixir-skip-comment-backward))
+      (return-from elixir-smie-next-token-no-lookaround "\n"))
+    (let* ((found-token-class (find-if
+                               (lambda (class-def)
+                                 (let ((regex (symbol-value (car class-def))))
+                                   (if forwardp
+                                       (looking-at regex)
+                                     (looking-back regex nil t))))
+                               elixir-syntax-class-names))
+           (maybe-token
+            (let ((current-char (if forwardp
+                                    (following-char)
+                                  (preceding-char))))
+              (cond ((member current-char
+                             '(?\n ?\;))
                      (if forwardp
-                         (forward-sexp)
-                       (backward-sexp))
-                     "STRING"))))))
-    (or maybe-token
-        (downcase
-         (buffer-substring-no-properties
-          (point)
-          (if forwardp
-              (progn (skip-syntax-forward "'w_")
-                     (point))
-            (progn (skip-syntax-backward "'w_")
-                   (point))))))))
+                         (forward-comment (point-max))
+                       (forward-comment (- (point))))
+                     (string current-char))
+                    (found-token-class
+                     (goto-char (if forwardp
+                                    (match-end 0)
+                                  (match-beginning 0)))
+                     (if (string= "PARENS" (cdr found-token-class))
+                         (buffer-substring-no-properties (match-beginning 0) (match-end 0))
+                       (cdr found-token-class)))
+                    ((when (= ?\" (char-syntax (if forwardp
+                                                   (following-char)
+                                                 (preceding-char))))
+                       (if forwardp
+                           (forward-sexp)
+                         (backward-sexp))
+                       "STRING"))))))
+      (or maybe-token
+          (downcase
+           (buffer-substring-no-properties
+            (point)
+            (if forwardp
+                (progn (skip-syntax-forward "'w_")
+                       (point))
+              (progn (skip-syntax-backward "'w_")
+                     (point)))))))))
 
 (defun elixir-smie-next-token (forwardp)
   (block elixir-smie-next-token
@@ -129,11 +137,11 @@
         ;; statement (but see below).
         (if (save-excursion
               (block nil
-               (let ((token (elixir-smie-next-token-no-lookaround nil nil)))
-                 (while (and (not (= (point) (point-min))) (not (string= "" token)) (string= "\n" token))
-                   (setq token (elixir-smie-next-token-no-lookaround nil nil)))
-                 (when (string= "OP" token)
-                   (return t)))))
+                (let ((token (elixir-smie-next-token-no-lookaround nil t)))
+                  (while (and (not (= (point) (point-min))) (string= "\n" token))
+                    (setq token (elixir-smie-next-token-no-lookaround nil t)))
+                  (when (member (intern token) elixir-smie-block-intro-keywords)
+                    (return t)))))
             ;; it's a continuation line, return the next token after the newline:
             (return-from elixir-smie-next-token (elixir-smie-next-token forwardp))
           (setq current-token ";")))
@@ -234,6 +242,12 @@
     (`(:after . "OP")
      (unless (smie-rule-sibling-p)
        elixir-smie-indent-basic))
+    (`(:before. "OP")
+     ;; FIXME: Issue #5: This should prevent comments on lines before
+     ;; continuation lines from causing indentation messed-upness, but
+     ;; for some reason SMIE doesn't look this far when there's a
+     ;; comment terminating the previous line. Ugh.
+     nil)
     (`(:after . "->")
      (when (smie-rule-hanging-p)
        elixir-smie-indent-basic))
