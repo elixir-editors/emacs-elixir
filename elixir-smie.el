@@ -22,6 +22,12 @@
     elixir-mode-syntax-table)
   "Elixir mode syntax table.")
 
+(defmacro elixir-smie-debug (message &rest format-args)
+  `(progn
+     (when elixir-smie-verbose-p
+       (message (format ,message ,@format-args)))
+     nil))
+
 (progn
   (setq elixir-syntax-class-names nil)
 
@@ -214,8 +220,12 @@
 
 (defun verbose-elixir-smie-rules (kind token)
   (let ((value (elixir-smie-rules kind token)))
-    (when elixir-smie-verbose-p
-      (message "%s '%s'; s:%s p:%s == %s" kind token (ignore-errors (smie-rule-sibling-p)) (ignore-errors smie--parent) value))
+    (elixir-smie-debug "%s '%s'; s:%s prev: %s hanging:%s p:%s == %s" kind token
+                       (ignore-errors (smie-rule-sibling-p))
+                       (ignore-errors smie--parent)
+                       (ignore-errors (smie-rule-prev-p "OP"))
+                       (ignore-errors (smie-rule-hanging-p))
+                       value)
     value))
 
 (defun elixir-smie-rules (kind token)
