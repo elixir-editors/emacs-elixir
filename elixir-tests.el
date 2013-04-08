@@ -92,3 +92,15 @@ has_something(x) &&
   has_something(y) ||
   has_something(z)
 ")
+
+(elixir-def-indentation-test indents-continuation-lines-with-comments
+  "
+has_something(x) &&  # foo
+has_something(y) ||
+has_something(z)
+"
+  "
+has_something(x) &&  # foo
+  has_something(y) ||
+  has_something(z)
+")
