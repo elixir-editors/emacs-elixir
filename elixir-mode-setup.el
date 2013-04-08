@@ -11,8 +11,8 @@
   (add-to-list 'auto-mode-alist '("\\.exs\\'" . elixir-mode)))
 
 
-;;;### (autoloads (elixir-mode) "elixir-mode" "elixir-mode.el" (20832
-;;;;;;  47531))
+;;;### (autoloads (run-elixir-tests elixir-mode) "elixir-mode" "elixir-mode.el"
+;;;;;;  (20834 17836))
 ;;; Generated autoloads from elixir-mode.el
 
 (defvar elixir-mode-hook nil)
@@ -22,6 +22,11 @@ Elixir mode keymap.")
 
 (autoload 'elixir-mode "elixir-mode" "\
 Major mode for editing Elixir files.
+
+\(fn)" t nil)
+
+(autoload 'run-elixir-tests "elixir-mode" "\
+Run ERT tests for `elixir-mode'.
 
 \(fn)" t nil)
 

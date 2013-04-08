@@ -355,6 +355,13 @@
    (t
     (remove-hook 'after-save-hook 'elixir-mode-compile-file t))))
 
+;;;###autoload
+(defun run-elixir-tests ()
+  "Run ERT tests for `elixir-mode'."
+  (interactive)
+  (load "elixir-tests")
+  (ert-run-tests-interactively "^elixir-ert-.*$"))
+
 (provide 'elixir-mode)
 ;;;***
 
