@@ -2,6 +2,11 @@
 
 (require 'smie)
 
+;; FIXME: This is me being lazy. CL is a compile-time dep only.
+;; (But for now, there is no real file-compilation plot, so let's
+;; scrape by with the runtime dep.)
+(require 'cl)
+
 (defvar elixir-smie-verbose-p nil
   "Emit context information about the current syntax state.")
 
