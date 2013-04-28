@@ -203,3 +203,12 @@ end"
 f = fn x, y ->
          x + y
     end")
+(elixir-def-indentation-test indents-list-argument-continuation-lines-nicely ()
+  "
+to_process = [27, 33, 35, 11, 36, 29, 18, 37, 21, 31, 19, 10, 14, 30,
+15, 17, 23, 28, 25, 34, 22, 20, 13, 16, 32, 12, 26, 24]
+"
+  "
+to_process = [27, 33, 35, 11, 36, 29, 18, 37, 21, 31, 19, 10, 14, 30,
+              15, 17, 23, 28, 25, 34, 22, 20, 13, 16, 32, 12, 26, 24]
+")

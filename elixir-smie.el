@@ -243,7 +243,10 @@ Return non-nil if any line breaks were skipped."
 
 (defun elixir-smie-rules (kind token)
   (pcase (cons kind token)
-    (`(:elem . basic) elixir-smie-indent-basic)
+    (`(:elem . basic)
+     (if (smie-rule-hanging-p)
+         0
+       elixir-smie-indent-basic))
     (`(:after . "OP")
      (unless (smie-rule-sibling-p)
        elixir-smie-indent-basic))
