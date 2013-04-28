@@ -194,15 +194,28 @@ function do
 end
 ")
 
-(elixir-def-indentation-test indents-fn ()
+(elixir-def-indentation-test indents-fn-in-assignment
+    (:expected-result :failed)
   "
 f = fn x, y ->
 x + y
 end"
   "
 f = fn x, y ->
-         x + y
-    end")
+  x + y
+end")
+
+(elixir-def-indentation-test indents-fn-as-arguments
+    (:expected-result :failed)
+  "
+Enum.map 1..10, fn x ->
+x+1
+end"
+  "
+Enum.map 1..10, fn x ->
+  x + 1
+end")
+
 (elixir-def-indentation-test indents-list-argument-continuation-lines-nicely ()
   "
 to_process = [27, 33, 35, 11, 36, 29, 18, 37, 21, 31, 19, 10, 14, 30,
