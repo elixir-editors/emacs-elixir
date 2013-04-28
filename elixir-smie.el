@@ -233,7 +233,7 @@ Return non-nil if any line breaks were skipped."
 
 (defun verbose-elixir-smie-rules (kind token)
   (let ((value (elixir-smie-rules kind token)))
-    (elixir-smie-debug "%s '%s'; s:%s prev: %s hanging:%s p:%s == %s" kind token
+    (elixir-smie-debug "%s '%s'; sibling-p:%s parent:%s prev-is-OP:%s hanging:%s == %s" kind token
                        (ignore-errors (smie-rule-sibling-p))
                        (ignore-errors smie--parent)
                        (ignore-errors (smie-rule-prev-p "OP"))
