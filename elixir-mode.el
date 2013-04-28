@@ -249,7 +249,7 @@
      `(,(concat "\\<" (regexp-opt elixir-mode-operator-names t) "\\>") . font-lock-operator-face))
 
    ;; variables:
-   '("\\(\\w*\\)\\s-*:?=" . font-lock-variable-name-face)
+   '("\\(\\w+\\)\\s-*:?=[^=]" 1 font-lock-variable-name-face)
 
    ;; regexes:
    '("-[Rr].*[ \n\t]" . font-lock-constant-face)
