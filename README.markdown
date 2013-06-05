@@ -33,41 +33,46 @@ functionality easily.
 (add-to-list 'auto-mode-alist '("\\.elixir2\\'" . elixir-mode))
 ```
 
-### Commands
+###  Interactive Commands
 
-(For the `M-x` prompt.)
-
-#### elixir-mode
-
-Switches to elixir-mode.
-
-#### elixir-cos-mode
-
-Applies compile-on-save minor mode.
-
-#### elixir-mode-iex
-
-Launch `IEX` inside Emacs.
-
-#### elixir-mode-opengithub
-
-Open the GitHub page for Elixir.
-
-#### elixir-mode-compile-file
-
-Compile Elixir files. Works fine on `exs` files, too, if needed.
-
-#### elixir-mode-open-elixir-home
-
-Go to Elixir README in the browser.
-
-#### elixir-mode-show-version
-
-Print version info for elixir-mode.
-
-#### elixir-mode-indent-line
-
-Indent the current line. (Buggy right now.)
+<table>
+    <tr>
+        <th>Command (For the <code>M-x</code> prompt.)</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><code>elixir-mode</code></td>
+        <td>Switches to elixir-mode.</td>
+    </tr>
+     <tr>
+        <td><code>elixir-cos-mode</code></td>
+        <td>Applies compile-on-save minor mode.</td>
+    </tr>
+    <tr>
+        <td><code>elixir-mode-iex</code></td>
+        <td>Launch <code>IEX</code> inside Emacs.</td>
+    </tr>
+    <tr>
+        <td><code>elixir-mode-opengithub</code></td>
+        <td>Open the GitHub page for Elixir.</td>
+    </tr>
+    <tr>
+        <td><code>elixir-mode-compile-file</code></td>
+        <td>Compile Elixir files. Works fine on <code>*.exs</code> files, too, if needed.</td>
+    </tr>
+    <tr>
+        <td><code>elixir-mode-open-elixir-home</code></td>
+        <td>Go to Elixir README in the browser.</td>
+    </tr>
+    <tr>
+        <td><code>elixir-mode-show-version</code></td>
+        <td>Print version info for elixir-mode.</td>
+    </tr>
+    <tr>
+        <td><code>elixir-mode-indent-line</code></td>
+        <td>Indent the current line. (Buggy right now.)</td>
+    </tr>
+</table>
 
 ### Hooks
 
@@ -87,30 +92,38 @@ adds compile on save.
 
 Custom variables for elixir-mode.
 
-#### elixir-compiler-command (string)
-##### Default: `"elixirc"`
-
-Command to compile Elixir code.
-
-#### elixir-iex-command (string)
-##### Default: `"iex"`
-
-Command to start an interactive REPL in `IEX`.
-
-#### elixir-mode-highlight-operators (boolean)
-##### Default: `t`
-
-Should operators be colored? (Currently not working properly.)
-
-#### elixir-mode-cygwin-paths (boolean)
-##### Default: `t`
-
-Should Cygwin paths be used on Windows?
-
-#### elixir-mode-cygwin-prefix (string)
-##### Default: `"/cygdrive/C"`
-
-The prefix for Cygwin-style paths.
+<table>
+    <tr>
+        <th>Variable</th>
+        <th>Default</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><code>elixir-compiler-command (string)</code></td>
+        <td><code>"elixirc"</code></td>
+        <td>Command to compile Elixir code.</td>
+    </tr>
+    <tr>
+        <td><code>elixir-iex-command (string)</code></td>
+        <td><code>"iex"</code></td>
+        <td>Command to start an interactive REPL in <code>IEX</code>.</td>
+    </tr>
+    <tr>
+        <td><code>elixir-mode-highlight-operators (boolean)</code></td>
+        <td><code>t</code></td>
+        <td>Should operators be colored? (Currently not working properly.)</td>
+    </tr>
+    <tr>
+        <td><code>elixir-mode-cygwin-paths (boolean)</code></td>
+        <td><code>t</code></td>
+        <td>Should Cygwin paths be used on Windows?</td>
+    </tr>
+    <tr>
+        <td><code>elixir-mode-cygwin-prefix (string)</code></td>
+        <td><code>"/cygdrive/C"</code></td>
+        <td>The prefix for Cygwin-style paths.</td>
+    </tr>
+</table>
 
 ### Keymapping
 
