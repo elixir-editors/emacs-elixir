@@ -39,15 +39,15 @@
 (require 'comint)       ; for interactive REPL
 (require 'easymenu)     ; for menubar features
 
-(require 'elixir-smie)        ; syntax and indentation support
-(require 'elixir-mode-setup)  ; Contains only the elixir-mode-setup function.
+(require 'elixir-smie)  ; syntax and indentation support
 
-;;;###autoload
 (defvar elixir-mode-hook nil)
 
-;;;###autoload
-(defvar elixir-mode-map (make-keymap)
-  "Elixir mode keymap.")
+(defvar elixir-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-M-d") 'smie-down-list)
+    map)
+  "Keymap used in elixir-mode.")
 
 (defgroup elixir nil
   "Elixir major mode."
@@ -330,6 +330,7 @@
   "Major mode for editing Elixir files."
   (interactive)
   (kill-all-local-variables)
+  (use-local-map elixir-mode-map)
   (set-syntax-table elixir-mode-syntax-table)
   (set (make-local-variable 'font-lock-defaults) '(elixir-mode-font-lock-defaults))
   (setq major-mode 'elixir-mode)
@@ -357,12 +358,16 @@
 (defun run-elixir-tests ()
   "Run ERT tests for `elixir-mode'."
   (interactive)
-  (load "elixir-tests")
+  (load "elixir-mode-tests")
   (ert-run-tests-interactively "^elixir-ert-.*$"))
 
+;; Invoke elixir-mode when appropriate
+
+;;;###autoload
+(progn
+  (add-to-list 'auto-mode-alist '("\\.elixir$'" . elixir-mode))
+  (add-to-list 'auto-mode-alist '("\\.ex$" . elixir-mode))
+  (add-to-list 'auto-mode-alist '("\\.exs$" . elixir-mode)))
+
 (provide 'elixir-mode)
-;;;***
-
-;; Local variables:
-;; generated-autoload-file: elixir-mode-setup.el
 ;;; elixir-mode.el ends here
