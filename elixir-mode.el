@@ -1,7 +1,10 @@
 ;;; elixir-mode.el --- Major mode for editing Elixir files
 
-;; Copyright (c) 2011 secondplanet
-;; Author: Humza Yaqoob, Andreas Fuchs <asf@boinkor.net>
+;; Copyright 2011 secondplanet
+;;           2013 Andreas Fuchs, Samuel Tonini
+;; Authors: Humza Yaqoob,
+;;          Andreas Fuchs <asf@boinkor.net>,
+;;          Samuel Tonini <tonini.samuel@gmail.com>
 ;; URL: https://github.com/elixir-lang/emacs-elixir
 ;; Created: Mon Nov 7 2011
 ;; Keywords: languages elixir
@@ -25,14 +28,77 @@
 
 ;;; Commentary:
 
-;; Provides font-locking, indentation support, and navigation for Elixir programs.
+;; Provides font-locking, indentation support, and navigation for Elixir code.
 ;;
-;; To install, add the put this directory on the `load-path', and load
-;; `elixir-mode-setup.el'. Then, run:
+;;  Manual Installation:
 ;;
-;;   (elixir-mode-setup)
+;;   (add-to-list 'load-path "~/path/to/elixir-mode.el/")
+;;   (require 'elixir-mode)
 ;;
-;; To auto-load the mode and set up file associations.
+;;  Interesting variables are:
+;;
+;;      `elixir-compiler-command`
+;;
+;;          Path to the executable <elixirc> command
+;;
+;;      `elixir-iex-command`
+;;
+;;          Path to the executable <iex> command
+;;
+;;      `elixir-mode-highlight-operators`
+;;
+;;          Option for whether or not to highlight operators.
+;;
+;;      `elixir-mode-cygwin-paths`
+;;
+;;          Use Cygwin style paths on Windows operating systems.
+;;
+;;      `elixir-mode-cygwin-prefix`
+;;
+;;          Cygwin prefix
+;;
+;;  Major commands are:
+;;
+;;       M-x elixir-mode
+;;
+;;           Switches to elixir-mode.
+;;
+;;       M-x elixir-cos-mode
+;;
+;;           Applies compile-on-save minor mode.
+;;
+;;       M-x elixir-mode-compile-file
+;;
+;;           Compile and save current file.
+;;
+;;       M-x elixir-mode-iex
+;;
+;;           Launch `IEX` inside Emacs.
+;;
+;;       M-x elixir-mode-opengithub
+;;
+;;           Open the GitHub page of the Elixir repository.
+;;
+;;       M-x elixir-mode-open-elixir-home
+;;
+;;           Open the Elixir website.
+;;
+;;       M-x elixir-mode-open-docs-master
+;;
+;;           Open the Elixir documentation for the master.
+;;
+;;       M-x elixir-mode-open-docs-stable
+;;
+;;           Open the Elixir documentation for the latest stable release.
+;;
+;;       M-x elixir-mode-run-tests
+;;
+;;           Run ERT tests for `elixir-mode`.
+;;
+;;       M-x elixir-mode-show-version
+;;
+;;           Print `elixir-mode` version.
+;;
 
 ;;; Code:
 
