@@ -28,11 +28,13 @@
 
 ;;; Commentary:
 
-;; Provides font-locking, indentation support, and navigation for Elixir code.
+;; Provides font-locking, indentation and navigation support
+;; for the Elixir programming language.
+;;
 ;;
 ;;  Manual Installation:
 ;;
-;;   (add-to-list 'load-path "~/path/to/elixir-mode.el/")
+;;   (add-to-list 'load-path "~/path/to/emacs-elixir/")
 ;;   (require 'elixir-mode)
 ;;
 ;;  Interesting variables are:
