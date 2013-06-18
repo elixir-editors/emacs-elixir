@@ -41,6 +41,11 @@
 
 (require 'elixir-smie)  ; syntax and indentation support
 
+(defvar elixir-mode--version "1.1.0")
+
+(defvar elixir-mode--website-url
+  "http://elixir-lang.org")
+
 (defvar elixir-mode-hook nil)
 
 (defvar elixir-mode-map
@@ -289,6 +294,7 @@
     (when (string= compiler-output "")
       (message "Compiled and saved as %s" (elixir-mode-compiled-file-name)))))
 
+;;;###autoload
 (defun elixir-mode-iex ()
   "Elixir mode interactive REPL."
   (interactive)
@@ -298,20 +304,35 @@
             elixir-iex-command nil '())))
   (pop-to-buffer "*IEX*"))
 
+;;;###autoload
 (defun elixir-mode-open-modegithub ()
   "Elixir mode open GitHub page."
   (interactive)
   (browse-url "https://github.com/elixir-lang/emacs-elixir"))
 
+;;;###autoload
 (defun elixir-mode-open-elixir-home ()
   "Elixir mode go to language home."
   (interactive)
-  (browse-url "http://elixir-lang.org"))
+  (browse-url elixir-mode--website-url))
 
+;;;###autoload
+(defun elixir-mode-open-docs-master ()
+  "Elixir mode go to master documentation."
+  (interactive)
+  (browse-url (concat elixir-mode--website-url "/docs/master")))
+
+;;;###autoload
+(defun elixir-mode-open-docs-stable ()
+  "Elixir mode go to stable documentation."
+  (interactive)
+  (browse-url (concat elixir-mode--website-url "/docs/stable")))
+
+;;;###autoload
 (defun elixir-mode-show-version ()
   "Elixir mode print version."
   (interactive)
-  (message (concat "elixir-mode v" elixir-mode-version " " elixir-mode-date " by Humza Yaqoob")))
+  (message (format "elixir-mode v%s" elixir-mode--version)))
 
 (easy-menu-define elixir-mode-menu elixir-mode-map
   "Elixir mode menu."
