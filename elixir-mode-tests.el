@@ -20,5 +20,8 @@
      (insert ,initial-contents)
      ,@body))
 
-(load "test/test-elixir-indentation.el")
-(load "test/test-elixir-tokenizer-hl.el")
+(load "test/elixir-mode-indentation-tests.el")
+(load "test/elixir-mode-tokenizer-hl-tests.el")
+
+(provide 'elixir-mode-tests)
+;;; elixir-mode-tests.el ends here
