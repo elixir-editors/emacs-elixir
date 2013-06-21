@@ -1,7 +1,10 @@
 ;;; elixir-mode.el --- Major mode for editing Elixir files
 
-;; Copyright (c) 2011 secondplanet
-;; Author: Humza Yaqoob, Andreas Fuchs <asf@boinkor.net>
+;; Copyright 2011 secondplanet
+;;           2013 Andreas Fuchs, Samuel Tonini
+;; Authors: Humza Yaqoob,
+;;          Andreas Fuchs <asf@boinkor.net>,
+;;          Samuel Tonini <tonini.samuel@gmail.com>
 ;; URL: https://github.com/elixir-lang/emacs-elixir
 ;; Created: Mon Nov 7 2011
 ;; Keywords: languages elixir
@@ -25,29 +28,99 @@
 
 ;;; Commentary:
 
-;; Provides font-locking, indentation support, and navigation for Elixir programs.
+;; Provides font-locking, indentation and navigation support
+;; for the Elixir programming language.
 ;;
-;; To install, add the put this directory on the `load-path', and load
-;; `elixir-mode-setup.el'. Then, run:
 ;;
-;;   (elixir-mode-setup)
+;;  Manual Installation:
 ;;
-;; To auto-load the mode and set up file associations.
+;;   (add-to-list 'load-path "~/path/to/emacs-elixir/")
+;;   (require 'elixir-mode)
+;;
+;;  Interesting variables are:
+;;
+;;      `elixir-compiler-command`
+;;
+;;          Path to the executable <elixirc> command
+;;
+;;      `elixir-iex-command`
+;;
+;;          Path to the executable <iex> command
+;;
+;;      `elixir-mode-highlight-operators`
+;;
+;;          Option for whether or not to highlight operators.
+;;
+;;      `elixir-mode-cygwin-paths`
+;;
+;;          Use Cygwin style paths on Windows operating systems.
+;;
+;;      `elixir-mode-cygwin-prefix`
+;;
+;;          Cygwin prefix
+;;
+;;  Major commands are:
+;;
+;;       M-x elixir-mode
+;;
+;;           Switches to elixir-mode.
+;;
+;;       M-x elixir-cos-mode
+;;
+;;           Applies compile-on-save minor mode.
+;;
+;;       M-x elixir-mode-compile-file
+;;
+;;           Compile and save current file.
+;;
+;;       M-x elixir-mode-iex
+;;
+;;           Launch `IEX` inside Emacs.
+;;
+;;       M-x elixir-mode-opengithub
+;;
+;;           Open the GitHub page of the Elixir repository.
+;;
+;;       M-x elixir-mode-open-elixir-home
+;;
+;;           Open the Elixir website.
+;;
+;;       M-x elixir-mode-open-docs-master
+;;
+;;           Open the Elixir documentation for the master.
+;;
+;;       M-x elixir-mode-open-docs-stable
+;;
+;;           Open the Elixir documentation for the latest stable release.
+;;
+;;       M-x elixir-mode-run-tests
+;;
+;;           Run ERT tests for `elixir-mode`.
+;;
+;;       M-x elixir-mode-show-version
+;;
+;;           Print `elixir-mode` version.
+;;
 
 ;;; Code:
 
 (require 'comint)       ; for interactive REPL
 (require 'easymenu)     ; for menubar features
 
-(require 'elixir-smie)        ; syntax and indentation support
-(require 'elixir-mode-setup)  ; Contains only the elixir-mode-setup function.
+(require 'elixir-smie)  ; syntax and indentation support
 
-;;;###autoload
+(defvar elixir-mode--version "1.1.0")
+
+(defvar elixir-mode--website-url
+  "http://elixir-lang.org")
+
 (defvar elixir-mode-hook nil)
 
-;;;###autoload
-(defvar elixir-mode-map (make-keymap)
-  "Elixir mode keymap.")
+(defvar elixir-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-M-d") 'smie-down-list)
+    map)
+  "Keymap used in elixir-mode.")
 
 (defgroup elixir nil
   "Elixir major mode."
@@ -289,6 +362,7 @@
     (when (string= compiler-output "")
       (message "Compiled and saved as %s" (elixir-mode-compiled-file-name)))))
 
+;;;###autoload
 (defun elixir-mode-iex ()
   "Elixir mode interactive REPL."
   (interactive)
@@ -298,20 +372,35 @@
             elixir-iex-command nil '())))
   (pop-to-buffer "*IEX*"))
 
+;;;###autoload
 (defun elixir-mode-open-modegithub ()
   "Elixir mode open GitHub page."
   (interactive)
   (browse-url "https://github.com/elixir-lang/emacs-elixir"))
 
+;;;###autoload
 (defun elixir-mode-open-elixir-home ()
   "Elixir mode go to language home."
   (interactive)
-  (browse-url "http://elixir-lang.org"))
+  (browse-url elixir-mode--website-url))
 
+;;;###autoload
+(defun elixir-mode-open-docs-master ()
+  "Elixir mode go to master documentation."
+  (interactive)
+  (browse-url (concat elixir-mode--website-url "/docs/master")))
+
+;;;###autoload
+(defun elixir-mode-open-docs-stable ()
+  "Elixir mode go to stable documentation."
+  (interactive)
+  (browse-url (concat elixir-mode--website-url "/docs/stable")))
+
+;;;###autoload
 (defun elixir-mode-show-version ()
   "Elixir mode print version."
   (interactive)
-  (message (concat "elixir-mode v" elixir-mode-version " " elixir-mode-date " by Humza Yaqoob")))
+  (message (format "elixir-mode v%s" elixir-mode--version)))
 
 (easy-menu-define elixir-mode-menu elixir-mode-map
   "Elixir mode menu."
@@ -330,6 +419,7 @@
   "Major mode for editing Elixir files."
   (interactive)
   (kill-all-local-variables)
+  (use-local-map elixir-mode-map)
   (set-syntax-table elixir-mode-syntax-table)
   (set (make-local-variable 'font-lock-defaults) '(elixir-mode-font-lock-defaults))
   (setq major-mode 'elixir-mode)
@@ -354,15 +444,19 @@
     (remove-hook 'after-save-hook 'elixir-mode-compile-file t))))
 
 ;;;###autoload
-(defun run-elixir-tests ()
+(defun elixir-mode-run-tests ()
   "Run ERT tests for `elixir-mode'."
   (interactive)
-  (load "elixir-tests")
+  (load "elixir-mode-tests")
   (ert-run-tests-interactively "^elixir-ert-.*$"))
 
+;; Invoke elixir-mode when appropriate
+
+;;;###autoload
+(progn
+  (add-to-list 'auto-mode-alist '("\\.elixir$" . elixir-mode))
+  (add-to-list 'auto-mode-alist '("\\.ex$" . elixir-mode))
+  (add-to-list 'auto-mode-alist '("\\.exs$" . elixir-mode)))
+
 (provide 'elixir-mode)
-;;;***
-
-;; Local variables:
-;; generated-autoload-file: elixir-mode-setup.el
 ;;; elixir-mode.el ends here

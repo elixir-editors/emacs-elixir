@@ -275,6 +275,4 @@ Return non-nil if any line breaks were skipped."
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token))
 
-(define-key elixir-mode-map (kbd "C-M-d") 'smie-down-list)
-
 (provide 'elixir-smie)
