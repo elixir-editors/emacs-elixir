@@ -412,14 +412,26 @@
           elixir-mode-command
           arguments))
 
+(defun elixir-mode--code-string-to-quoted-command (arguments)
+  (format "%s -e 'IO.puts inspect(elem(Code.string_to_quoted(\"%s\"), 1))'"
+          elixir-mode-command
+          arguments))
+
 (defun elixir-mode--execute-elixir-with-code-eval-string (string)
   (shell-command-to-string (elixir-mode--code-eval-string-command string)))
 
+(defun elixir-mode--execute-elixir-with-code-string-to-quoted (string)
+  (shell-command-to-string (elixir-mode--code-string-to-quoted-command string)))
+
 (defun elixir-mode--eval-string (string)
-  "Evalautes the Elixir code from the given string."
-  (let* ((formated-string (replace-regexp-in-string "\"" "\\\"" region nil t))
+  (let* ((formated-string (replace-regexp-in-string "\"" "\\\"" string nil t))
          (output (elixir-mode--execute-elixir-with-code-eval-string formated-string)))
-  (message (car (split-string output "\n")))))
+    (message (car (split-string output "\n")))))
+
+(defun elixir-mode--string-to-quoted (string)
+  (let* ((formated-string (replace-regexp-in-string "\"" "\\\"" string nil t))
+         (output (elixir-mode--execute-elixir-with-code-string-to-quoted formated-string)))
+    (message output)))
 
 (defun elixir-mode-eval-on-region (beg end)
   "Evaluates the Elixir code on the marked region."
@@ -434,6 +446,20 @@
   (interactive)
   (let ((current-line (thing-at-point 'line)))
     (elixir-mode--eval-string current-line)))
+
+(defun elixir-mode-string-to-quoted-on-region (beg end)
+  "Get the representation of the expression on the marked region."
+  (interactive (list (point) (mark)))
+  (unless (and beg end)
+    (error "The mark is not set now, so there is no region"))
+  (let ((region (buffer-substring-no-properties beg end)))
+    (elixir-mode--string-to-quoted region)))
+
+(defun elixir-mode-string-to-quoted-on-current-line ()
+  "Get the representation of the expression on the current line."
+  (interactive)
+  (let ((current-line (thing-at-point 'line)))
+    (elixir-mode--string-to-quoted current-line)))
 
 (easy-menu-define elixir-mode-menu elixir-mode-map
   "Elixir mode menu."
