@@ -131,6 +131,11 @@
   :type 'string
   :group 'elixir)
 
+(defcustom elixir-mode-command "elixir"
+  "The command for elixir"
+  :type 'string
+  :group 'elixir)
+
 (defcustom elixir-iex-command "iex"
   "Elixir mode command for interactive REPL. Must be in your path."
   :type 'string
@@ -401,6 +406,34 @@
   "Elixir mode print version."
   (interactive)
   (message (format "elixir-mode v%s" elixir-mode--version)))
+
+(defun elixir-mode--code-eval-string-command (arguments)
+  (format "%s -e 'IO.puts inspect(elem(Code.eval_string(\"%s\"), 0))'"
+          elixir-mode-command
+          arguments))
+
+(defun elixir-mode--execute-elixir-with-code-eval-string (string)
+  (shell-command-to-string (elixir-mode--code-eval-string-command string)))
+
+(defun elixir-mode--eval-string (string)
+  "Evalautes the Elixir code from the given string."
+  (let* ((formated-string (replace-regexp-in-string "\"" "\\\"" region nil t))
+         (output (elixir-mode--execute-elixir-with-code-eval-string formated-string)))
+  (message (car (split-string output "\n")))))
+
+(defun elixir-mode-eval-on-region (beg end)
+  "Evaluates the Elixir code on the marked region."
+  (interactive (list (point) (mark)))
+  (unless (and beg end)
+    (error "The mark is not set now, so there is no region"))
+  (let* ((region (buffer-substring-no-properties beg end)))
+    (elixir-mode--eval-string region)))
+
+(defun elixir-mode-eval-on-current-line ()
+  "Evaluates the Elixir code on the current line."
+  (interactive)
+  (let ((current-line (thing-at-point 'line)))
+    (elixir-mode--eval-string current-line)))
 
 (easy-menu-define elixir-mode-menu elixir-mode-map
   "Elixir mode menu."
