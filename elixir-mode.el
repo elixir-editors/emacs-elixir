@@ -118,7 +118,10 @@
 
 (defvar elixir-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-M-d") 'smie-down-list)
+    (define-key map (kbd "C-c ,r") 'elixir-mode-eval-on-region)
+    (define-key map (kbd "C-c ,c") 'elixir-mode-eval-on-current-line)
+    (define-key map (kbd "C-c ,a") 'elixir-mode-string-to-quoted-on-region)
+    (define-key map (kbd "C-c ,l") 'elixir-mode-string-to-quoted-on-current-line)
     map)
   "Keymap used in elixir-mode.")
 
