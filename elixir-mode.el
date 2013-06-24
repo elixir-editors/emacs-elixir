@@ -8,7 +8,7 @@
 ;; URL: https://github.com/elixir-lang/emacs-elixir
 ;; Created: Mon Nov 7 2011
 ;; Keywords: languages elixir
-;; Version: 1.2.0
+;; Version: 1.3.0
 
 ;; This file is not a part of GNU Emacs.
 
@@ -143,7 +143,7 @@
 
 (require 'elixir-smie)  ; syntax and indentation support
 
-(defvar elixir-mode--version "1.2.0")
+(defvar elixir-mode--version "1.3.0")
 
 (defvar elixir-mode--website-url
   "http://elixir-lang.org")
