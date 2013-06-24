@@ -79,13 +79,18 @@
 ;;
 ;;       M-x elixir-mode-eval-on-region
 ;;
-;;           Evaluates the Elixir code on the marked region. This is
-;;           bound to "C-c ,r" while in `elixir-mode'.
+;;           Evaluates the Elixir code on the marked region.
+;;           This is bound to "C-c ,r" while in `elixir-mode'.
 ;;
 ;;       M-x elixir-mode-eval-on-current-line
 ;;
-;;           Evaluates the Elixir code on the current line. This is
-;;           bound to "C-c ,c" while in `elixir-mode'.
+;;           Evaluates the Elixir code on the current line.
+;;           This is bound to "C-c ,c" while in `elixir-mode'.
+;;
+;;       M-x elixir-mode-eval-on-current-buffer
+;;
+;;           Evaluates the Elixir code on the current buffer.
+;;           This is bound to "C-c ,c" while in `elixir-mode'.
 ;;
 ;;       M-x elixir-mode-string-to-quoted-on-region
 ;;
@@ -149,6 +154,7 @@
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c ,r") 'elixir-mode-eval-on-region)
     (define-key map (kbd "C-c ,c") 'elixir-mode-eval-on-current-line)
+    (define-key map (kbd "C-c ,b") 'elixir-mode-eval-on-current-buffer)
     (define-key map (kbd "C-c ,a") 'elixir-mode-string-to-quoted-on-region)
     (define-key map (kbd "C-c ,l") 'elixir-mode-string-to-quoted-on-current-line)
     map)
@@ -486,6 +492,12 @@
   (interactive)
   (let ((current-line (thing-at-point 'line)))
     (elixir-mode--eval-string current-line)))
+
+(defun elixir-mode-eval-on-current-buffer ()
+  "Evaluates the Elixir code on the current buffer."
+  (interactive)
+  (let ((current-buffer (buffer-substring-no-properties (point-max) (point-min))))
+    (elixir-mode--eval-string current-buffer)))
 
 (defun elixir-mode-string-to-quoted-on-region (beg end)
   "Get the representation of the expression on the marked region."

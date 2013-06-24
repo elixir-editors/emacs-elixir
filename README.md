@@ -65,6 +65,11 @@ Add the following in your .emacs file:
             This is bound to <code>C-c ,c</code> while in <code>elixir-mode</code>.</td>
     </tr>
     <tr>
+        <td><code>elixir-mode-eval-on-current-buffer</code></td>
+        <td>Evaluates the Elixir code in the current buffer.
+            This is bound to <code>C-c ,b</code> while in <code>elixir-mode</code>.</td>
+    </tr>
+    <tr>
         <td><code>elixir-mode-string-to-quoted-on-region</code></td>
         <td>Get the representation of the expression on the marked region.
             This is bound to <code>C-c ,a</code> while in <code>elixir-mode</code>.</td>
