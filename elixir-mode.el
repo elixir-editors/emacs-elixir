@@ -359,7 +359,7 @@
   "Elixir mode compile and save current file."
   (interactive)
   (let ((compiler-output (shell-command-to-string (elixir-mode-command-compile (buffer-file-name)))))
-    (when (string= compiler-output "")
+    (unless (string= compiler-output "")
       (message "Compiled and saved as %s" (elixir-mode-compiled-file-name)))))
 
 ;;;###autoload
