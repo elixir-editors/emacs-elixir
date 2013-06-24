@@ -55,6 +55,26 @@ Add the following in your .emacs file:
         <td>Launch <code>IEX</code> inside Emacs.</td>
     </tr>
     <tr>
+        <td><code>elixir-mode-eval-on-region</code></td>
+        <td>Evaluates the Elixir code on the marked region.
+            This is bound to <code>C-c ,r</code> while in <code>elixir-mode</code>.</td>
+    </tr>
+    <tr>
+        <td><code>elixir-mode-eval-on-current-line</code></td>
+        <td>Evaluates the Elixir code on the current line.
+            This is bound to <code>C-c ,c</code> while in <code>elixir-mode</code>.</td>
+    </tr>
+    <tr>
+        <td><code>elixir-mode-string-to-quoted-on-region</code></td>
+        <td>Get the representation of the expression on the marked region.
+            This is bound to <code>C-c ,a</code> while in <code>elixir-mode</code>.</td>
+    </tr>
+    <tr>
+        <td><code>elixir-mode-string-to-quoted-on-current-line</code></td>
+        <td>Get the representation of the expression on the current line.
+            This is bound to <code>C-c ,l</code> while in <code>elixir-mode</code>.</td>
+    </tr>
+    <tr>
         <td><code>elixir-mode-opengithub</code></td>
         <td>Open the GitHub page for Elixir.</td>
     </tr>
@@ -144,7 +164,6 @@ adds compile on save.
 ### Keymapping
 
 Keymaps can be added to the `elixir-mode-map` variable.
-There are no keyboard shortcuts included by default.
 
 ## Notes
 
