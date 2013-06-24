@@ -77,6 +77,26 @@
 ;;
 ;;           Launch `IEX` inside Emacs.
 ;;
+;;       M-x elixir-mode-eval-on-region
+;;
+;;           Evaluates the Elixir code on the marked region. This is
+;;           bound to "C-c ,r" while in `elixir-mode'.
+;;
+;;       M-x elixir-mode-eval-on-current-line
+;;
+;;           Evaluates the Elixir code on the current line. This is
+;;           bound to "C-c ,c" while in `elixir-mode'.
+;;
+;;       M-x elixir-mode-string-to-quoted-on-region
+;;
+;;           Get the representation of the expression on the marked region.
+;;           This is bound to "C-c ,a" while in `elixir-mode'.
+;;
+;;       M-x elixir-mode-string-to-quoted-on-current-line
+;;
+;;           Get the representation of the expression on the current line.
+;;           This is bound to "C-c ,l" while in `elixir-mode'.
+;;
 ;;       M-x elixir-mode-opengithub
 ;;
 ;;           Open the GitHub page of the Elixir repository.
