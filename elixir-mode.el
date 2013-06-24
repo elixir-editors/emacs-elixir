@@ -77,6 +77,31 @@
 ;;
 ;;           Launch `IEX` inside Emacs.
 ;;
+;;       M-x elixir-mode-eval-on-region
+;;
+;;           Evaluates the Elixir code on the marked region.
+;;           This is bound to "C-c ,r" while in `elixir-mode'.
+;;
+;;       M-x elixir-mode-eval-on-current-line
+;;
+;;           Evaluates the Elixir code on the current line.
+;;           This is bound to "C-c ,c" while in `elixir-mode'.
+;;
+;;       M-x elixir-mode-eval-on-current-buffer
+;;
+;;           Evaluates the Elixir code on the current buffer.
+;;           This is bound to "C-c ,c" while in `elixir-mode'.
+;;
+;;       M-x elixir-mode-string-to-quoted-on-region
+;;
+;;           Get the representation of the expression on the marked region.
+;;           This is bound to "C-c ,a" while in `elixir-mode'.
+;;
+;;       M-x elixir-mode-string-to-quoted-on-current-line
+;;
+;;           Get the representation of the expression on the current line.
+;;           This is bound to "C-c ,l" while in `elixir-mode'.
+;;
 ;;       M-x elixir-mode-opengithub
 ;;
 ;;           Open the GitHub page of the Elixir repository.
@@ -101,6 +126,15 @@
 ;;
 ;;           Print `elixir-mode` version.
 ;;
+;;   Also check out the customization group
+;;
+;;       M-x customize-group RET elixir RET
+;;
+;;   If you use the customization group to set variables like
+;;   `elixir-compiler-command' or `elixir-iex-command', make sure the path to
+;;   "elixir-mode.el" is present in the `load-path' *before* the
+;;   `custom-set-variables' is executed in your .emacs file.
+;;
 
 ;;; Code:
 
@@ -118,7 +152,11 @@
 
 (defvar elixir-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-M-d") 'smie-down-list)
+    (define-key map (kbd "C-c ,r") 'elixir-mode-eval-on-region)
+    (define-key map (kbd "C-c ,c") 'elixir-mode-eval-on-current-line)
+    (define-key map (kbd "C-c ,b") 'elixir-mode-eval-on-current-buffer)
+    (define-key map (kbd "C-c ,a") 'elixir-mode-string-to-quoted-on-region)
+    (define-key map (kbd "C-c ,l") 'elixir-mode-string-to-quoted-on-current-line)
     map)
   "Keymap used in elixir-mode.")
 
@@ -128,6 +166,11 @@
 
 (defcustom elixir-compiler-command "elixirc"
   "Elixir mode command to compile code. Must be in your path."
+  :type 'string
+  :group 'elixir)
+
+(defcustom elixir-mode-command "elixir"
+  "The command for elixir"
   :type 'string
   :group 'elixir)
 
@@ -150,6 +193,8 @@
   "Elixir mode Cygwin prefix."
   :type 'string
   :group 'elixir)
+
+(defvar elixir-mode--eval-filename "elixir-mode-tmp-eval-file.exs")
 
 (defvar elixir-mode-define-names
   '("def"
@@ -401,6 +446,72 @@
   "Elixir mode print version."
   (interactive)
   (message (format "elixir-mode v%s" elixir-mode--version)))
+
+(defun elixir-mode--code-eval-string-command (file)
+  (format "%s -e 'IO.puts inspect(elem(Code.eval_string(File.read!(\"%s\")), 0))'"
+          elixir-mode-command
+          file))
+
+(defun elixir-mode--code-string-to-quoted-command (file)
+  (format "%s -e 'IO.puts inspect(elem(Code.string_to_quoted(File.read!(\"%s\")), 1))'"
+          elixir-mode-command
+          file))
+
+(defun elixir-mode--execute-elixir-with-code-eval-string (string)
+  (with-temp-file elixir-mode--eval-filename
+    (insert string))
+  (let ((output (shell-command-to-string (elixir-mode--code-eval-string-command elixir-mode--eval-filename))))
+    (delete-file elixir-mode--eval-filename)
+    output))
+
+(defun elixir-mode--execute-elixir-with-code-string-to-quoted (string)
+  (with-temp-file elixir-mode--eval-filename
+    (insert string))
+  (let ((output (shell-command-to-string (elixir-mode--code-string-to-quoted-command elixir-mode--eval-filename))))
+    (delete-file elixir-mode--eval-filename)
+    output))
+
+(defun elixir-mode--eval-string (string)
+  (let ((output (elixir-mode--execute-elixir-with-code-eval-string string)))
+    (message output)))
+
+(defun elixir-mode--string-to-quoted (string)
+  (let* ((output (elixir-mode--execute-elixir-with-code-string-to-quoted string)))
+    (message output)))
+
+(defun elixir-mode-eval-on-region (beg end)
+  "Evaluates the Elixir code on the marked region."
+  (interactive (list (point) (mark)))
+  (unless (and beg end)
+    (error "The mark is not set now, so there is no region"))
+  (let* ((region (buffer-substring-no-properties beg end)))
+    (elixir-mode--eval-string region)))
+
+(defun elixir-mode-eval-on-current-line ()
+  "Evaluates the Elixir code on the current line."
+  (interactive)
+  (let ((current-line (thing-at-point 'line)))
+    (elixir-mode--eval-string current-line)))
+
+(defun elixir-mode-eval-on-current-buffer ()
+  "Evaluates the Elixir code on the current buffer."
+  (interactive)
+  (let ((current-buffer (buffer-substring-no-properties (point-max) (point-min))))
+    (elixir-mode--eval-string current-buffer)))
+
+(defun elixir-mode-string-to-quoted-on-region (beg end)
+  "Get the representation of the expression on the marked region."
+  (interactive (list (point) (mark)))
+  (unless (and beg end)
+    (error "The mark is not set now, so there is no region"))
+  (let ((region (buffer-substring-no-properties beg end)))
+    (elixir-mode--string-to-quoted region)))
+
+(defun elixir-mode-string-to-quoted-on-current-line ()
+  "Get the representation of the expression on the current line."
+  (interactive)
+  (let ((current-line (thing-at-point 'line)))
+    (elixir-mode--string-to-quoted current-line)))
 
 (easy-menu-define elixir-mode-menu elixir-mode-map
   "Elixir mode menu."
