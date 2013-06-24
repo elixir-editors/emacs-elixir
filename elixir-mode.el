@@ -159,6 +159,8 @@
   :type 'string
   :group 'elixir)
 
+(defvar elixir-mode--eval-filename "elixir-mode-tmp-eval-file.exs")
+
 (defvar elixir-mode-define-names
   '("def"
     "defdelegate"
@@ -410,30 +412,36 @@
   (interactive)
   (message (format "elixir-mode v%s" elixir-mode--version)))
 
-(defun elixir-mode--code-eval-string-command (arguments)
-  (format "%s -e 'IO.puts inspect(elem(Code.eval_string(\"%s\"), 0))'"
+(defun elixir-mode--code-eval-string-command (file)
+  (format "%s -e 'IO.puts inspect(elem(Code.eval_string(File.read!(\"%s\")), 0))'"
           elixir-mode-command
-          arguments))
+          file))
 
-(defun elixir-mode--code-string-to-quoted-command (arguments)
-  (format "%s -e 'IO.puts inspect(elem(Code.string_to_quoted(\"%s\"), 1))'"
+(defun elixir-mode--code-string-to-quoted-command (file)
+  (format "%s -e 'IO.puts inspect(elem(Code.string_to_quoted(File.read!(\"%s\")), 1))'"
           elixir-mode-command
-          arguments))
+          file))
 
 (defun elixir-mode--execute-elixir-with-code-eval-string (string)
-  (shell-command-to-string (elixir-mode--code-eval-string-command string)))
+  (with-temp-file elixir-mode--eval-filename
+    (insert string))
+  (let ((output (shell-command-to-string (elixir-mode--code-eval-string-command elixir-mode--eval-filename))))
+    (delete-file elixir-mode--eval-filename)
+    output))
 
 (defun elixir-mode--execute-elixir-with-code-string-to-quoted (string)
-  (shell-command-to-string (elixir-mode--code-string-to-quoted-command string)))
+  (with-temp-file elixir-mode--eval-filename
+    (insert string))
+  (let ((output (shell-command-to-string (elixir-mode--code-string-to-quoted-command elixir-mode--eval-filename))))
+    (delete-file elixir-mode--eval-filename)
+    output))
 
 (defun elixir-mode--eval-string (string)
-  (let* ((formated-string (replace-regexp-in-string "\"" "\\\"" string nil t))
-         (output (elixir-mode--execute-elixir-with-code-eval-string formated-string)))
-    (message (car (split-string output "\n")))))
+  (let ((output (elixir-mode--execute-elixir-with-code-eval-string string)))
+    (message output)))
 
 (defun elixir-mode--string-to-quoted (string)
-  (let* ((formated-string (replace-regexp-in-string "\"" "\\\"" string nil t))
-         (output (elixir-mode--execute-elixir-with-code-string-to-quoted formated-string)))
+  (let* ((output (elixir-mode--execute-elixir-with-code-string-to-quoted string)))
     (message output)))
 
 (defun elixir-mode-eval-on-region (beg end)
