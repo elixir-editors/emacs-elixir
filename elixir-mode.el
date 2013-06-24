@@ -121,6 +121,15 @@
 ;;
 ;;           Print `elixir-mode` version.
 ;;
+;;   Also check out the customization group
+;;
+;;       M-x customize-group RET elixir RET
+;;
+;;   If you use the customization group to set variables like
+;;   `elixir-compiler-command' or `elixir-iex-command', make sure the path to
+;;   "elixir-mode.el" is present in the `load-path' *before* the
+;;   `custom-set-variables' is executed in your .emacs file.
+;;
 
 ;;; Code:
 
