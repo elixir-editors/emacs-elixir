@@ -27,6 +27,47 @@ defmodule Foo do
   end
 end")
 
+(elixir-def-indentation-test indents-do-blocks-after-linebreak ()
+  "
+defmodule FooBar do
+def foo do
+if true, do: IO.puts \"yay\"
+20
+end
+
+def bar do
+if true, do: IO.puts \"yay\"
+20
+end
+end"
+  "
+defmodule FooBar do
+  def foo do
+    if true, do: IO.puts \"yay\"
+    20
+  end
+
+  def bar do
+    if true, do: IO.puts \"yay\"
+    20
+  end
+end")
+
+(elixir-def-indentation-test indents-after-empty-line ()
+  "
+a = 2
+
+  b = a + 3
+
+    c = a + b"
+  "
+a = 2
+
+b = a + 3
+
+c = a + b")
+
+
 (elixir-def-indentation-test indents-function-calls-without-parens ()
   "
 test \"foo\" do
