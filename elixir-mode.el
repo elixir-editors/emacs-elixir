@@ -414,7 +414,7 @@
   (unless (comint-check-proc "*IEX*")
     (set-buffer
      (apply 'make-comint "IEX"
-            elixir-iex-command nil '())))
+            elixir-iex-command nil '("-S" "mix"))))
   (pop-to-buffer "*IEX*"))
 
 ;;;###autoload
