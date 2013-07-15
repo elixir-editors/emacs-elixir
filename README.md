@@ -184,6 +184,10 @@ experience, you can add the following to your `elixir-mode-hook`:
                (ruby-end-mode +1)))
 ```
 
+## Mix
+
+If you looking for integrated emacs [mix](http://elixir-lang.org/getting_started/mix/1.html) support, see here: [elixir-mix.el](https://github.com/tonini/elixir-mix.el)
+
 ## History
 
 This mode is based on the
