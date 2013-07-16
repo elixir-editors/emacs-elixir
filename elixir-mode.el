@@ -408,13 +408,16 @@
       (message "Compiled and saved as %s" (elixir-mode-compiled-file-name)))))
 
 ;;;###autoload
-(defun elixir-mode-iex ()
+(defun elixir-mode-iex (&optional args-p)
   "Elixir mode interactive REPL."
-  (interactive)
-  (unless (comint-check-proc "*IEX*")
-    (set-buffer
-     (apply 'make-comint "IEX"
-            elixir-iex-command nil '())))
+  (interactive "P")
+  (let ((switches (if (equal args-p nil)
+                      '()
+                    (split-string (read-string "Additional args: ")))))
+    (unless (comint-check-proc "*IEX*")
+      (set-buffer
+       (apply 'make-comint "IEX"
+              elixir-iex-command nil switches))))
   (pop-to-buffer "*IEX*"))
 
 ;;;###autoload
