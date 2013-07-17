@@ -75,7 +75,8 @@
 ;;
 ;;       M-x elixir-mode-iex
 ;;
-;;           Launch `IEX` inside Emacs.
+;;           Launch <iex> inside Emacs.
+;;           Use "C-u" (universal-argument) to run <iex> with some additional arguments.
 ;;
 ;;       M-x elixir-mode-eval-on-region
 ;;

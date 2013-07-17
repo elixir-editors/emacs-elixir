@@ -1,3 +1,8 @@
+## 1.4.0 ()
+- add
+  [univesal-argument](http://www.gnu.org/software/emacs/manual/html_node/elisp/Prefix-Command-Arguments.html)
+  possibility for `elixir-mode-iex` to run <code>iex</code> with additional arguments.
+
 ## 1.3.0 (June 24, 2013)
 - Add `elixir-mode-eval-on-region` to evalute Elixir code on the
   marked region.
