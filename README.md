@@ -52,7 +52,11 @@ Add the following in your .emacs file:
     </tr>
     <tr>
         <td><code>elixir-mode-iex</code></td>
-        <td>Launch <code>IEX</code> inside Emacs.</td>
+        <td>
+            Launch <code>iex</code> inside Emacs. Use <code>C-u</code>
+            <a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Prefix-Command-Arguments.html">univesal-argument</a>
+            to run <code>iex</code> with some additional arguments.
+        </td>
     </tr>
     <tr>
         <td><code>elixir-mode-eval-on-region</code></td>
