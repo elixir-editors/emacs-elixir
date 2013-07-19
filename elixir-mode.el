@@ -91,7 +91,7 @@
 ;;       M-x elixir-mode-eval-on-current-buffer
 ;;
 ;;           Evaluates the Elixir code on the current buffer.
-;;           This is bound to "C-c ,c" while in `elixir-mode'.
+;;           This is bound to "C-c ,b" while in `elixir-mode'.
 ;;
 ;;       M-x elixir-mode-string-to-quoted-on-region
 ;;
