@@ -159,24 +159,24 @@
     (define-key map (kbd "C-c ,a") 'elixir-mode-string-to-quoted-on-region)
     (define-key map (kbd "C-c ,l") 'elixir-mode-string-to-quoted-on-current-line)
     map)
-  "Keymap used in elixir-mode.")
+  "Keymap used in `elixir-mode'.")
 
 (defgroup elixir nil
   "Elixir major mode."
   :group 'languages)
 
 (defcustom elixir-compiler-command "elixirc"
-  "Elixir mode command to compile code. Must be in your path."
+  "Elixir mode command to compile code.  Must be in your path."
   :type 'string
   :group 'elixir)
 
 (defcustom elixir-mode-command "elixir"
-  "The command for elixir"
+  "The command for elixir."
   :type 'string
   :group 'elixir)
 
 (defcustom elixir-iex-command "iex"
-  "Elixir mode command for interactive REPL. Must be in your path."
+  "Elixir mode command for interactive REPL.  Must be in your path."
   :type 'string
   :group 'elixir)
 
@@ -325,7 +325,7 @@
   "Elixir mode operators.")
 
 (defvar elixir-mode-sigils '("B" "C" "R" "b" "c" "r")
-  "%-prefixed sigils that are understood by elixir-mode")
+  "%-prefixed sigils that are understood by `elixir-mode'.")
 
 (defvar elixir-basic-offset 2)
 (defvar elixir-key-label-offset 0)
@@ -381,11 +381,13 @@
   "Highlighting for Elixir mode.")
 
 (defun elixir-mode-cygwin-path (expanded-file-name)
-  "Elixir mode get Cygwin absolute path name."
+  "Elixir mode get Cygwin absolute path name.
+Argument EXPANDED-FILE-NAME ."
   (replace-regexp-in-string "^[a-zA-Z]:" elixir-mode-cygwin-prefix expanded-file-name t))
 
 (defun elixir-mode-universal-path (file-name)
-  "Elixir mode multi-OS path handler."
+  "Elixir mode multi-OS path handler.
+Argument FILE-NAME ."
   (let ((full-file-name (expand-file-name file-name)))
     (if (and (equal system-type 'windows-nt)
              elixir-mode-cygwin-paths)
@@ -393,12 +395,13 @@
       full-file-name)))
 
 (defun elixir-mode-command-compile (file-name)
-  "Elixir mode command to compile a file."
+  "Elixir mode command to compile a file.
+Argument FILE-NAME ."
   (let ((full-file-name (elixir-mode-universal-path file-name)))
     (mapconcat 'identity (append (list elixir-compiler-command) (list full-file-name)) " ")))
 
 (defun elixir-mode-compiled-file-name (&optional filename)
-  "Elixir mode compiled filename."
+  "Elixir mode compiled FILENAME."
   (concat (file-name-sans-extension (or filename (buffer-file-name))) ".beam"))
 
 (defun elixir-mode-compile-file ()
@@ -410,7 +413,8 @@
 
 ;;;###autoload
 (defun elixir-mode-iex (&optional args-p)
-  "Elixir mode interactive REPL."
+  "Elixir mode interactive REPL.
+Optional argument ARGS-P ."
   (interactive "P")
   (let ((switches (if (equal args-p nil)
                       '()
@@ -484,7 +488,9 @@
     (message output)))
 
 (defun elixir-mode-eval-on-region (beg end)
-  "Evaluates the Elixir code on the marked region."
+  "Evaluate the Elixir code on the marked region.
+Argument BEG Start of the region.
+Argument END End of the region."
   (interactive (list (point) (mark)))
   (unless (and beg end)
     (error "The mark is not set now, so there is no region"))
@@ -492,19 +498,21 @@
     (elixir-mode--eval-string region)))
 
 (defun elixir-mode-eval-on-current-line ()
-  "Evaluates the Elixir code on the current line."
+  "Evaluate the Elixir code on the current line."
   (interactive)
   (let ((current-line (thing-at-point 'line)))
     (elixir-mode--eval-string current-line)))
 
 (defun elixir-mode-eval-on-current-buffer ()
-  "Evaluates the Elixir code on the current buffer."
+  "Evaluate the Elixir code on the current buffer."
   (interactive)
   (let ((current-buffer (buffer-substring-no-properties (point-max) (point-min))))
     (elixir-mode--eval-string current-buffer)))
 
 (defun elixir-mode-string-to-quoted-on-region (beg end)
-  "Get the representation of the expression on the marked region."
+  "Get the representation of the expression on the marked region.
+Argument BEG Start of the region.
+Argument END End of the region."
   (interactive (list (point) (mark)))
   (unless (and beg end)
     (error "The mark is not set now, so there is no region"))
@@ -560,7 +568,7 @@
 
 ;;;###autoload
 (defun elixir-mode-run-tests ()
-  "Run ERT tests for `elixir-mode'."
+  "Run ERT test for `elixir-mode'."
   (interactive)
   (load "elixir-mode-tests")
   (ert-run-tests-interactively "^elixir-ert-.*$"))
