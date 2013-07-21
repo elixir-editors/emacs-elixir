@@ -342,9 +342,6 @@
 
 (defconst elixir-mode-font-lock-defaults
   (list
-   ;; comments:
-   '("#.*$" . font-lock-comment-face)
-
    ;; records and modules at point of definition:
    '("^\\s *def\\(module\\|record\\|protocol\\|impl\\)\\s +\\([^( \t\n,]+\\)" 2 font-lock-type-face)
 
@@ -551,6 +548,8 @@ Argument END End of the region."
   (set (make-local-variable 'comment-end) "")
   (set (make-variable-buffer-local 'tab-width) elixir-basic-offset)
   (set (make-variable-buffer-local 'default-tab-width) elixir-basic-offset)
+  (if (boundp 'syntax-propertize-function)
+      (set (make-local-variable 'syntax-propertize-function) 'elixir-syntax-propertize))
   (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules ; 'elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token)
