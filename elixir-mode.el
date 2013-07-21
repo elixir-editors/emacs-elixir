@@ -343,7 +343,7 @@
 (defconst elixir-mode-font-lock-defaults
   (list
    ;; comments:
-   '("#.*$" . font-lock-comment-face)
+   '("\\(^\\|[^?]\\)#.*$" . font-lock-comment-face)
 
    ;; records and modules at point of definition:
    '("^\\s *def\\(module\\|record\\|protocol\\|impl\\)\\s +\\([^( \t\n,]+\\)" 2 font-lock-type-face)
