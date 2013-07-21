@@ -131,6 +131,19 @@ has_something(x) &&
   has_something(z)
 ")
 
+(elixir-def-indentation-test indents-last-commented-line
+    (:expected-result :failed) ; #27
+  "
+defmodule Bar do
+# ohai
+end
+"
+  "
+defmodule Bar do
+  # ohai
+end
+")
+
 (elixir-def-indentation-test indents-if ()
   "
 if condition do
