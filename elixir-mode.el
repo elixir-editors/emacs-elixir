@@ -549,6 +549,7 @@ Argument END End of the region."
   (setq mode-name "Elixir")
   (set (make-local-variable 'comment-start) "# ")
   (set (make-local-variable 'comment-end) "")
+  (set (make-local-variable 'indent-tabs-mode) nil)
   (set (make-variable-buffer-local 'tab-width) elixir-basic-offset)
   (set (make-variable-buffer-local 'default-tab-width) elixir-basic-offset)
   (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules ; 'elixir-smie-rules
