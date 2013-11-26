@@ -161,6 +161,16 @@
     map)
   "Keymap used in `elixir-mode'.")
 
+(defvar elixir-imenu-generic-expression
+  '(("Modules" "^\\s-*defmodule[ \n\t]+\\([A-Z][A-Za-z0-9._]+\\)\\s-+do.*$" 1)
+    ("Public Functions" "^\\s-*def[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*[ \t\n]+do.*" 1)
+    ("Private Functions" "^\\s-*defp[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*[ \t\n]+do.*" 1)
+    ("Public Macros" "^\\s-*defmacro[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*[ \t\n]+do.*" 1)
+    ("Private Macros" "^\\s-*defmacrop[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*[ \t\n]+do.*" 1)
+    ("Delegates" "^\\s-*defdelegate[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*[ \t\n]+do.*" 1)
+    ("Overridables" "^\\s-*defoverridable[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*[ \t\n]+do.*" 1))
+  "Imenu pattern for `elixir-mode'.")
+
 (defgroup elixir nil
   "Elixir major mode."
   :group 'languages)
@@ -549,6 +559,7 @@ Argument END End of the region."
   (set (make-local-variable 'comment-use-syntax) t)
   (set (make-local-variable 'tab-width) elixir-basic-offset)
   (set (make-local-variable 'default-tab-width) elixir-basic-offset)
+  (set (make-local-variable 'imenu-generic-expression) elixir-imenu-generic-expression)
   (if (boundp 'syntax-propertize-function)
       (set (make-local-variable 'syntax-propertize-function) 'elixir-syntax-propertize))
   (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules ; 'elixir-smie-rules
