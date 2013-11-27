@@ -8,7 +8,7 @@
 ;; URL: https://github.com/elixir-lang/emacs-elixir
 ;; Created: Mon Nov 7 2011
 ;; Keywords: languages elixir
-;; Version: 1.3.0
+;; Version: 1.3.1
 
 ;; This file is not a part of GNU Emacs.
 
@@ -77,6 +77,13 @@
 ;;
 ;;           Launch <iex> inside Emacs.
 ;;           Use "C-u" (universal-argument) to run <iex> with some additional arguments.
+;;
+;;       M-x elixir-mode-run-project-tests
+;;           Finds the mix.exs file and runes `mix test`.
+;;           Bound to "C-c ,t" in `elixir-mode`.
+;;
+;;           Evaluates the Elixir code on the marked region.
+;;           This is bound to "C-c ,r" while in `elixir-mode'.
 ;;
 ;;       M-x elixir-mode-eval-on-region
 ;;
@@ -153,11 +160,12 @@
 
 (defvar elixir-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c ,r") 'elixir-mode-eval-on-region)
-    (define-key map (kbd "C-c ,c") 'elixir-mode-eval-on-current-line)
-    (define-key map (kbd "C-c ,b") 'elixir-mode-eval-on-current-buffer)
     (define-key map (kbd "C-c ,a") 'elixir-mode-string-to-quoted-on-region)
+    (define-key map (kbd "C-c ,b") 'elixir-mode-eval-on-current-buffer)
+    (define-key map (kbd "C-c ,c") 'elixir-mode-eval-on-current-line)
     (define-key map (kbd "C-c ,l") 'elixir-mode-string-to-quoted-on-current-line)
+    (define-key map (kbd "C-c ,r") 'elixir-mode-eval-on-region)
+    (define-key map (kbd "C-c ,t") 'elixir-mode-run-project-tests)
     map)
   "Keymap used in `elixir-mode'.")
 
@@ -418,6 +426,14 @@ Argument FILE-NAME ."
     (when (string= compiler-output "")
       (message "Compiled and saved as %s" (elixir-mode-compiled-file-name)))))
 
+;; Search up from default-directory until we find mix.exs
+(defun elixir-mode--find-mix-exs (dir)
+ (let ((f (expand-file-name "mix.exs" dir))
+       (parent (file-truename (expand-file-name ".." dir))))
+   (cond ((string= dir parent) nil)
+         ((file-exists-p f) dir)
+         (t (elixir-mode--find-mix-exs parent)))))
+
 ;;;###autoload
 (defun elixir-mode-iex (&optional args-p)
   "Elixir mode interactive REPL.
@@ -538,6 +554,7 @@ Argument END End of the region."
     ["Indent line" smie-indent-line]
     ["Compile file" elixir-mode-compile-file]
     ["IEX" elixir-mode-iex]
+    ["Test" elixir-mode-run-project-tests]
     "---"
     ["elixir-mode on GitHub" elixir-mode-open-modegithub]
     ["Elixir homepage" elixir-mode-open-elixirhome]
@@ -576,6 +593,16 @@ Argument END End of the region."
     (add-hook 'after-save-hook 'elixir-mode-compile-file nil t))
    (t
     (remove-hook 'after-save-hook 'elixir-mode-compile-file t))))
+
+(defun elixir-mode-run-project-tests ()
+  "Run 'mix test' on the whole project."
+  (interactive)
+  (let ((mix-dir (elixir-mode--find-mix-exs default-directory)))
+    (unless mix-dir
+      (error (concat "Cannot find mix.exs in " default-directory " or its parents")))
+    (shell-command (concat "cd " mix-dir " && " "mix test"))))
+
+
 
 ;;;###autoload
 (defun elixir-mode-run-tests ()
