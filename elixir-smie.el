@@ -117,10 +117,12 @@ Return non-nil if any line breaks were skipped."
   (block elixir-smie-next-token-no-lookaround
     ;; First, skip comments; but if any comments / newlines were
     ;; skipped, the upper level needs to check if they were significant:
-    (when (if forwardp
+    
+    (when
+        (if forwardp
               (elixir-skip-comment-forward)
             (elixir-skip-comment-backward))
-      (return-from elixir-smie-next-token-no-lookaround "\n"))
+      (return-from elixir-smie-next-token-no-lookaround "\n")) 
     (let* ((found-token-class (find-if
                                (lambda (class-def)
                                  (let ((regex (symbol-value (car class-def))))
@@ -292,6 +294,7 @@ Return non-nil if any line breaks were skipped."
        elixir-smie-indent-basic))
     (`(,_ . ,(or `"COMMA")) (smie-rule-separator kind))
     (`(:after . "=") elixir-smie-indent-basic)
+    (`(:after . "end") 0)
     (`(:after . ,(or `"do"))
      elixir-smie-indent-basic)
     (`(:list-intro . ,(or `"do"))
