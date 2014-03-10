@@ -559,7 +559,6 @@ Argument END End of the region."
   (set (make-local-variable 'comment-end) "")
   (set (make-local-variable 'comment-use-syntax) t)
   (set (make-local-variable 'tab-width) elixir-basic-offset)
-  (set (make-local-variable 'default-tab-width) elixir-basic-offset)
   (set (make-local-variable 'imenu-generic-expression) elixir-imenu-generic-expression)
   (if (boundp 'syntax-propertize-function)
       (set (make-local-variable 'syntax-propertize-function) 'elixir-syntax-propertize))
