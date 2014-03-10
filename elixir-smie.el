@@ -294,7 +294,12 @@ Return non-nil if any line breaks were skipped."
        elixir-smie-indent-basic))
     (`(,_ . ,(or `"COMMA")) (smie-rule-separator kind))
     (`(:after . "=") elixir-smie-indent-basic)
-    (`(:after . "end") 0)
+    (`(:after . "end")
+     ;; dont't increase the indent level after an 'end' was seen.
+     ;; FIXME: This is just a woraround to do the right thing under
+     ;; normal circumstances Once the problem with newline assessment
+     ;; is (#5 and #18 !?) fixed, this should be unnecessary
+     0)
     (`(:after . ,(or `"do"))
      elixir-smie-indent-basic)
     (`(:list-intro . ,(or `"do"))
