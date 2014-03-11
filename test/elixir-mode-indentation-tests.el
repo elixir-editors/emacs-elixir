@@ -11,6 +11,41 @@
            (insert indented)
            (should (equal indented ,expected-output)))))))
 
+(elixir-def-indentation-test indents-use-dot-module-newline
+    (:expected-result :failed)
+  "
+defmodule Foo do
+use GenServer.Behaviour
+
+def foobar do
+if true, do: IO.puts \"yay\"
+end
+end"
+  "
+defmodule Foo do
+  use GenServer.Behaviour
+
+  def foobar do
+    if true, do: IO.puts \"yay\"
+  end
+end")
+
+(elixir-def-indentation-test indents-use-dot-module ()
+  "
+defmodule Foo do
+use GenServer.Behaviour
+def foobar do
+if true, do: IO.puts \"yay\"
+end
+end"
+  "
+defmodule Foo do
+  use GenServer.Behaviour
+  def foobar do
+    if true, do: IO.puts \"yay\"
+  end
+end")
+
 (elixir-def-indentation-test indents-do-blocks ()
   "
 defmodule Foo do
