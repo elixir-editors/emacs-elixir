@@ -198,7 +198,11 @@ Return non-nil if any line breaks were skipped."
                      token)
                  (save-excursion
                    (block nil
-                     (while (and (not (= (point) (point-max))) (not (string= "" token)) (not (or (string= "\n" token) (string= ";" token))))
+                     (while
+                         (and
+                          (not (= (point) (point-max)))
+                          (not (string= "" token))
+                          (not (or (string= "\n" token) (string= ";" token))))
                        (setq token (elixir-smie-next-token-no-lookaround t nil))
                        (cond ((and (= level 0) (string= "->" token))
                               (return t))
@@ -210,7 +214,11 @@ Return non-nil if any line breaks were skipped."
                (let (token)
                  (save-excursion
                    (block nil
-                     (while (and (not (= (point) (point-min))) (not (string= "" token)) (not (string= "do" token)) (not (string= "fn" token)))
+                     (while
+                         (and (not (= (point) (point-min)))
+                              (not (string= "" token))
+                              (not (string= "do" token))
+                              (not (string= "fn" token)))
                        (setq token (elixir-smie-next-token-no-lookaround nil nil))
                        (when (string= "->" token)
                          (return t)))
