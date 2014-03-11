@@ -241,7 +241,7 @@ Return non-nil if any line breaks were skipped."
            ("try" "do" statements "catch" match-statements "end")
            ("try" "do" statements "end")
            ("case" non-block-expr "do" match-statements "end")
-           ("function" "do" match-statements "end")
+           ("def" non-block-expr "do" statements "end")
            (non-block-expr "do" statements "end")
            (expr)
            )
@@ -258,7 +258,13 @@ Return non-nil if any line breaks were skipped."
            (match-statement))
           (match-statement
            (non-block-expr "->" statements)))
-        '((assoc "DOT") (assoc "if") (assoc "do:") (assoc "else:") (assoc "COMMA") (assoc "OP") (assoc "->" ";")))))
+        '((assoc "DOT")
+          (assoc "if")
+          (assoc "do:")
+          (assoc "else:")
+          (assoc "COMMA")
+          (assoc "OP")
+          (assoc "->" ";")))))
 
 (defvar elixir-smie-indent-basic 2)
 
