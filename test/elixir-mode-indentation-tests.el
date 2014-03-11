@@ -11,8 +11,7 @@
            (insert indented)
            (should (equal indented ,expected-output)))))))
 
-(elixir-def-indentation-test indents-use-dot-module-newline
-    (:expected-result :failed)
+(elixir-def-indentation-test indents-use-dot-module-newline ()
   "
 defmodule Foo do
 use GenServer.Behaviour
