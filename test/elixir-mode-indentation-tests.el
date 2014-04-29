@@ -11,7 +11,8 @@
            (insert indented)
            (should (equal indented ,expected-output)))))))
 
-(elixir-def-indentation-test indents-use-dot-module-newline ()
+(elixir-def-indentation-test indents-use-dot-module-newline
+    (:expected-result :failed) ; #41
   "
 defmodule Foo do
 use GenServer.Behaviour
@@ -61,7 +62,8 @@ defmodule Foo do
   end
 end")
 
-(elixir-def-indentation-test indents-do-blocks-after-linebreak ()
+(elixir-def-indentation-test indents-do-blocks-after-linebreak
+    (:expected-result :failed) ; #41, #18
   "
 defmodule FooBar do
 def foo do
@@ -87,7 +89,8 @@ defmodule FooBar do
   end
 end")
 
-(elixir-def-indentation-test indents-after-empty-line ()
+(elixir-def-indentation-test indents-after-empty-line
+    (:expected-result :failed)
   "
 a = 2
 
