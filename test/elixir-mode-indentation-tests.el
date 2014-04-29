@@ -141,7 +141,7 @@ has_something(x) &&
 ")
 
 (elixir-def-indentation-test indents-continuation-lines-with-comments/1
-    (:expected-result :failed)
+    ()
   "
 has_something(x) &&  # foo
 has_something(y) ||
@@ -168,13 +168,21 @@ has_something(x) &&
 (elixir-def-indentation-test indents-last-commented-line
     (:expected-result :failed) ; #27
   "
-defmodule Bar do
-# ohai
+defmodule Foo
+  def bar do
+    2
+  end
+
+  # last line
 end
 "
   "
-defmodule Bar do
-  # ohai
+  defmodule Foo
+  def bar do
+    2
+  end
+
+# last line
 end
 ")
 
