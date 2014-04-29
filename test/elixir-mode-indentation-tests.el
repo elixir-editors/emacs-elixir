@@ -102,7 +102,6 @@ def bar do
 if true, do: IO.puts \"yay\"
 20
 end
-end
 
 def baz do
 if true, do: IO.puts \"yay\"
