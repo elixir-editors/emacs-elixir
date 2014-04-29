@@ -62,8 +62,8 @@ defmodule Foo do
   end
 end")
 
-(elixir-def-indentation-test indents-do-blocks-after-linebreak
-    (:expected-result :failed) ; #41, #18
+(elixir-def-indentation-test indents-do-blocks-after-linebreak-two
+    () ; #41, #18
   "
 defmodule FooBar do
 def foo do
@@ -84,6 +84,44 @@ defmodule FooBar do
   end
 
   def bar do
+    if true, do: IO.puts \"yay\"
+    20
+  end
+end")
+
+(elixir-def-indentation-test indents-do-blocks-after-linebreak-three
+    (:expected-result :failed) ; #41, #18
+  "
+defmodule FooBar do
+def foo do
+if true, do: IO.puts \"yay\"
+20
+end
+
+def bar do
+if true, do: IO.puts \"yay\"
+20
+end
+end
+
+def baz do
+if true, do: IO.puts \"yay\"
+20
+end
+end"
+  "
+defmodule FooBar do
+  def foo do
+    if true, do: IO.puts \"yay\"
+    20
+  end
+
+  def bar do
+    if true, do: IO.puts \"yay\"
+    20
+  end
+
+  def baz do
     if true, do: IO.puts \"yay\"
     20
   end

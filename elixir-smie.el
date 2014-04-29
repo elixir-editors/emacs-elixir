@@ -306,6 +306,7 @@ Return non-nil if any line breaks were skipped."
        elixir-smie-indent-basic))
     (`(,_ . ,(or `"COMMA")) (smie-rule-separator kind))
     (`(:after . "=") elixir-smie-indent-basic)
+    (`(:after . "end") 0)
     (`(:after . ,(or `"do"))
      elixir-smie-indent-basic)
     (`(:list-intro . ,(or `"do"))
