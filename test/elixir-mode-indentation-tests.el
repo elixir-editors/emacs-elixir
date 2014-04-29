@@ -62,8 +62,7 @@ defmodule Foo do
   end
 end")
 
-(elixir-def-indentation-test indents-do-blocks-after-linebreak-two
-    () ; #41, #18
+(elixir-def-indentation-test indents-do-blocks-after-linebreak-two ()
   "
 defmodule FooBar do
 def foo do
