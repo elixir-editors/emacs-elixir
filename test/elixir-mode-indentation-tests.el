@@ -89,8 +89,7 @@ defmodule FooBar do
   end
 end")
 
-(elixir-def-indentation-test indents-do-blocks-after-linebreak-three
-    (:expected-result :failed) ; #41, #18
+(elixir-def-indentation-test indents-do-blocks-after-linebreak-three ()
   "
 defmodule FooBar do
 def foo do
