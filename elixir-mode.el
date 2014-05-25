@@ -241,6 +241,7 @@
     "defp"
     "defprotocol"
     "defrecord"
+    "defstruct"
     "destructure"
     "alias"
     "require"
@@ -265,7 +266,9 @@
     "end")
   "Elixir mode keywords.")
 (defvar elixir-mode-module-names
-  '("Behavior"
+  '("Actor"
+    "Base"
+    "Behavior"
     "Binary"
     "Bitwise"
     "Builtin"
