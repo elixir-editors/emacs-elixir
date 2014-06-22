@@ -295,7 +295,8 @@ Return non-nil if any line breaks were skipped."
     (`(:after . "OP")
      (unless (smie-rule-sibling-p)
        elixir-smie-indent-basic))
-    (`(:before. "OP")
+    (`(:before . "def") elixir-smie-indent-basic)
+    (`(:before . "OP")
      ;; FIXME: Issue #5: This should prevent comments on lines before
      ;; continuation lines from causing indentation messed-upness, but
      ;; for some reason SMIE doesn't look this far when there's a
