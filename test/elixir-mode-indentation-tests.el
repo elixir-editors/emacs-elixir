@@ -11,18 +11,19 @@
            (insert indented)
            (should (equal indented ,expected-output)))))))
 
-(elixir-def-indentation-test indents-use-dot-module-newline
-    (:expected-result :failed) ; #41
-  "
-defmodule Foo do
+;; Expected test failures indicates that the code tested by that test case is
+;; indeed broken. My intention is that while working on a specific problem,
+;; the failure expectation will be removed so that we know when the test case
+;; passes.
+(elixir-def-indentation-test indents-use-dot-module-newline ()
+  "defmodule Foo do
 use GenServer.Behaviour
 
 def foobar do
 if true, do: IO.puts \"yay\"
 end
 end"
-  "
-defmodule Foo do
+  "defmodule Foo do
   use GenServer.Behaviour
 
   def foobar do
@@ -125,7 +126,7 @@ defmodule FooBar do
 end")
 
 (elixir-def-indentation-test indents-after-empty-line
-    (:expected-result :failed)
+    (:expected-result :failed) ; #18
   "
 a = 2
 

@@ -200,14 +200,21 @@ Return non-nil if any line breaks were skipped."
                    (block nil
                      (while
                          (and
+                          ;; Cursor is not at the end of the buffer...
                           (not (= (point) (point-max)))
+                          ;; ...and the current token is not an empty string...
                           (not (string= "" token))
+                          ;; ...nor a newline nor a semicolon.
                           (not (or (string= "\n" token) (string= ";" token))))
                        (setq token (elixir-smie-next-token-no-lookaround t nil))
+                       ;; If we're at the top level and the token is "->",
+                       ;; return t
                        (cond ((and (= level 0) (string= "->" token))
                               (return t))
+                             ;; If token is "do" or "fn", increment level
                              ((find token '("do" "fn") :test 'string=)
                               (incf level))
+                             ;; If token is "end", decrement level
                              ((string= token "end")
                               (decf level)))))))
                ;; Scan behind:
@@ -215,15 +222,17 @@ Return non-nil if any line breaks were skipped."
                  (save-excursion
                    (block nil
                      (while
-                         (and (not (= (point) (point-min)))
-                              (not (string= "" token))
-                              (not (string= "do" token))
-                              (not (string= "fn" token)))
+                         (and
+                          ;; Cursor is not at the beginning of buffer...
+                          (not (= (point) (point-min)))
+                          ;; ...and token is neither empty string, nor "do"/"fn"
+                          (not (string= "" token))
+                          (not (string= "do" token))
+                          (not (string= "fn" token)))
                        (setq token (elixir-smie-next-token-no-lookaround nil nil))
                        (when (string= "->" token)
                          (return t)))
-                     (when (or (string= token "do"))
-                       t)))))
+                     (when (string= token "do") t)))))
           "MATCH-STATEMENT-DELIMITER"
         current-token))))
 
@@ -310,15 +319,14 @@ Return non-nil if any line breaks were skipped."
     (`(:after . "end") 0)
     (`(:after . ,(or `"do"))
      elixir-smie-indent-basic)
-    (`(:list-intro . ,(or `"do"))
-     t)))
+    (`(:list-intro . ,(or `"do")) t)))
 
 (define-minor-mode elixir-smie-mode
   "SMIE-based indentation and syntax for Elixir"
   nil nil nil nil
   (set (make-local-variable 'comment-start) "# ")
   (set (make-local-variable 'comment-end) "")
-  (smie-setup elixir-smie-grammar 'elixir-smie-rules ; 'verbose-elixir-smie-rules
+  (smie-setup elixir-smie-grammar 'elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token))
 
