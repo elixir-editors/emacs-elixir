@@ -248,8 +248,7 @@ function do
 end
 ")
 
-(elixir-def-indentation-test indents-fn-in-assignment
-    (:expected-result :failed)
+(elixir-def-indentation-test indents-fn-in-assignment ()
   "
 f = fn x, y ->
 x + y
@@ -259,11 +258,10 @@ f = fn x, y ->
   x + y
 end")
 
-(elixir-def-indentation-test indents-fn-as-arguments
-    (:expected-result :failed)
+(elixir-def-indentation-test indents-fn-as-arguments ()
   "
 Enum.map 1..10, fn x ->
-x+1
+x + 1
 end"
   "
 Enum.map 1..10, fn x ->
