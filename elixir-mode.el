@@ -341,7 +341,7 @@
   "Elixir mode operators.")
 
 (defvar elixir-mode-sigils '("B" "C" "R" "b" "c" "r")
-  "%-prefixed sigils that are understood by `elixir-mode'.")
+  "~-prefixed sigils that are understood by `elixir-mode'.")
 
 (defvar elixir-basic-offset 2)
 (defvar elixir-key-label-offset 0)
@@ -367,8 +367,8 @@
    ;; keywords:
    `(,(concat "\\<" (regexp-opt elixir-mode-keyword-names t) "\\>") . font-lock-keyword-face)
 
-   ;; % Sigils
-   `(,(concat "\\<%" (regexp-opt elixir-mode-sigils t) "\\>") . font-lock-builtin-face)
+   ;; ~ Sigils
+   `(,(concat "\\<~" (regexp-opt elixir-mode-sigils t) "\\>") . font-lock-builtin-face)
 
    ;; builtins:
    `(,(concat "\\<" (regexp-opt elixir-mode-builtin-names t) "\\>") . font-lock-builtin-face)
