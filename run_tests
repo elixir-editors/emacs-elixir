@@ -9,14 +9,17 @@ if [ $? == 0 ]; then
 else
     # Give the user to re-do the tests in emacs proper
     cat /tmp/test-output.txt
-    read -p "There were test failures. Re-run in regular Emacs? [Yn]" choice
-    case $choice in
-        n|N)
-            break
-            ;;
-        *)
-            emacs -l elixir-mode-tests.el -f elixir-mode-run-tests
-            ;;
-    esac
+    while [[ 1 ]]
+    do
+        read -p "There were test failures. Re-run in regular Emacs? [Yn]" choice
+        case $choice in
+            n|N)
+                break
+                ;;
+            *)
+                emacs -l elixir-mode-tests.el -f elixir-mode-run-tests
+                ;;
+        esac
+    done
 fi
 
