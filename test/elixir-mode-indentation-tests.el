@@ -11,6 +11,42 @@
            (insert indented)
            (should (equal indented ,expected-output)))))))
 
+;; Expected test failures indicates that the code tested by that test case is
+;; indeed broken. My intention is that while working on a specific problem,
+;; the failure expectation will be removed so that we know when the test case
+;; passes.
+(elixir-def-indentation-test indents-use-dot-module-newline ()
+  "defmodule Foo do
+use GenServer.Behaviour
+
+def foobar do
+if true, do: IO.puts \"yay\"
+end
+end"
+  "defmodule Foo do
+  use GenServer.Behaviour
+
+  def foobar do
+    if true, do: IO.puts \"yay\"
+  end
+end")
+
+(elixir-def-indentation-test indents-use-dot-module ()
+  "
+defmodule Foo do
+use GenServer.Behaviour
+def foobar do
+if true, do: IO.puts \"yay\"
+end
+end"
+  "
+defmodule Foo do
+  use GenServer.Behaviour
+  def foobar do
+    if true, do: IO.puts \"yay\"
+  end
+end")
+
 (elixir-def-indentation-test indents-do-blocks ()
   "
 defmodule Foo do
@@ -27,7 +63,7 @@ defmodule Foo do
   end
 end")
 
-(elixir-def-indentation-test indents-do-blocks-after-linebreak ()
+(elixir-def-indentation-test indents-do-blocks-after-linebreak-two ()
   "
 defmodule FooBar do
 def foo do
@@ -53,7 +89,44 @@ defmodule FooBar do
   end
 end")
 
-(elixir-def-indentation-test indents-after-empty-line ()
+(elixir-def-indentation-test indents-do-blocks-after-linebreak-three ()
+  "
+defmodule FooBar do
+def foo do
+if true, do: IO.puts \"yay\"
+20
+end
+
+def bar do
+if true, do: IO.puts \"yay\"
+20
+end
+
+def baz do
+if true, do: IO.puts \"yay\"
+20
+end
+end"
+  "
+defmodule FooBar do
+  def foo do
+    if true, do: IO.puts \"yay\"
+    20
+  end
+
+  def bar do
+    if true, do: IO.puts \"yay\"
+    20
+  end
+
+  def baz do
+    if true, do: IO.puts \"yay\"
+    20
+  end
+end")
+
+(elixir-def-indentation-test indents-after-empty-line
+    (:expected-result :failed) ; #18
   "
 a = 2
 
@@ -107,7 +180,7 @@ has_something(x) &&
 ")
 
 (elixir-def-indentation-test indents-continuation-lines-with-comments/1
-    (:expected-result :failed)
+    ()
   "
 has_something(x) &&  # foo
 has_something(y) ||
@@ -134,13 +207,21 @@ has_something(x) &&
 (elixir-def-indentation-test indents-last-commented-line
     (:expected-result :failed) ; #27
   "
-defmodule Bar do
-# ohai
+defmodule Foo
+  def bar do
+    2
+  end
+
+  # last line
 end
 "
   "
-defmodule Bar do
-  # ohai
+  defmodule Foo
+  def bar do
+    2
+  end
+
+# last line
 end
 ")
 
