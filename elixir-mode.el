@@ -248,6 +248,7 @@
     "import"
     "use"
     "if"
+    "unless"
     "true"
     "false"
     "when"
@@ -266,7 +267,7 @@
     "end")
   "Elixir mode keywords.")
 (defvar elixir-mode-module-names
-  '("Actor"
+  '("Agent"
     "Base"
     "Behavior"
     "Binary"
@@ -297,6 +298,7 @@
     "Record"
     "Regexp"
     "System"
+    "Task"
     "Tuple"
     "URI"
     "UnboundMethod")
