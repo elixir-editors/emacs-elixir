@@ -340,7 +340,7 @@
     "<-")
   "Elixir mode operators.")
 
-(defvar elixir-mode-sigils '("B" "C" "R" "b" "c" "r")
+(defvar elixir-mode-sigils '("B" "C" "R" "S" "b" "c" "r" "s" "w")
   "~-prefixed sigils that are understood by `elixir-mode'.")
 
 (defvar elixir-basic-offset 2)
@@ -373,6 +373,9 @@
    ;; ~ Sigils
    `(,(concat "\\<~" (regexp-opt elixir-mode-sigils t) "\\>") . font-lock-builtin-face)
 
+   ;; regexes:
+   '("~r/\\([^/]*\\)/.*" 1 font-lock-string-face)
+
    ;; builtins:
    `(,(concat "\\<" (regexp-opt elixir-mode-builtin-names t) "\\>") . font-lock-builtin-face)
 
@@ -385,9 +388,6 @@
 
    ;; variables:
    '("\\(\\w+\\)\\s-*:?=[^=]" 1 font-lock-variable-name-face)
-
-   ;; regexes:
-   '("-[Rr].*[ \n\t]" . font-lock-constant-face)
 
    ;; atoms, boolean:
    '("\\<\\(true\\|false\\|nil\\)\\>" . font-lock-reference-face)
@@ -568,8 +568,6 @@ Argument END End of the region."
   (set (make-local-variable 'comment-use-syntax) t)
   (set (make-local-variable 'tab-width) elixir-basic-offset)
   (set (make-local-variable 'imenu-generic-expression) elixir-imenu-generic-expression)
-  (if (boundp 'syntax-propertize-function)
-      (set (make-local-variable 'syntax-propertize-function) 'elixir-syntax-propertize))
   (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules ; 'elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token)
