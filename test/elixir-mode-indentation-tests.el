@@ -369,5 +369,5 @@ end"
   "
 match = Regex.named_captures ~r/^a(?<ct>b)c/, data
 case match do
-   x + 1
+  x + 1
 end")
