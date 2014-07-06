@@ -17,6 +17,7 @@
     ;; work:
     (modify-syntax-entry ?_ "w" elixir-mode-syntax-table)
     (modify-syntax-entry ?? "w" elixir-mode-syntax-table)
+    (modify-syntax-entry ?\\ "w" elixir-mode-syntax-table)
     (modify-syntax-entry ?~ "w" elixir-mode-syntax-table)
 
     (modify-syntax-entry ?' "\"" elixir-mode-syntax-table)
@@ -33,6 +34,7 @@
     elixir-mode-syntax-table)
   "Elixir mode syntax table.")
 
+; not used...
 (defun elixir-syntax-propertize (start end)
   (save-excursion
     (goto-char start)
