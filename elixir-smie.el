@@ -200,24 +200,41 @@ Return non-nil if any line breaks were skipped."
                      token)
                  (save-excursion
                    (block nil
-                     (while (and (not (= (point) (point-max))) (not (string= "" token)) (not (or (string= "\n" token) (string= ";" token))))
+                     (while
+                         (and
+                          ;; Cursor is not at the end of the buffer...
+                          (not (= (point) (point-max)))
+                          ;; ...and the current token is not an empty string...
+                          (not (string= "" token))
+                          ;; ...nor a newline nor a semicolon.
+                          (not (or (string= "\n" token) (string= ";" token))))
                        (setq token (elixir-smie-next-token-no-lookaround t nil))
+                       ;; If we're at the top level and the token is "->",
+                       ;; return t
                        (cond ((and (= level 0) (string= "->" token))
                               (return t))
+                             ;; If token is "do" or "fn", increment level
                              ((find token '("do" "fn") :test 'string=)
                               (incf level))
+                             ;; If token is "end", decrement level
                              ((string= token "end")
                               (decf level)))))))
                ;; Scan behind:
                (let (token)
                  (save-excursion
                    (block nil
-                     (while (and (not (= (point) (point-min))) (not (string= "" token)) (not (string= "do" token)) (not (string= "fn" token)))
+                     (while
+                         (and
+                          ;; Cursor is not at the beginning of buffer...
+                          (not (= (point) (point-min)))
+                          ;; ...and token is neither empty string, nor "do"/"fn"
+                          (not (string= "" token))
+                          (not (string= "do" token))
+                          (not (string= "fn" token)))
                        (setq token (elixir-smie-next-token-no-lookaround nil nil))
                        (when (string= "->" token)
                          (return t)))
-                     (when (or (string= token "do"))
-                       t)))))
+                     (when (string= token "do") t)))))
           "MATCH-STATEMENT-DELIMITER"
         current-token))))
 
@@ -243,8 +260,7 @@ Return non-nil if any line breaks were skipped."
            ("try" "do" statements "catch" match-statements "end")
            ("try" "do" statements "end")
            ("case" non-block-expr "do" match-statements "end")
-           ("fn" match-statement "end")
-           ("function" "do" match-statements "end")
+           ("def" non-block-expr "do" statements "end")
            (non-block-expr "do" statements "end")
            (expr)
            )
@@ -261,7 +277,13 @@ Return non-nil if any line breaks were skipped."
            (match-statement))
           (match-statement
            (non-block-expr "->" statements)))
-        '((assoc "DOT") (assoc "if") (assoc "do:") (assoc "else:") (assoc "COMMA") (assoc "OP") (assoc "->" ";")))))
+        '((assoc "DOT")
+          (assoc "if")
+          (assoc "do:")
+          (assoc "else:")
+          (assoc "COMMA")
+          (assoc "OP")
+          (assoc "->" ";")))))
 
 (defvar elixir-smie-indent-basic 2)
 
@@ -284,7 +306,8 @@ Return non-nil if any line breaks were skipped."
     (`(:after . "OP")
      (unless (smie-rule-sibling-p)
        elixir-smie-indent-basic))
-    (`(:before. "OP")
+    (`(:before . "def") elixir-smie-indent-basic)
+    (`(:before . "OP")
      ;; FIXME: Issue #5: This should prevent comments on lines before
      ;; continuation lines from causing indentation messed-upness, but
      ;; for some reason SMIE doesn't look this far when there's a
@@ -295,17 +318,17 @@ Return non-nil if any line breaks were skipped."
        elixir-smie-indent-basic))
     (`(,_ . ,(or `"COMMA")) (smie-rule-separator kind))
     (`(:after . "=") elixir-smie-indent-basic)
+    (`(:after . "end") 0)
     (`(:after . ,(or `"do"))
      elixir-smie-indent-basic)
-    (`(:list-intro . ,(or `"do"))
-     t)))
+    (`(:list-intro . ,(or `"do")) t)))
 
 (define-minor-mode elixir-smie-mode
   "SMIE-based indentation and syntax for Elixir"
   nil nil nil nil
   (set (make-local-variable 'comment-start) "# ")
   (set (make-local-variable 'comment-end) "")
-  (smie-setup elixir-smie-grammar 'elixir-smie-rules ; 'verbose-elixir-smie-rules
+  (smie-setup elixir-smie-grammar 'elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token))
 

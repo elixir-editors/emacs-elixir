@@ -1,0 +1,26 @@
+#!/bin/bash
+# -*- shell-script -*-
+OUTPUT=/tmp/test-output.txt
+emacs -batch -l ert-bootstrap.el -l elixir-mode-tests.el -f ert-run-tests-batch-and-exit 2> $OUTPUT
+
+if [ $? == 0 ]; then
+    echo "Success -- All tests passed."
+    rm $OUTPUT
+else
+    # Give the user to re-do the tests in emacs proper
+    cat /tmp/test-output.txt
+    while [[ 1 ]]
+    do
+        read -p "There were test failures. Re-run in regular Emacs? [Yn]" choice
+        case $choice in
+            n|N)
+                break
+                ;;
+            *)
+                emacs -l elixir-mode-tests.el -f elixir-mode-run-tests
+                break
+                ;;
+        esac
+    done
+fi
+
