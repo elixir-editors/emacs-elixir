@@ -358,3 +358,16 @@ to_process = [27, 33, 35, 11, 36, 29, 18, 37, 21, 31, 19, 10, 14, 30,
 to_process = [27, 33, 35, 11, 36, 29, 18, 37, 21, 31, 19, 10, 14, 30,
               15, 17, 23, 28, 25, 34, 22, 20, 13, 16, 32, 12, 26, 24]
 ")
+
+(elixir-def-indentation-test indents-regex-question-mark
+    ()
+  "
+match = Regex.named_captures ~r/^a(?<ct>b)c/, data
+case match do
+x + 1
+end"
+  "
+match = Regex.named_captures ~r/^a(?<ct>b)c/, data
+case match do
+   x + 1
+end")
