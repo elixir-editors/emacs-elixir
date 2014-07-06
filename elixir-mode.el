@@ -340,7 +340,7 @@
     "<-")
   "Elixir mode operators.")
 
-(defvar elixir-mode-sigils '("B" "C" "R" "b" "c" "r")
+(defvar elixir-mode-sigils '("B" "C" "R" "S" "b" "c" "r" "s" "w")
   "~-prefixed sigils that are understood by `elixir-mode'.")
 
 (defvar elixir-basic-offset 2)
