@@ -373,6 +373,9 @@
    ;; ~ Sigils
    `(,(concat "\\<~" (regexp-opt elixir-mode-sigils t) "\\>") . font-lock-builtin-face)
 
+   ;; regexes:
+   '("~r/\\([^/]*\\)/.*" 1 font-lock-string-face)
+
    ;; builtins:
    `(,(concat "\\<" (regexp-opt elixir-mode-builtin-names t) "\\>") . font-lock-builtin-face)
 
@@ -385,9 +388,6 @@
 
    ;; variables:
    '("\\(\\w+\\)\\s-*:?=[^=]" 1 font-lock-variable-name-face)
-
-   ;; regexes:
-   '("-[Rr].*[ \n\t]" . font-lock-constant-face)
 
    ;; atoms, boolean:
    '("\\<\\(true\\|false\\|nil\\)\\>" . font-lock-reference-face)
