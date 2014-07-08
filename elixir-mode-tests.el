@@ -22,6 +22,7 @@
 
 (load "test/elixir-mode-indentation-tests.el")
 (load "test/elixir-mode-tokenizer-hl-tests.el")
+(load "test/elixir-mode-font-tests.el")
 
 (provide 'elixir-mode-tests)
 ;;; elixir-mode-tests.el ends here

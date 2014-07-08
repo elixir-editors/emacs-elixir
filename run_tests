@@ -17,7 +17,7 @@ else
                 break
                 ;;
             *)
-                emacs -l elixir-mode-tests.el -f elixir-mode-run-tests
+                emacs -l elixir-mode-tests.el -f ert-run-tests-interactively
                 break
                 ;;
         esac
