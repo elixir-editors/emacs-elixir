@@ -199,4 +199,4 @@ This mode is based on the
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/elixir-lang/emacs-elixir/CONTRIBUTING.md) for guidelines on how to contribute to this project.
+Please read [CONTRIBUTING.md](https://github.com/elixir-lang/emacs-elixir/blob/master/CONTRIBUTING.md) for guidelines on how to contribute to this project.
