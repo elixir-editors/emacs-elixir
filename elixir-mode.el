@@ -387,7 +387,7 @@
    '("\\(\\w+\\)\\s-*:?=[^=]" 1 font-lock-variable-name-face)
 
    ;; regexes:
-   '("-[Rr].*[ \n\t]" . font-lock-constant-face)
+   '("~r/\\(.*\\)/[, \n\t]*" 1 font-lock-string-face)
 
    ;; atoms, boolean:
    '("\\<\\(true\\|false\\|nil\\)\\>" . font-lock-reference-face)
