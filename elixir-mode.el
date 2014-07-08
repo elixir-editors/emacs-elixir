@@ -208,40 +208,6 @@
 
 (defvar elixir-mode--eval-filename "elixir-mode-tmp-eval-file.exs")
 
-(defvar elixir-mode-define-names
-  '("def" "defdelegate" "defmacro" "defmacrop" "defoverridable" "defp"
-    "defmacrop")
-  "Elixir mode def-like keywords.")
-
-(defvar elixir-mode-keyword-names
-  '("->" "bc" "lc" "in" "inbits" "inlist" "quote" "unquote" "unquote_splicing"
-    "var" "do" "after" "for" "def" "defdelegate" "defimpl" "defmacro"
-    "defmacrop" "defmodule" "defoverridable" "defp" "defprotocol" "defrecord"
-    "defstruct" "destructure" "alias" "require" "import" "use" "if" "unless"
-    "true" "false" "when" "case" "cond" "throw" "then" "else" "elsif" "try"
-    "catch" "rescue" "fn" "function" "receive" "end")
-  "Elixir mode keywords.")
-
-(defvar elixir-mode-module-names
-  '("Agent" "Base" "Behavior" "Binary" "Bitwise" "Builtin" "Elixir" "Code" "EEx"
-    "Enum" "ExUnit" "Exception" "File" "GenServer" "Function" "GenServer"
-    "GenTCP" "HashDict" "IO" "Keyword" "List" "Math" "Module" "Node"
-    "OptionParser" "OrdDict" "Port" "Process" "Record" "Regexp" "System" "Task"
-    "Tuple" "URI" "UnboundMethod")
-  "Elixir mode modules.")
-
-(defvar elixir-mode-builtin-names
-  '("Erlang" "__MODULE__" "__LINE__" "__FILE__" "__ENV__")
-  "Elixir mode builtins.")
-
-(defvar elixir-mode-operator-names
-  '("+" "++" "<>" "-" "/" "*" "div" "rem" "==" "!=" "<=" "<" ">=" ">" "==="
-    "!==" "and" "or" "not" "&&" "||" "!" "." "#" "=" ":=" "<-")
-  "Elixir mode operators.")
-
-(defvar elixir-mode-sigils '("B" "C" "R" "b" "c" "r")
-  "~-prefixed sigils that are understood by `elixir-mode'.")
-
 (defvar elixir-basic-offset 2)
 (defvar elixir-key-label-offset 0)
 (defvar elixir-match-label-offset 2)
