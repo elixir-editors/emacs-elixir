@@ -212,11 +212,12 @@
 (defvar elixir-key-label-offset 0)
 (defvar elixir-match-label-offset 2)
 
-(defvar font-lock-operator-face 'font-lock-operator-face)
-(defface font-lock-operator-face
-  '((((type tty) (class color)) nil)
-    (((class color) (background light))
-     (:foreground "darkred"))
+(defvar elixir-operator-face 'elixir-operator-face)
+(defface elixir-operator-face
+  '((((class color) (min-colors 88) (background light))
+     :foreground "darkred")
+    (((class color) (background dark))
+     (:foreground "lemonchiffon1"))
     (t nil))
   "For use with operators."
   :group 'font-lock-faces)
@@ -361,7 +362,7 @@
 
     ;; Operators
     (,(elixir-rx (group operators))
-     1 font-lock-operator-face)
+     1 elixir-operator-face)
 
     ;; Atoms and singleton-like words like true/false/nil.
     (,(elixir-rx (group (or atoms bool-and-nil)))
