@@ -19,7 +19,8 @@
     (modify-syntax-entry ?? "w" elixir-mode-syntax-table)
     (modify-syntax-entry ?~ "w" elixir-mode-syntax-table)
 
-    (modify-syntax-entry ?' "\"" elixir-mode-syntax-table)
+    (modify-syntax-entry ?' "\"'" elixir-mode-syntax-table)
+    (modify-syntax-entry ?\" "\"\"" elixir-mode-syntax-table)
     (modify-syntax-entry ?# "<" elixir-mode-syntax-table)
     (modify-syntax-entry ?\n ">" elixir-mode-syntax-table)
     (modify-syntax-entry ?\( "()" elixir-mode-syntax-table)
