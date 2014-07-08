@@ -197,10 +197,6 @@ If you looking for integrated emacs [mix](http://elixir-lang.org/getting_started
 This mode is based on the
 [Emacs mode by secondplanet](https://github.com/secondplanet/elixir-mode).
 
-## Contributions are very welcome!
+## Contributing
 
-1. Fork emacs-elixir
-2. Create a topic branch - `git checkout -b my_branch`
-4. Push to your branch - `git push origin my_branch`
-5. Send us a pull-request for your topic branch
-6. That's it!
+Please read [CONTRIBUTING.md](https://github.com/elixir-lang/emacs-elixir/CONTRIBUTING.md) for guidelines on how to contribute to this project.
