@@ -358,3 +358,16 @@ to_process = [27, 33, 35, 11, 36, 29, 18, 37, 21, 31, 19, 10, 14, 30,
 to_process = [27, 33, 35, 11, 36, 29, 18, 37, 21, 31, 19, 10, 14, 30,
               15, 17, 23, 28, 25, 34, 22, 20, 13, 16, 32, 12, 26, 24]
 ")
+
+(elixir-def-indentation-test indent-nested-fn
+    (:expected-result :failed) ; #59
+  "defmodule FooModule do
+def foo do
+x = fn(a, b) -> a + b end
+end
+end"
+  "defmodule FooModule do
+  def foo do
+    x = fn(a, b) -> a + b end
+  end
+end")
