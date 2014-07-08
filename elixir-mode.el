@@ -209,135 +209,34 @@
 (defvar elixir-mode--eval-filename "elixir-mode-tmp-eval-file.exs")
 
 (defvar elixir-mode-define-names
-  '("def"
-    "defdelegate"
-    "defmacro"
-    "defmacrop"
-    "defoverridable"
-    "defp"
+  '("def" "defdelegate" "defmacro" "defmacrop" "defoverridable" "defp"
     "defmacrop")
   "Elixir mode def-like keywords.")
+
 (defvar elixir-mode-keyword-names
-  '("->"
-    "bc"
-    "lc"
-    "in"
-    "inbits"
-    "inlist"
-    "quote"
-    "unquote"
-    "unquote_splicing"
-    "var"
-    "do"
-    "after"
-    "for"
-    "def"
-    "defdelegate"
-    "defimpl"
-    "defmacro"
-    "defmacrop"
-    "defmodule"
-    "defoverridable"
-    "defp"
-    "defprotocol"
-    "defrecord"
-    "defstruct"
-    "destructure"
-    "alias"
-    "require"
-    "import"
-    "use"
-    "if"
-    "unless"
-    "true"
-    "false"
-    "when"
-    "case"
-    "cond"
-    "throw"
-    "then"
-    "else"
-    "elsif"
-    "try"
-    "catch"
-    "rescue"
-    "fn"
-    "function"
-    "receive"
-    "end")
+  '("->" "bc" "lc" "in" "inbits" "inlist" "quote" "unquote" "unquote_splicing"
+    "var" "do" "after" "for" "def" "defdelegate" "defimpl" "defmacro"
+    "defmacrop" "defmodule" "defoverridable" "defp" "defprotocol" "defrecord"
+    "defstruct" "destructure" "alias" "require" "import" "use" "if" "unless"
+    "true" "false" "when" "case" "cond" "throw" "then" "else" "elsif" "try"
+    "catch" "rescue" "fn" "function" "receive" "end")
   "Elixir mode keywords.")
+
 (defvar elixir-mode-module-names
-  '("Agent"
-    "Base"
-    "Behavior"
-    "Binary"
-    "Bitwise"
-    "Builtin"
-    "Elixir"
-    "Code"
-    "EEx"
-    "Enum"
-    "ExUnit"
-    "Exception"
-    "File"
-    "GenServer"
-    "Function"
-    "GenServer"
-    "GenTCP"
-    "HashDict"
-    "IO"
-    "Keyword"
-    "List"
-    "Math"
-    "Module"
-    "Node"
-    "OptionParser"
-    "OrdDict"
-    "Port"
-    "Process"
-    "Record"
-    "Regexp"
-    "System"
-    "Task"
-    "Tuple"
-    "URI"
-    "UnboundMethod")
+  '("Agent" "Base" "Behavior" "Binary" "Bitwise" "Builtin" "Elixir" "Code" "EEx"
+    "Enum" "ExUnit" "Exception" "File" "GenServer" "Function" "GenServer"
+    "GenTCP" "HashDict" "IO" "Keyword" "List" "Math" "Module" "Node"
+    "OptionParser" "OrdDict" "Port" "Process" "Record" "Regexp" "System" "Task"
+    "Tuple" "URI" "UnboundMethod")
   "Elixir mode modules.")
+
 (defvar elixir-mode-builtin-names
-  '("Erlang"
-    "__MODULE__"
-    "__LINE__"
-    "__FILE__"
-    "__ENV__")
+  '("Erlang" "__MODULE__" "__LINE__" "__FILE__" "__ENV__")
   "Elixir mode builtins.")
+
 (defvar elixir-mode-operator-names
-  '("+"
-    "++"
-    "<>"
-    "-"
-    "/"
-    "*"
-    "div"
-    "rem"
-    "=="
-    "!="
-    "<="
-    "<"
-    ">="
-    ">"
-    "==="
-    "!=="
-    "and"
-    "or"
-    "not"
-    "&&"
-    "||"
-    "!"
-    "."
-    "#"
-    "="
-    ":="
-    "<-")
+  '("+" "++" "<>" "-" "/" "*" "div" "rem" "==" "!=" "<=" "<" ">=" ">" "==="
+    "!==" "and" "or" "not" "&&" "||" "!" "." "#" "=" ":=" "<-")
   "Elixir mode operators.")
 
 (defvar elixir-mode-sigils '("B" "C" "R" "b" "c" "r")
@@ -356,45 +255,151 @@
   "For use with operators."
   :group 'font-lock-faces)
 
+(eval-when-compile
+  (defconst elixir-rx-constituents
+    `(
+      (keywords . ,(rx symbol-start
+                      (or "->" "bc" "lc" "in" "inbits" "inlist" "quote"
+                          "unquote" "unquote_splicing" "var" "do" "after" "for"
+                          "def" "defdelegate" "defimpl" "defmacro" "defmacrop"
+                          "defmodule" "defoverridable" "defp" "defprotocol"
+                          "defrecord" "defstruct" "destructure" "alias"
+                          "require" "import" "use" "if" "unless" "when" "case"
+                          "cond" "throw" "then" "else" "elsif" "try" "catch"
+                          "rescue" "fn" "function" "receive" "end")
+                      symbol-end))
+      (imports . ,(rx symbol-start
+                      (or "use" "require" "import")
+                      symbol-end))
+      (bool-and-nil . ,(rx symbol-start
+                           (or "true" "false" "nil")
+                           symbol-end))
+      (builtins . ,(rx symbol-start
+                       (or "Erlang" "__MODULE__" "__LINE__" "__FILE__"
+                           "__ENV__" "__DIR__")
+                       symbol-end))
+      (sigils . ,(rx "~" (or "B" "C" "R" "S" "b" "c" "r" "s" "w")))
+      (method-defines . ,(rx symbol-start
+                      (or "def" "defdelegate" "defmacro" "defmacrop"
+                          "defoverridable" "defp" "defmacrop")
+                      symbol-end))
+      (module-defines . ,(rx symbol-start
+                             (or "defmodule" "defprotocol" "defimpl"
+                                 "defrecord")
+                             symbol-end))
+      (builtin-modules . ,(rx symbol-start
+                              (or "Agent" "Base" "Behavior" "Binary" "Bitwise"
+                                  "Builtin" "Elixir" "Code" "EEx" "Enum"
+                                  "ExUnit" "Exception" "File" "GenServer"
+                                  "Function" "GenServer" "GenTCP" "HashDict"
+                                  "IO" "Keyword" "List" "Math" "Module" "Node"
+                                  "OptionParser" "OrdDict" "Port" "Process"
+                                  "Record" "Regexp" "System" "Task" "Tuple"
+                                  "URI" "UnboundMethod")
+                              symbol-end))
+      (operators . ,(rx symbol-start
+                        (or "+" "++" "<>" "-" "/" "*" "div" "rem" "==" "!=" "<="
+                            "<" ">=" ">" "===" "!==" "and" "or" "not" "&&" "||"
+                            "!" "." "#" "=" ":=" "<-")))
+      (resource-name . ,(rx symbol-start
+                            (zero-or-more (any "A-Z")
+                                          (zero-or-more
+                                           (any "a-z"))
+                                          "."
+                                          (any "A-Z")
+                                          (zero-or-more
+                                           (any "a-z")))
+                            symbol-end))
+      (variables . ,(rx symbol-start
+                        (one-or-more (any "A-Z" "a-z" "0-9" "_"))
+                        symbol-end))
+      (atoms . ,(rx ":"
+                    (or
+                     (one-or-more (any "a-z" "A-Z" "0-9" "_"))
+                     (and "\"" (one-or-more (not (any "\""))) "\"")
+                     (and "'" (one-or-more (not (any "'"))) "'"))))
+      (code-point . ,(rx "?" anything))))
+
+  (defmacro elixir-rx (&rest sexps)
+    (let ((rx-constituents (append elixir-rx-constituents rx-constituents)))
+      (cond ((null sexps)
+             (error "No regexp"))
+            ((cdr sexps)
+             (rx-to-string `(and ,@sexps) t))
+            (t
+             (rx-to-string (car sexps) t))))))
+
 (defconst elixir-mode-font-lock-defaults
-  (list
-   ;; records and modules at point of definition:
-   '("^\\s *def\\(module\\|record\\|protocol\\|impl\\)\\s +\\([^( \t\n,]+\\)" 2 font-lock-type-face)
+  `(
+    ;; Import, module- and method-defining keywords
+    (,(elixir-rx (or method-defines module-defines imports)
+                 space
+                 (group resource-name))
+     1 font-lock-type-face)
 
-   ;; use/require/import:
-   '("^\\s *\\(use\\|require\\|import\\)\\s \\([^\n]+\\)" 2 font-lock-type-face)
+    ;; Keywords
+    (,(elixir-rx (group keywords))
+     1 font-lock-keyword-face)
 
-   ;; methods:
-   `(,(concat "^\\s *\\<" (regexp-opt elixir-mode-define-names t) "\\>\\s +\\([^( \t\n]+\\)") 2 font-lock-function-name-face)
+    ;; Method names, i.e. `def foo do'
+    (,(elixir-rx method-defines
+                 space
+                 (group (one-or-more (any "a-z" "_"))))
+     1 font-lock-function-name-face)
 
-   ;; keywords:
-   `(,(concat "\\<" (regexp-opt elixir-mode-keyword-names t) "\\>") . font-lock-keyword-face)
+    ;; Variable definitions
+    (,(elixir-rx (group variables)
+                 (one-or-more space)
+                 "="
+                 (one-or-more space))
+     1 font-lock-variable-name-face)
 
-   ;; ~ Sigils
-   `(,(concat "\\<~" (regexp-opt elixir-mode-sigils t) "\\>") . font-lock-builtin-face)
+    ;; Built-in constants
+    (,(elixir-rx (group builtins))
+     1 font-lock-builtin-face)
 
-   ;; builtins:
-   `(,(concat "\\<" (regexp-opt elixir-mode-builtin-names t) "\\>") . font-lock-builtin-face)
+    ;; Sigils
+    (,(elixir-rx (group sigils))
+     1 font-lock-builtin-face)
 
-   ;; core modules:
-   `(,(concat "\\<" (regexp-opt elixir-mode-module-names t) "\\>") . font-lock-type-face)
+    ;; Regex patterns. Elixir has support for eight different regex delimiters.
+    ;; This isn't a very DRY approach here but it gets the job done.
+    (,(elixir-rx "~r"
+                 (and "/" (group (one-or-more (not (any "/")))) "/"))
+     1 font-lock-string-face)
+    (,(elixir-rx "~r"
+                  (and "[" (group (one-or-more (not (any "]")))) "]"))
+     1 font-lock-string-face)
+    (,(elixir-rx "~r"
+                  (and "{" (group (one-or-more (not (any "}")))) "}"))
+     1 font-lock-string-face)
+    (,(elixir-rx "~r"
+                  (and "(" (group (one-or-more (not (any ")")))) ")"))
+     1 font-lock-string-face)
+    (,(elixir-rx "~r"
+                  (and "|" (group (one-or-more (not (any "|")))) "|"))
+     1 font-lock-string-face)
+    (,(elixir-rx "~r"
+                  (and "\"" (group (one-or-more (not (any "\"")))) "\""))
+     1 font-lock-string-face)
+    (,(elixir-rx "~r"
+                  (and "'" (group (one-or-more (not (any "'")))) "'"))
+     1 font-lock-string-face)
+    (,(elixir-rx "~r"
+                  (and "<" (group (one-or-more (not (any ">")))) ">"))
+     1 font-lock-string-face)
 
-   ;; operators:
-   (when elixir-mode-highlight-operators
-     `(,(concat "\\<" (regexp-opt elixir-mode-operator-names t) "\\>") . font-lock-operator-face))
+    ;; Built-in modules
+    (,(elixir-rx (group builtin-modules))
+     1 font-lock-constant-face)
 
-   ;; variables:
-   '("\\(\\w+\\)\\s-*:?=[^=]" 1 font-lock-variable-name-face)
+    ;; Operators
+    (,(elixir-rx (group operators))
+     1 font-lock-operator-face)
 
-   ;; regexes:
-   '("~r/\\(.*\\)/[, \n\t]*" 1 font-lock-string-face)
-
-   ;; atoms, boolean:
-   '("\\<\\(true\\|false\\|nil\\)\\>" . font-lock-reference-face)
-
-   ;; atoms, generic
-   '("[@:]\\w*\\|\\w*:\\s-" . font-lock-reference-face))
-  "Highlighting for Elixir mode.")
+    ;; Atoms and singleton-like words like true/false/nil.
+    (,(elixir-rx (group (or atoms bool-and-nil)))
+     1 font-lock-reference-face)))
 
 (defun elixir-mode-cygwin-path (expanded-file-name)
   "Elixir mode get Cygwin absolute path name.
