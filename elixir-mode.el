@@ -255,14 +255,23 @@
                                  "defrecord")
                              symbol-end))
       (builtin-modules . ,(rx symbol-start
-                              (or "Agent" "Base" "Behavior" "Binary" "Bitwise"
-                                  "Builtin" "Elixir" "Code" "EEx" "Enum"
-                                  "ExUnit" "Exception" "File" "GenServer"
-                                  "Function" "GenServer" "GenTCP" "HashDict"
-                                  "IO" "Keyword" "List" "Math" "Module" "Node"
-                                  "OptionParser" "OrdDict" "Port" "Process"
-                                  "Record" "Regexp" "System" "Task" "Tuple"
-                                  "URI" "UnboundMethod")
+                              (or "Agent" "Application" "Atom" "Base"
+                                  "Behaviour" "Bitwise" "Builtin" "Code" "Dict"
+                                  "EEx" "Elixir" "Enum" "ExUnit" "Exception"
+                                  "File" "File.Stat" "File.Stream" "Float"
+                                  "Function" "GenEvent" "GenServer" "GenTCP"
+                                  "HashDict" "HashSet" "IO" "IO.ANSI"
+                                  "IO.Stream" "Inspect.Algebra" "Inspect.Opts"
+                                  "Integer" "Kernel" "Kernel.ParallelCompiler"
+                                  "Kernel.ParallelRequire" "Kernel.SpecialForms"
+                                  "Kernel.Typespec" "Keyword" "List" "Macro"
+                                  "Macro.Env" "Map" "Math" "Module" "Node"
+                                  "OptionParser" "OrdDict" "Path" "Port"
+                                  "Process" "Protocol" "Range" "Record" "Regex"
+                                  "Set" "Stream" "String" "StringIO"
+                                  "Supervisor" "Supervisor.Spec" "System" "Task"
+                                  "Task.Supervisor" "Tuple" "URI"
+                                  "UnboundMethod" "Version")
                               symbol-end))
       (operators . ,(rx symbol-start
                         (or "+" "++" "<>" "-" "/" "*" "div" "rem" "==" "!=" "<="
