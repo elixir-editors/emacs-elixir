@@ -27,7 +27,10 @@ buffer."
   (elixir-test-with-temp-buffer
    "match = ~r/foo/"
    (should (eq (elixir-test-face-at 1) 'font-lock-variable-name-face))
-   (should (eq (elixir-test-face-at 9) 'font-lock-builtin-face))))
+   (should (eq (elixir-test-face-at 9) 'font-lock-builtin-face))
+   (should (eq (elixir-test-face-at 12) 'font-lock-string-face))
+   ;; no face for regex delimiters
+   (should (eq (elixir-test-face-at 15) nil))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-modules-and-types ()
   :tags '(fontification syntax-table)
