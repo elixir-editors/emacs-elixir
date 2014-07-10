@@ -308,9 +308,15 @@ Return non-nil if any line breaks were skipped."
      ;; for some reason SMIE doesn't look this far when there's a
      ;; comment terminating the previous line. Ugh.
      nil)
+    ;; If the parent token of `->' is `fn', then we want to align to the
+    ;; parent, and offset by `elixir-smie-indent-basic'. Otherwise, indent
+    ;; normally. This helps us work with/indent anonymous function blocks
+    ;; correctly.
     (`(:after . "->")
      (when (smie-rule-hanging-p)
-       elixir-smie-indent-basic))
+       (if (smie-rule-parent-p "fn")
+           (smie-rule-parent elixir-smie-indent-basic)
+         elixir-smie-indent-basic)))
     (`(,_ . ,(or `"COMMA")) (smie-rule-separator kind))
     (`(:after . "=") elixir-smie-indent-basic)
     (`(:after . "end") 0)
