@@ -376,7 +376,7 @@ end"
 end")
 
 (elixir-def-indentation-test indents-list-of-floats-aligns
-    (:expected-result :failed) ; #49
+    ()
   "
 [1.2,
 3.4]"

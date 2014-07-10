@@ -264,7 +264,6 @@ Return non-nil if any line breaks were skipped."
            )
           (non-block-expr
            (non-block-expr "OP" non-block-expr)
-           (non-block-expr "DOT" non-block-expr)
            (non-block-expr "COMMA" non-block-expr)
            ("(" statements ")")
            ("{" statements "}")
@@ -275,8 +274,7 @@ Return non-nil if any line breaks were skipped."
            (match-statement))
           (match-statement
            (non-block-expr "->" statements)))
-        '((assoc "DOT")
-          (assoc "if")
+        '((assoc "if")
           (assoc "do:")
           (assoc "else:")
           (assoc "COMMA")
