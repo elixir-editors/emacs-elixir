@@ -208,7 +208,16 @@ has_something(x) &&
 ")
 
 (elixir-def-indentation-test indents-last-commented-line
-    (:expected-result :failed) ; #27
+    ()
+  "
+defmodule Foo
+def bar do
+2
+end
+
+# last line
+end
+"
   "
 defmodule Foo
   def bar do
@@ -216,15 +225,6 @@ defmodule Foo
   end
 
   # last line
-end
-"
-  "
-  defmodule Foo
-  def bar do
-    2
-  end
-
-# last line
 end
 ")
 
