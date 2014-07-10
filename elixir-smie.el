@@ -84,7 +84,6 @@
                                  "===" "!=="                                                      ; comp3
                                  "==" "!=" "<=" ">="                                              ; comp2
                                  "<" ">"                                                          ; comp1
-                                 "+" "-" "*" "/" "=" "|" "!" "^" "@"                              ; op1
                                  "&&" "||" "<>" "++" "--" "**" "//" "::" "<-"  ".." "/>" "=~"     ; op2 (minus ->)
                                  "xor" "|>"                                                       ; http://elixir-lang.org/docs/stable/Kernel.html
                                  )
@@ -320,7 +319,7 @@ Return non-nil if any line breaks were skipped."
     (`(:after . "end") 0)
     (`(:after . ,(or `"do"))
      elixir-smie-indent-basic)
-    (`(:list-intro . ,(or `"do")) t)))
+    (`(:list-intro . ,(or `"do" `";")) t)))
 
 (define-minor-mode elixir-smie-mode
   "SMIE-based indentation and syntax for Elixir"
