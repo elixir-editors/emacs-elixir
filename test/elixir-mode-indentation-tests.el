@@ -125,6 +125,22 @@ defmodule FooBar do
   end
 end")
 
+(elixir-def-indentation-test indents-do-blocks-with-space-after-inline (:expected-result :failed)
+  "defmodule Foo do
+def foobar do
+if true, do: IO.puts \"yay\"
+
+20
+end
+end"
+  "defmodule Foo do
+  def foobar do
+    if true, do: IO.puts \"yay\"
+
+    20
+  end
+end")
+
 (elixir-def-indentation-test indents-after-empty-line
     ()
   "
