@@ -46,3 +46,11 @@ buffer."
    (should (eq (elixir-test-face-at 41) 'font-lock-type-face))
    (should (eq (elixir-test-face-at 52) 'font-lock-type-face))
    (should (eq (elixir-test-face-at 53) 'font-lock-type-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-regex-with-question-mark ()
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+      "ptn = ~r/^user-mnl6yssn: (?<ct>\d+)$/mg"
+    (should (eq (elixir-test-face-at 10) 'font-lock-string-face))
+    (should (eq (elixir-test-face-at 28) 'font-lock-string-face))
+    (should (eq (elixir-test-face-at 30) 'font-lock-string-face))))

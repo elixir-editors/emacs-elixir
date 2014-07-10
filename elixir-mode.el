@@ -298,6 +298,37 @@
 
 (defconst elixir-mode-font-lock-defaults
   `(
+    ;; Regex patterns. Elixir has support for eight different regex delimiters.
+    ;; This isn't a very DRY approach here but it gets the job done.
+    (,(elixir-rx "~r"
+                 (and "/" (group (one-or-more (not (any "/")))) "/"))
+     1 font-lock-string-face)
+    (,(elixir-rx "~r"
+                  (and "[" (group (one-or-more (not (any "]")))) "]"))
+     1 font-lock-string-face)
+    (,(elixir-rx "~r"
+                  (and "{" (group (one-or-more (not (any "}")))) "}"))
+     1 font-lock-string-face)
+    (,(elixir-rx "~r"
+                  (and "(" (group (one-or-more (not (any ")")))) ")"))
+     1 font-lock-string-face)
+    (,(elixir-rx "~r"
+                  (and "|" (group (one-or-more (not (any "|")))) "|"))
+     1 font-lock-string-face)
+    (,(elixir-rx "~r"
+                  (and "\"" (group (one-or-more (not (any "\"")))) "\""))
+     1 font-lock-string-face)
+    (,(elixir-rx "~r"
+                  (and "'" (group (one-or-more (not (any "'")))) "'"))
+     1 font-lock-string-face)
+    (,(elixir-rx "~r"
+                  (and "<" (group (one-or-more (not (any ">")))) ">"))
+     1 font-lock-string-face)
+
+    ;; Code points (i.e. `?c')
+    (,(elixir-rx (group code-point))
+     1 font-lock-reference-face)
+
     ;; Import, module- and method-defining keywords
     (,(elixir-rx (or method-defines module-defines imports)
                  space
@@ -328,33 +359,6 @@
     ;; Sigils
     (,(elixir-rx (group sigils))
      1 font-lock-builtin-face)
-
-    ;; Regex patterns. Elixir has support for eight different regex delimiters.
-    ;; This isn't a very DRY approach here but it gets the job done.
-    (,(elixir-rx "~r"
-                 (and "/" (group (one-or-more (not (any "/")))) "/"))
-     1 font-lock-string-face)
-    (,(elixir-rx "~r"
-                  (and "[" (group (one-or-more (not (any "]")))) "]"))
-     1 font-lock-string-face)
-    (,(elixir-rx "~r"
-                  (and "{" (group (one-or-more (not (any "}")))) "}"))
-     1 font-lock-string-face)
-    (,(elixir-rx "~r"
-                  (and "(" (group (one-or-more (not (any ")")))) ")"))
-     1 font-lock-string-face)
-    (,(elixir-rx "~r"
-                  (and "|" (group (one-or-more (not (any "|")))) "|"))
-     1 font-lock-string-face)
-    (,(elixir-rx "~r"
-                  (and "\"" (group (one-or-more (not (any "\"")))) "\""))
-     1 font-lock-string-face)
-    (,(elixir-rx "~r"
-                  (and "'" (group (one-or-more (not (any "'")))) "'"))
-     1 font-lock-string-face)
-    (,(elixir-rx "~r"
-                  (and "<" (group (one-or-more (not (any ">")))) ">"))
-     1 font-lock-string-face)
 
     ;; Built-in modules
     (,(elixir-rx (group builtin-modules))
