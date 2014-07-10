@@ -294,6 +294,10 @@ Return non-nil if any line breaks were skipped."
 
 (defun elixir-smie-rules (kind token)
   (pcase (cons kind token)
+    (`(:after . "STRING")
+     (if (smie-rule-prev-p "do:")
+         (smie-rule-parent 0)
+       nil))
     (`(:elem . basic)
      (if (smie-rule-hanging-p)
          0
