@@ -259,6 +259,7 @@ Return non-nil if any line breaks were skipped."
            ("try" "do" statements "end")
            ("case" non-block-expr "do" match-statements "end")
            ("def" non-block-expr "do" statements "end")
+           (non-block-expr "fn" match-statement "end")
            (non-block-expr "do" statements "end")
            (expr)
            )
