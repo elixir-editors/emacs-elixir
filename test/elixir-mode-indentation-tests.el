@@ -126,20 +126,23 @@ defmodule FooBar do
 end")
 
 (elixir-def-indentation-test indents-after-empty-line
-    (:expected-result :failed) ; #18
+    ()
   "
-a = 2
-
-  b = a + 3
-
-    c = a + b"
-  "
+def foo do
 a = 2
 
 b = a + 3
 
-c = a + b")
+c = a * b
+end"
+  "
+def foo do
+  a = 2
 
+  b = a + 3
+
+  c = a * b
+end")
 
 (elixir-def-indentation-test indents-function-calls-without-parens ()
   "
