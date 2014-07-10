@@ -1,3 +1,10 @@
+## v1.4.0 - 2014/07/09
+* [#62](https://github.com/elixir-lang/emacs-elixir/pull/62) - Remove grammar entry causing erroneous alignment to ".". Fixes #49
+* [#61](https://github.com/elixir-lang/emacs-elixir/pull/61) - Remove "=" & left-assoc opers from "OP" regex. Fixes #18.
+* [#60](https://github.com/elixir-lang/emacs-elixir/pull/60) - Refactor font face defaults.
+* [#58](https://github.com/elixir-lang/emacs-elixir/pull/58) - Use string syntax highlighting for regex patterns.
+* [#57](https://github.com/elixir-lang/emacs-elixir/pull/57) - Add beginnings of font-face testing.
+
 ## v1.3.1 - 2014/07/05
 * [#52](https://github.com/elixir-lang/emacs-elixir/pull/52) - Add CLI for running elixir-mode tests.
 * [#48](https://github.com/elixir-lang/emacs-elixir/pull/48) - Add a SMIE rule function for "def". Fixes #38 and #41
