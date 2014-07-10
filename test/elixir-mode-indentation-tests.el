@@ -374,3 +374,12 @@ end"
     x = fn(a, b) -> a + b end
   end
 end")
+
+(elixir-def-indentation-test indents-list-of-floats-aligns
+    ()
+  "
+[1.2,
+3.4]"
+  "
+[1.2,
+ 3.4]")
