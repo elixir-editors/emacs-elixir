@@ -250,6 +250,8 @@ Return non-nil if any line breaks were skipped."
            (statement)
            (statement ";" statements))
           (statement
+           (non-block-expr "fn" match-statement "end")
+           (non-block-expr "do" statements "end")
            ("if" non-block-expr "do" statements "else" statements "end")
            ("if" non-block-expr "do" statements "end")
            ("if" non-block-expr "COMMA" "do:" statement)
@@ -258,11 +260,7 @@ Return non-nil if any line breaks were skipped."
            ("try" "do" statements "catch" match-statements "end")
            ("try" "do" statements "end")
            ("case" non-block-expr "do" match-statements "end")
-           ("def" non-block-expr "do" statements "end")
-           (non-block-expr "fn" match-statement "end")
-           (non-block-expr "do" statements "end")
-           (expr)
-           )
+           ("def" non-block-expr "do" statements "end"))
           (non-block-expr
            (non-block-expr "OP" non-block-expr)
            (non-block-expr "COMMA" non-block-expr)
