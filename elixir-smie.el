@@ -306,12 +306,6 @@ Return non-nil if any line breaks were skipped."
      (unless (smie-rule-sibling-p)
        elixir-smie-indent-basic))
     (`(:before . "def") elixir-smie-indent-basic)
-    (`(:before . "OP")
-     ;; FIXME: Issue #5: This should prevent comments on lines before
-     ;; continuation lines from causing indentation messed-upness, but
-     ;; for some reason SMIE doesn't look this far when there's a
-     ;; comment terminating the previous line. Ugh.
-     nil)
     ;; If the parent token of `->' is `fn', then we want to align to the
     ;; parent, and offset by `elixir-smie-indent-basic'. Otherwise, indent
     ;; normally. This helps us work with/indent anonymous function blocks
