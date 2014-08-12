@@ -535,15 +535,11 @@ Argument END End of the region."
     ))
 
 ;;;###autoload
-(defun elixir-mode ()
-  "Major mode for editing Elixir files."
-  (interactive)
-  (kill-all-local-variables)
-  (use-local-map elixir-mode-map)
-  (set-syntax-table elixir-mode-syntax-table)
+(define-derived-mode elixir-mode prog-mode "Elixir"
+  "Major mode for editing Elixir code.
+
+\\{elixir-mode-map}"
   (set (make-local-variable 'font-lock-defaults) '(elixir-mode-font-lock-defaults))
-  (setq major-mode 'elixir-mode)
-  (setq mode-name "Elixir")
   (set (make-local-variable 'comment-start) "# ")
   (set (make-local-variable 'comment-end) "")
   (set (make-local-variable 'comment-use-syntax) t)
@@ -553,9 +549,7 @@ Argument END End of the region."
       (set (make-local-variable 'syntax-propertize-function) 'elixir-syntax-propertize))
   (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules ; 'elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
-              :backward-token 'elixir-smie-backward-token)
-  (run-hooks 'elixir-mode-hook)
-  (run-hooks 'prog-mode-hook))
+              :backward-token 'elixir-smie-backward-token))
 
 (define-minor-mode elixir-cos-mode
   "Elixir mode toggle compile on save."
