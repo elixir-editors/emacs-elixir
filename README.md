@@ -140,11 +140,6 @@ Custom variables for elixir-mode.
         <td>Command to start an interactive REPL in <code>IEX</code>.</td>
     </tr>
     <tr>
-        <td><code>elixir-mode-highlight-operators (boolean)</code></td>
-        <td><code>t</code></td>
-        <td>Should operators be colored? (Currently not working properly.)</td>
-    </tr>
-    <tr>
         <td><code>elixir-mode-cygwin-paths (boolean)</code></td>
         <td><code>t</code></td>
         <td>Should Cygwin paths be used on Windows?</td>

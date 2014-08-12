@@ -47,10 +47,6 @@
 ;;
 ;;          Path to the executable <iex> command
 ;;
-;;      `elixir-mode-highlight-operators`
-;;
-;;          Option for whether or not to highlight operators.
-;;
 ;;      `elixir-mode-cygwin-paths`
 ;;
 ;;          Use Cygwin style paths on Windows operating systems.
@@ -189,11 +185,6 @@
 (defcustom elixir-iex-command "iex"
   "Elixir mode command for interactive REPL.  Must be in your path."
   :type 'string
-  :group 'elixir)
-
-(defcustom elixir-mode-highlight-operators t
-  "Elixir mode option for whether or not to highlight operators."
-  :type 'boolean
   :group 'elixir)
 
 (defcustom elixir-mode-cygwin-paths t
