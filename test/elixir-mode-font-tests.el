@@ -46,3 +46,12 @@ buffer."
    (should (eq (elixir-test-face-at 41) 'font-lock-type-face))
    (should (eq (elixir-test-face-at 52) 'font-lock-type-face))
    (should (eq (elixir-test-face-at 53) 'font-lock-type-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-regex-with-quote ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/23"
+  :tags '(fontification syntax-table)
+  :expected-result :failed
+  (elixir-test-with-temp-buffer
+      "~r/\"/
+x = 15"
+    (should (eq (elixir-test-face-at 7) 'font-lock-variable-name-face))))
