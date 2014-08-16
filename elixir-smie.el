@@ -209,6 +209,25 @@ Return non-nil if any line breaks were skipped."
 (defun elixir-smie-backward-token ()
   (elixir-smie-next-token nil))
 
+;; Lifting this directly from octave.el
+;; http://git.savannah.gnu.org/cgit/emacs.git/tree/lisp/progmodes/octave.el?h=emacs-24
+;; and ruby-mode.el
+;; http://git.savannah.gnu.org/cgit/emacs.git/tree/lisp/progmodes/ruby-mode.el?h=emacs-24
+(defconst elixir-operator-table
+  '((right "=")
+    (right "+=" "-=" "*=" "/=" "%=" "**=" "&=" "|=" "^="
+           "<<=" ">>=" "&&=" "||=")
+    (left "+" "-" "<>")
+    (left "*" "/" "%" "**")
+    (left "&&" "||")
+    (left "^" "&" "|")
+    (nonassoc "<=>")
+    (nonassoc ">" ">=" "<" "<=")
+    (nonassoc "==" "===" "!=")
+    (nonassoc "=~" "!~")
+    (left "<<" ">>")
+    (right ".")))
+
 (setq elixir-smie-grammar
       (smie-prec2->grammar
        (smie-bnf->prec2
