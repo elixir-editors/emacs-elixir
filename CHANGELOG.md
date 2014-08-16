@@ -1,3 +1,14 @@
+## v1.4.2 - 2014/08/15
+* [#73](https://github.com/elixir-lang/emacs-elixir/pull/73) - Fix buggy syntax highlighting behavior involving "?"
+* [#71](https://github.com/elixir-lang/emacs-elixir/pull/71) - Need two backslashes in regex string.
+* [#70](https://github.com/elixir-lang/emacs-elixir/pull/70) - Use define-derived-mode to define elixir-mode
+* [#69](https://github.com/elixir-lang/emacs-elixir/pull/69) - Remove unused variable
+
+## v1.4.1 - 2014/08/11
+* [#66](https://github.com/elixir-lang/emacs-elixir/pull/66) - Indent correctly after one-liner if/do: statements. Fixes #65
+* [#64](https://github.com/elixir-lang/emacs-elixir/pull/64) - wrong indentation if space between if and statement
+* [#63](https://github.com/elixir-lang/emacs-elixir/pull/63) - Correctly indent one-line anon fns AND block fns. Fixes #59
+
 ## v1.4.0 - 2014/07/09
 * [#62](https://github.com/elixir-lang/emacs-elixir/pull/62) - Remove grammar entry causing erroneous alignment to ".". Fixes #49
 * [#61](https://github.com/elixir-lang/emacs-elixir/pull/61) - Remove "=" & left-assoc opers from "OP" regex. Fixes #18.
