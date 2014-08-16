@@ -53,14 +53,7 @@
            ,regexp)
          (pushnew `(,',regex-name . ,(upcase (symbol-name ',name))) elixir-syntax-class-names))))
 
-  (elixir-smie-define-regexp-opt op
-                                 "<<<" ">>>" "^^^" "~~~" "&&&" "|||"                              ; op3
-                                 "===" "!=="                                                      ; comp3
-                                 "==" "!=" "<=" ">="                                              ; comp2
-                                 "<" ">"                                                          ; comp1
-                                 "&&" "||" "<>" "++" "--" "**" "//" "::" "<-"  ".." "/>" "=~"     ; op2 (minus ->)
-                                 "xor" "|>"                                                       ; http://elixir-lang.org/docs/stable/Kernel.html
-                                 )
+  (elixir-smie-define-regexp-opt op "&&" "||" "!")
   (elixir-smie-define-regexp dot "\\.")
   (elixir-smie-define-regexp comma ",")
   (elixir-smie-define-regexp -> "->")
@@ -290,7 +283,6 @@ Return non-nil if any line breaks were skipped."
            (smie-rule-parent elixir-smie-indent-basic)
          elixir-smie-indent-basic)))
     (`(,_ . ,(or `"COMMA")) (smie-rule-separator kind))
-    (`(:after . "=") elixir-smie-indent-basic)
     (`(:after . "end") 0)
     (`(:after . ,(or `"do"))
      elixir-smie-indent-basic)

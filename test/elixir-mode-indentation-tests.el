@@ -399,3 +399,37 @@ end")
   "
 [1.2,
  3.4]")
+
+(elixir-def-indentation-test indent-after-operator ()
+  "
+defmodule Banana do
+def start do
+a = \"\" <> \"?\"
+
+case bar do
+z -> 1
+end
+
+case foo do
+?x -> x
+end
+
+end
+end
+"
+  "
+defmodule Banana do
+  def start do
+    a = \"\" <> \"?\"
+
+    case bar do
+      z -> 1
+    end
+
+    case foo do
+      ?x -> x
+    end
+
+  end
+end
+")
