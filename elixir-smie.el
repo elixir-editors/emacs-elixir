@@ -62,7 +62,7 @@
   (elixir-smie-define-regexp-opt parens "(" ")" "{" "}" "[" "]" "<<" ">>"))
 
 (defconst elixir-smie-block-intro-keywords
-  '(do else catch after rescue -> COMMA OP)
+  '(do else catch after rescue -> OP)
   "Keywords in which newlines cause confusion for the parser.")
 
 (defun elixir-skip-comment-backward ()
@@ -81,7 +81,7 @@ Return non-nil if any line breaks were skipped."
     (forward-comment (buffer-size))
     (/= start-line-no (line-number-at-pos (point)))))
 
-(defun elixir-smie-next-token-no-lookaround (forwardp nested)
+(defun elixir-smie-next-token-no-lookaround (forwardp)
   (block elixir-smie-next-token-no-lookaround
     ;; First, skip comments; but if any comments / newlines were
     ;; skipped, the upper level needs to check if they were significant:
@@ -132,7 +132,7 @@ Return non-nil if any line breaks were skipped."
 
 (defun elixir-smie-next-token (forwardp)
   (block elixir-smie-next-token
-    (let ((current-token (elixir-smie-next-token-no-lookaround forwardp nil)))
+    (let ((current-token (elixir-smie-next-token-no-lookaround forwardp)))
       (when (string= "\n" current-token)
         ;; This is a newline; if the previous token isn't an OP2, this
         ;; means the line end marks the end of a statement & we get to
@@ -141,9 +141,10 @@ Return non-nil if any line breaks were skipped."
         ;; statement (but see below).
         (if (save-excursion
               (block nil
-                (let ((token (elixir-smie-next-token-no-lookaround nil t)))
-                  (while (and (not (= (point) (point-min))) (string= "\n" token))
-                    (setq token (elixir-smie-next-token-no-lookaround nil t)))
+                (let ((token (elixir-smie-next-token-no-lookaround nil)))
+                  (while (and (not (= (point) (point-min)))
+                              (string= "\n" token))
+                    (setq token (elixir-smie-next-token-no-lookaround nil)))
                   (when (member (intern token) elixir-smie-block-intro-keywords)
                     (return t)))))
             ;; it's a continuation line, return the next token after the newline:
@@ -173,7 +174,7 @@ Return non-nil if any line breaks were skipped."
                           (not (string= "" token))
                           ;; ...nor a newline nor a semicolon.
                           (not (or (string= "\n" token) (string= ";" token))))
-                       (setq token (elixir-smie-next-token-no-lookaround t nil))
+                       (setq token (elixir-smie-next-token-no-lookaround t))
                        ;; If we're at the top level and the token is "->",
                        ;; return t
                        (cond ((and (= level 0) (string= "->" token))
@@ -196,7 +197,7 @@ Return non-nil if any line breaks were skipped."
                           (not (string= "" token))
                           (not (string= "do" token))
                           (not (string= "fn" token)))
-                       (setq token (elixir-smie-next-token-no-lookaround nil nil))
+                       (setq token (elixir-smie-next-token-no-lookaround nil))
                        (when (string= "->" token)
                          (return t)))
                      (when (string= token "do") t)))))
@@ -204,48 +205,43 @@ Return non-nil if any line breaks were skipped."
         current-token))))
 
 (defun elixir-smie-forward-token ()
-  (elixir-smie-next-token t))
+ (elixir-smie-next-token t))
 
 (defun elixir-smie-backward-token ()
   (elixir-smie-next-token nil))
 
-(setq elixir-smie-grammar
-      (smie-prec2->grammar
-       (smie-bnf->prec2
-        '((id)
-          (statements
-           (statement)
-           (statement ";" statements))
-          (statement
-           (non-block-expr "fn" match-statement "end")
-           (non-block-expr "do" statements "end")
-           ("if" non-block-expr "do" statements "else" statements "end")
-           ("if" non-block-expr "do" statements "end")
-           ("if" non-block-expr "COMMA" "do:" statement)
-           ("if" non-block-expr "COMMA" "do:" statement "COMMA" "else:" statement)
-           ("try" "do" statements "after" statements "end")
-           ("try" "do" statements "catch" match-statements "end")
-           ("try" "do" statements "end")
-           ("case" non-block-expr "do" match-statements "end")
-           ("def" non-block-expr "do" statements "end"))
-          (non-block-expr
-           (non-block-expr "OP" non-block-expr)
-           (non-block-expr "COMMA" non-block-expr)
-           ("(" statements ")")
-           ("{" statements "}")
-           ("[" statements "]")
-           ("STRING"))
-          (match-statements
-           (match-statement "MATCH-STATEMENT-DELIMITER" match-statements)
-           (match-statement))
-          (match-statement
-           (non-block-expr "->" statements)))
-        '((assoc "if")
-          (assoc "do:")
-          (assoc "else:")
-          (assoc "COMMA")
-          (assoc "OP")
-          (assoc "->" ";")))))
+(defconst elixir-smie-grammar
+  (smie-prec2->grammar
+   (smie-bnf->prec2
+    '((id)
+      (statements (statement)
+                  (statement ";" statements))
+      (statement ("defrecord" non-block-expr "do" statements "end")
+                 ("def" non-block-expr "do" statements "end")
+                 (non-block-expr "fn" match-statement "end")
+                 (non-block-expr "do" statements "end")
+                 ("if" non-block-expr "do" statements "else" statements "end")
+                 ("if" non-block-expr "do" statements "end")
+                 ("if" non-block-expr "COMMA" "do:" non-block-expr)
+                 ("if" non-block-expr "COMMA"
+                  "do:" non-block-expr "COMMA"
+                  "else:" non-block-expr)
+                 ("try" "do" statements "after" statements "end")
+                 ("try" "do" statements "catch" match-statements "end")
+                 ("try" "do" statements "end")
+                 ("case" non-block-expr "do" match-statements "end"))
+      (non-block-expr (non-block-expr "OP" non-block-expr)
+                      (non-block-expr "COMMA" non-block-expr)
+                      ("(" statements ")")
+                      ("{" statements "}")
+                      ("[" statements "]")
+                      ("STRING"))
+      (match-statements (match-statement "MATCH-STATEMENT-DELIMITER" match-statements)
+                        (match-statement))
+      (match-statement (non-block-expr "->" statements)))
+    '((assoc "if" "do:" "else:")
+      (assoc "COMMA")
+      (left "OP")))))
 
 (defvar elixir-smie-indent-basic 2)
 
@@ -282,11 +278,13 @@ Return non-nil if any line breaks were skipped."
        (if (smie-rule-parent-p "fn")
            (smie-rule-parent elixir-smie-indent-basic)
          elixir-smie-indent-basic)))
-    (`(,_ . ,(or `"COMMA")) (smie-rule-separator kind))
-    (`(:after . "end") 0)
-    (`(:after . ,(or `"do"))
+    (`(:after . "do")
      elixir-smie-indent-basic)
-    (`(:list-intro . ,(or `"do" `";")) t)))
+    (`(:list-intro . ,(or `"do" `";")) t)
+    (`(:after . ";")
+     (if (smie-rule-parent-p "if")
+         (smie-rule-parent 0)))))
+
 
 (define-minor-mode elixir-smie-mode
   "SMIE-based indentation and syntax for Elixir"
