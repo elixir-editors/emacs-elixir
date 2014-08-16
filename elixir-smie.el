@@ -240,12 +240,13 @@ Return non-nil if any line breaks were skipped."
            (match-statement))
           (match-statement
            (non-block-expr "->" statements)))
-        '((assoc "if")
+        '((assoc ";")
+          (assoc "if")
           (assoc "do:")
           (assoc "else:")
           (assoc "COMMA")
           (assoc "OP")
-          (assoc "->" ";")))))
+          (assoc "->")))))
 
 (defvar elixir-smie-indent-basic 2)
 
