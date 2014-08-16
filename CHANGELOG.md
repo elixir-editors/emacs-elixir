@@ -1,3 +1,7 @@
+## v1.4.3 - 2014/08/16
+* [#75](https://github.com/elixir-lang/emacs-elixir/pull/75) - Clean up several minor bugbears in elixir-smie.
+* [#74](https://github.com/elixir-lang/emacs-elixir/pull/74) - Remove special indentation rules for operators, except booleans.
+
 ## v1.4.2 - 2014/08/15
 * [#73](https://github.com/elixir-lang/emacs-elixir/pull/73) - Fix buggy syntax highlighting behavior involving "?"
 * [#71](https://github.com/elixir-lang/emacs-elixir/pull/71) - Need two backslashes in regex string.
