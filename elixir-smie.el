@@ -62,7 +62,7 @@
   (elixir-smie-define-regexp-opt parens "(" ")" "{" "}" "[" "]" "<<" ">>"))
 
 (defconst elixir-smie-block-intro-keywords
-  '(do else catch after rescue -> COMMA OP)
+  '(do else catch after rescue -> OP)
   "Keywords in which newlines cause confusion for the parser.")
 
 (defun elixir-skip-comment-backward ()
@@ -142,7 +142,8 @@ Return non-nil if any line breaks were skipped."
         (if (save-excursion
               (block nil
                 (let ((token (elixir-smie-next-token-no-lookaround nil t)))
-                  (while (and (not (= (point) (point-min))) (string= "\n" token))
+                  (while (and (not (= (point) (point-min)))
+                              (string= "\n" token))
                     (setq token (elixir-smie-next-token-no-lookaround nil t)))
                   (when (member (intern token) elixir-smie-block-intro-keywords)
                     (return t)))))
@@ -241,7 +242,8 @@ Return non-nil if any line breaks were skipped."
                   (non-block-expr "do" statements "end")
                   ("if" non-block-expr "do" statements "else" statements "end")
                   ("if" non-block-expr "do" statements "end")
-                  ("if" non-block-exprs)
+                  ("if" non-block-expr "do:" non-block-expr)
+                  ("if" non-block-expr "do:" non-block-expr "else:")
                   ("try" "do" statements "after" statements "end")
                   ("try" "do" statements "catch" match-statements "end")
                   ("try" "do" statements "end")
