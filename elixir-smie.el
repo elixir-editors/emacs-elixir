@@ -293,9 +293,7 @@ Return non-nil if any line breaks were skipped."
        (if (smie-rule-parent-p "fn")
            (smie-rule-parent elixir-smie-indent-basic)
          elixir-smie-indent-basic)))
-    (`(,_ . ,(or `"COMMA")) (smie-rule-separator kind))
-    (`(:after . "end") 0)
-    (`(:after . ,(or `"do"))
+    (`(:after . "do")
      elixir-smie-indent-basic)
     (`(:list-intro . ,(or `"do" `";")) t)))
 
