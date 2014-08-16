@@ -213,6 +213,16 @@
   "For use with operators."
   :group 'font-lock-faces)
 
+(defvar elixir-negation-face 'elixir-negation-face)
+(defface elixir-negation-face
+  '((((class color) (min-colors 88) (background light))
+     :foreground "#ff4500")
+    (((class color) (background dark))
+     (:foreground "#ff4500"))
+    (t nil))
+  "For use with escape characters."
+  :group 'font-lock-faces)
+
 (eval-when-compile
   (defconst elixir-rx-constituents
     `(
@@ -285,7 +295,7 @@
                      (one-or-more (any "a-z" "A-Z" "0-9" "_"))
                      (and "\"" (one-or-more (not (any "\""))) "\"")
                      (and "'" (one-or-more (not (any "'"))) "'"))))
-      (code-point . ,(rx "?" anything))))
+      (code-point . ,(rx "?" (zero-or-one anything)))))
 
   (defmacro elixir-rx (&rest sexps)
     (let ((rx-constituents (append elixir-rx-constituents rx-constituents)))
@@ -366,7 +376,11 @@
 
     ;; Atoms and singleton-like words like true/false/nil.
     (,(elixir-rx (group (or atoms bool-and-nil)))
-     1 font-lock-reference-face)))
+     1 font-lock-reference-face)
+
+    ;; Code points
+    (,(elixir-rx (group code-point))
+     1 elixir-negation-face)))
 
 (defun elixir-mode-cygwin-path (expanded-file-name)
   "Elixir mode get Cygwin absolute path name.
@@ -536,8 +550,6 @@ Argument END End of the region."
   (set (make-local-variable 'comment-use-syntax) t)
   (set (make-local-variable 'tab-width) elixir-basic-offset)
   (set (make-local-variable 'imenu-generic-expression) elixir-imenu-generic-expression)
-  (if (boundp 'syntax-propertize-function)
-      (set (make-local-variable 'syntax-propertize-function) 'elixir-syntax-propertize))
   (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules ; 'elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token))

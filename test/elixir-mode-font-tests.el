@@ -46,3 +46,29 @@ buffer."
    (should (eq (elixir-test-face-at 41) 'font-lock-type-face))
    (should (eq (elixir-test-face-at 52) 'font-lock-type-face))
    (should (eq (elixir-test-face-at 53) 'font-lock-type-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-regex-with-quote ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/23"
+  :tags '(fontification syntax-table)
+  :expected-result :failed
+  (elixir-test-with-temp-buffer
+      "~r/\"/
+x = 15"
+    (should (eq (elixir-test-face-at 7) 'font-lock-variable-name-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-regex-with-question/1 ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/36"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+      "~r/^matt: (?<ct>\d+)$/mg
+x = 15"
+    (should (eq (elixir-test-face-at 4) 'font-lock-string-face))
+    (should (eq (elixir-test-face-at 25) 'font-lock-variable-name-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-regex-with-question/2 ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/29"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+      "a = \"\" <> \"?\"
+x = 15"
+    (should (eq (elixir-test-face-at 15) 'font-lock-variable-name-face))))
