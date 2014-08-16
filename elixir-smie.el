@@ -248,7 +248,10 @@ be used as the token."
                        ("STRING"))
        (match-statements (match-statement "MATCH-STATEMENT-DELIMITER" match-statements)
                          (match-statement))
-       (match-statement (non-block-expr "->" statements)))))))
+       (match-statement (non-block-expr "->" statements)))
+     '((assoc "if" "do:" "else:")
+       (assoc "COMMA")
+       (left "BOOLOPS"))))))
 
 (defvar elixir-smie-indent-basic 2)
 
