@@ -81,7 +81,7 @@ Return non-nil if any line breaks were skipped."
     (forward-comment (buffer-size))
     (/= start-line-no (line-number-at-pos (point)))))
 
-(defun elixir-smie-next-token-no-lookaround (forwardp nested)
+(defun elixir-smie-next-token-no-lookaround (forwardp)
   (block elixir-smie-next-token-no-lookaround
     ;; First, skip comments; but if any comments / newlines were
     ;; skipped, the upper level needs to check if they were significant:
@@ -132,7 +132,7 @@ Return non-nil if any line breaks were skipped."
 
 (defun elixir-smie-next-token (forwardp)
   (block elixir-smie-next-token
-    (let ((current-token (elixir-smie-next-token-no-lookaround forwardp nil)))
+    (let ((current-token (elixir-smie-next-token-no-lookaround forwardp)))
       (when (string= "\n" current-token)
         ;; This is a newline; if the previous token isn't an OP2, this
         ;; means the line end marks the end of a statement & we get to
@@ -141,10 +141,10 @@ Return non-nil if any line breaks were skipped."
         ;; statement (but see below).
         (if (save-excursion
               (block nil
-                (let ((token (elixir-smie-next-token-no-lookaround nil t)))
+                (let ((token (elixir-smie-next-token-no-lookaround nil)))
                   (while (and (not (= (point) (point-min)))
                               (string= "\n" token))
-                    (setq token (elixir-smie-next-token-no-lookaround nil t)))
+                    (setq token (elixir-smie-next-token-no-lookaround nil)))
                   (when (member (intern token) elixir-smie-block-intro-keywords)
                     (return t)))))
             ;; it's a continuation line, return the next token after the newline:
@@ -174,7 +174,7 @@ Return non-nil if any line breaks were skipped."
                           (not (string= "" token))
                           ;; ...nor a newline nor a semicolon.
                           (not (or (string= "\n" token) (string= ";" token))))
-                       (setq token (elixir-smie-next-token-no-lookaround t nil))
+                       (setq token (elixir-smie-next-token-no-lookaround t))
                        ;; If we're at the top level and the token is "->",
                        ;; return t
                        (cond ((and (= level 0) (string= "->" token))
@@ -197,7 +197,7 @@ Return non-nil if any line breaks were skipped."
                           (not (string= "" token))
                           (not (string= "do" token))
                           (not (string= "fn" token)))
-                       (setq token (elixir-smie-next-token-no-lookaround nil nil))
+                       (setq token (elixir-smie-next-token-no-lookaround nil))
                        (when (string= "->" token)
                          (return t)))
                      (when (string= token "do") t)))))
