@@ -326,28 +326,6 @@ after
   post_that()
 end")
 
-(elixir-def-indentation-test indents-function ()
-  "
-function do
-a,b,c ->
-three_args
-a,b ->
-two_args
-\[a|rest] ->
-one_arg_list
-end
-"
-  "
-function do
-  a,b,c ->
-    three_args
-  a,b ->
-    two_args
-  [a|rest] ->
-    one_arg_list
-end
-")
-
 (elixir-def-indentation-test indents-fn-in-assignment ()
   "
 f = fn x, y ->
