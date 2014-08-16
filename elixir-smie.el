@@ -204,30 +204,20 @@ Return non-nil if any line breaks were skipped."
           "MATCH-STATEMENT-DELIMITER"
         current-token))))
 
+(defun elixir-smie--implicit-semi-p ()
+  "This function defines the rules that determine whether an implicit `;' will
+be used as the token."
+  (save-excursion
+    (skip-chars-backward " \t")
+    (not (or (bolp)
+             (memq (char-before) '(?\[ ?\( ?\{))
+             (eq (save-excursion (elixir-smie-next-token nil)) "OP")))))
+
 (defun elixir-smie-forward-token ()
-  (elixir-smie-next-token t))
+ (elixir-smie-next-token t))
 
 (defun elixir-smie-backward-token ()
   (elixir-smie-next-token nil))
-
-;; Lifting this directly from octave.el
-;; http://git.savannah.gnu.org/cgit/emacs.git/tree/lisp/progmodes/octave.el?h=emacs-24
-;; and ruby-mode.el
-;; http://git.savannah.gnu.org/cgit/emacs.git/tree/lisp/progmodes/ruby-mode.el?h=emacs-24
-(defconst elixir-operator-table
-  '((right "=")
-    (right "+=" "-=" "*=" "/=" "%=" "**=" "&=" "|=" "^="
-           "<<=" ">>=" "&&=" "||=")
-    (left "+" "-" "<>")
-    (left "*" "/" "%" "**")
-    (left "&&" "||")
-    (left "^" "&" "|")
-    (nonassoc "<=>")
-    (nonassoc ">" ">=" "<" "<=")
-    (nonassoc "==" "===" "!=")
-    (nonassoc "=~" "!~")
-    (left "<<" ">>")
-    (right ".")))
 
 (defconst elixir-smie-grammar
   (smie-prec2->grammar
