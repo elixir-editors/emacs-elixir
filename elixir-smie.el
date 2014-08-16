@@ -204,15 +204,6 @@ Return non-nil if any line breaks were skipped."
           "MATCH-STATEMENT-DELIMITER"
         current-token))))
 
-(defun elixir-smie--implicit-semi-p ()
-  "This function defines the rules that determine whether an implicit `;' will
-be used as the token."
-  (save-excursion
-    (skip-chars-backward " \t")
-    (not (or (bolp)
-             (memq (char-before) '(?\[ ?\( ?\{))
-             (eq (save-excursion (elixir-smie-next-token nil)) "OP")))))
-
 (defun elixir-smie-forward-token ()
  (elixir-smie-next-token t))
 
@@ -221,37 +212,36 @@ be used as the token."
 
 (defconst elixir-smie-grammar
   (smie-prec2->grammar
-   (smie-merge-prec2s
-    (smie-bnf->prec2
-     '((id)
-       (statements (statement)
-                   (statement ";" statements))
-       (statement ("defrecord" non-block-expr "do" statements "end")
-                  ("def" non-block-expr "do" statements "end")
-                  (non-block-expr "fn" match-statement "end")
-                  (non-block-expr "do" statements "end")
-                  ("if" non-block-expr "do" statements "else" statements "end")
-                  ("if" non-block-expr "do" statements "end")
-                  ("if" non-block-expr "COMMA" "do:" non-block-expr)
-                  ("if" non-block-expr "COMMA"
-                   "do:" non-block-expr "COMMA"
-                   "else:" non-block-expr)
-                  ("try" "do" statements "after" statements "end")
-                  ("try" "do" statements "catch" match-statements "end")
-                  ("try" "do" statements "end")
-                  ("case" non-block-expr "do" match-statements "end"))
-       (non-block-expr (non-block-expr "OP" non-block-expr)
-                       (non-block-expr "COMMA" non-block-expr)
-                       ("(" statements ")")
-                       ("{" statements "}")
-                       ("[" statements "]")
-                       ("STRING"))
-       (match-statements (match-statement "MATCH-STATEMENT-DELIMITER" match-statements)
-                         (match-statement))
-       (match-statement (non-block-expr "->" statements)))
-     '((assoc "if" "do:" "else:")
-       (assoc "COMMA")
-       (left "BOOLOPS"))))))
+   (smie-bnf->prec2
+    '((id)
+      (statements (statement)
+                  (statement ";" statements))
+      (statement ("defrecord" non-block-expr "do" statements "end")
+                 ("def" non-block-expr "do" statements "end")
+                 (non-block-expr "fn" match-statement "end")
+                 (non-block-expr "do" statements "end")
+                 ("if" non-block-expr "do" statements "else" statements "end")
+                 ("if" non-block-expr "do" statements "end")
+                 ("if" non-block-expr "COMMA" "do:" non-block-expr)
+                 ("if" non-block-expr "COMMA"
+                  "do:" non-block-expr "COMMA"
+                  "else:" non-block-expr)
+                 ("try" "do" statements "after" statements "end")
+                 ("try" "do" statements "catch" match-statements "end")
+                 ("try" "do" statements "end")
+                 ("case" non-block-expr "do" match-statements "end"))
+      (non-block-expr (non-block-expr "OP" non-block-expr)
+                      (non-block-expr "COMMA" non-block-expr)
+                      ("(" statements ")")
+                      ("{" statements "}")
+                      ("[" statements "]")
+                      ("STRING"))
+      (match-statements (match-statement "MATCH-STATEMENT-DELIMITER" match-statements)
+                        (match-statement))
+      (match-statement (non-block-expr "->" statements)))
+    '((assoc "if" "do:" "else:")
+      (assoc "COMMA")
+      (left "OP")))))
 
 (defvar elixir-smie-indent-basic 2)
 
