@@ -254,12 +254,7 @@ Return non-nil if any line breaks were skipped."
                        ("STRING"))
        (match-statements (match-statement "MATCH-STATEMENT-DELIMITER" match-statements)
                          (match-statement))
-       (match-statement (non-block-expr "->" statements))))
-    ;; '((assoc "if")
-    ;;   (assoc "COMMA")
-    ;;   (assoc "OP")
-    ;;   (assoc "->")))
-    (smie-precs->prec2 elixir-operator-table))))
+       (match-statement (non-block-expr "->" statements)))))))
 
 (defvar elixir-smie-indent-basic 2)
 
