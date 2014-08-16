@@ -290,7 +290,11 @@ be used as the token."
          elixir-smie-indent-basic)))
     (`(:after . "do")
      elixir-smie-indent-basic)
-    (`(:list-intro . ,(or `"do" `";")) t)))
+    (`(:list-intro . ,(or `"do" `";")) t)
+    (`(:after . ";")
+     (if (smie-rule-parent-p "if")
+         (smie-rule-parent 0)))))
+
 
 (define-minor-mode elixir-smie-mode
   "SMIE-based indentation and syntax for Elixir"
