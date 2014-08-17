@@ -140,7 +140,7 @@
 
 (require 'elixir-smie)  ; syntax and indentation support
 
-(defvar elixir-mode--version "1.3.0")
+(defvar elixir-mode--version "1.4.3")
 
 (defvar elixir-mode--website-url
   "http://elixir-lang.org")
