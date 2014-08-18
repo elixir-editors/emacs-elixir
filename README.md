@@ -12,7 +12,8 @@ elixir-mode is available on the community maintained repository -
 [RET] elixir-mode [RET]` inside your emacs and you're ready to go.
 
 **Please take note of the MELPA URL.** If you are using http://melpa.milkbox.com
-then you are not getting the latest *stable* version of this package.
+then you are not getting the latest *stable* version of this package. 
+Please use http://melpa-stable.milkbox.com when retrieving this package.
 
 If you're not already using ELPA, check the [emacswiki](http://www.emacswiki.org/emacs/ELPA) page to get
 familiar with it.
