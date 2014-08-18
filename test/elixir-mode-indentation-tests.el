@@ -421,3 +421,19 @@ defmodule Banana do
   end
 end
 ")
+
+(elixir-def-indentation-test nested-modules ()
+  "defmodule Mod1 do
+  defmodule Mod1a do
+    def start do
+      foo()
+    end
+  end
+end"
+  "defmodule Mod1 do
+  defmodule Mod1a do
+    def start do
+      foo()
+    end
+  end
+end")
