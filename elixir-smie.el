@@ -88,11 +88,6 @@
        (message (format ,message ,@format-args)))
      nil))
 
-(defun elixir-smie--at-dot-call ()
-  (and (eq ?w (char-syntax (following-char)))
-       (eq (char-before) ?.)
-       (not (eq (char-before (1- (point))) ?.))))
-
 (defun elixir-smie--implicit-semi-p ()
   (not (or (memq (char-before) '(?\{ ?\[))
            (looking-back elixir-smie--operator-regexp (- (point) 3) t))))
@@ -136,10 +131,6 @@
       ((smie-rule-sibling-p) nil)
       ((smie-rule-hanging-p) (smie-rule-parent elixir-smie-indent-basic))
       (t elixir-smie-indent-basic)))
-    ;; If the parent token of `->' is `fn', then we want to align to the
-    ;; parent, and offset by `elixir-smie-indent-basic'. Otherwise, indent
-    ;; normally. This helps us work with/indent anonymous function blocks
-    ;; correctly.
     (`(:before . ";")
      (cond
       ((smie-rule-parent-p "after" "catch" "def" "defmodule" "defp" "do" "else"
