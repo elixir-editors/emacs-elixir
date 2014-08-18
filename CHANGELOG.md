@@ -1,3 +1,6 @@
+## v1.4.6 - 2014/08/18
+* [#82](https://github.com/elixir-lang/emacs-elixir/pull/82) - Remove broken SMIE rule.
+
 ## v1.4.5 - 2014/08/18
 * [#81](https://github.com/elixir-lang/emacs-elixir/pull/81) - Rewrite token emitting functions
 
