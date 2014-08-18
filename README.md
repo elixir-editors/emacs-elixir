@@ -8,8 +8,11 @@ Provides font-locking, indentation and navigation support for the
 ### ELPA
 
 elixir-mode is available on the community maintained repository -
-[MELPA](http://melpa.milkbox.net/). Just run `M-x package-install
+[MELPA](http://melpa-stable.milkbox.net/). Just run `M-x package-install
 [RET] elixir-mode [RET]` inside your emacs and you're ready to go.
+
+**Please take note of the MELPA URL.** If you are using http://melpa.milkbox.com
+then you are not getting the latest *stable* version of this package.
 
 If you're not already using ELPA, check the [emacswiki](http://www.emacswiki.org/emacs/ELPA) page to get
 familiar with it.
