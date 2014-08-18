@@ -136,7 +136,6 @@
       ((smie-rule-sibling-p) nil)
       ((smie-rule-hanging-p) (smie-rule-parent elixir-smie-indent-basic))
       (t elixir-smie-indent-basic)))
-    (`(:before . "def") elixir-smie-indent-basic)
     ;; If the parent token of `->' is `fn', then we want to align to the
     ;; parent, and offset by `elixir-smie-indent-basic'. Otherwise, indent
     ;; normally. This helps us work with/indent anonymous function blocks

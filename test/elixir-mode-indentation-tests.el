@@ -236,7 +236,7 @@ has_something(x) &&
 (elixir-def-indentation-test indents-last-commented-line
     ()
   "
-defmodule Foo
+defmodule Foo do
 def bar do
 2
 end
@@ -245,7 +245,7 @@ end
 end
 "
   "
-defmodule Foo
+defmodule Foo do
   def bar do
     2
   end
@@ -421,3 +421,19 @@ defmodule Banana do
   end
 end
 ")
+
+(elixir-def-indentation-test nested-modules ()
+  "defmodule Mod1 do
+  defmodule Mod1a do
+    def start do
+      foo()
+    end
+  end
+end"
+  "defmodule Mod1 do
+  defmodule Mod1a do
+    def start do
+      foo()
+    end
+  end
+end")
