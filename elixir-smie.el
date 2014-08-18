@@ -51,9 +51,9 @@
       `(progn
          (defconst ,regex-name
            ,regexp)
-         (pushnew `(,',regex-name . ,(upcase (symbol-name ',name))) elixir-syntax-class-names))))
+         (pushnew `(,',regex-name . ,(upcase (symbol-name ',name)))
+                  elixir-syntax-class-names))))
 
-  ;(elixir-smie-define-regexp-opt op "&&" "||" "!")
   (elixir-smie-define-regexp dot "\\.")
   (elixir-smie-define-regexp comma ",")
   (elixir-smie-define-regexp -> "->")
@@ -127,7 +127,8 @@
                        ("{" non-block-expr "}")
                        ("[" non-block-expr "]")
                        ("STRING"))
-       (match-statements (match-statement "MATCH-STATEMENT-DELIMITER" match-statements)
+       (match-statements (match-statement "MATCH-STATEMENT-DELIMITER"
+                                          match-statements)
                          (match-statement))
        (match-statement (non-block-expr "->" statements)))
      '((assoc "if" "do:" "else:")
@@ -155,14 +156,6 @@
 
 (defun elixir-smie-rules (kind token)
   (pcase (cons kind token)
-    (`(:after . "STRING")
-     (if (smie-rule-prev-p "do:")
-         (smie-rule-parent 0)
-       nil))
-    (`(:elem . basic)
-     (if (smie-rule-hanging-p)
-         0
-       elixir-smie-indent-basic))
     (`(:after . "OP")
      (cond
       ((smie-rule-sibling-p) nil)
@@ -173,7 +166,6 @@
     ;; parent, and offset by `elixir-smie-indent-basic'. Otherwise, indent
     ;; normally. This helps us work with/indent anonymous function blocks
     ;; correctly.
-    (`(:list-intro . ,(or `"do" `";")) t)
     (`(:before . ";")
      (cond
       ((smie-rule-parent-p "after" "catch" "def" "defmodule" "defp" "do" "else"
