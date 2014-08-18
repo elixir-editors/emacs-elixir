@@ -40,27 +40,6 @@
        (message (format ,message ,@format-args)))
      nil))
 
-(progn
-  (setq elixir-syntax-class-names nil)
-
-  (defmacro elixir-smie-define-regexp-opt (name &rest table)
-    `(elixir-smie-define-regexp ,name (regexp-opt (list ,@table))))
-
-  (defmacro elixir-smie-define-regexp (name regexp &optional flag)
-    (let ((regex-name (intern (format "elixir-smie-%s" name))))
-      `(progn
-         (defconst ,regex-name
-           ,regexp)
-         (pushnew `(,',regex-name . ,(upcase (symbol-name ',name)))
-                  elixir-syntax-class-names))))
-
-  (elixir-smie-define-regexp dot "\\.")
-  (elixir-smie-define-regexp comma ",")
-  (elixir-smie-define-regexp -> "->")
-  (elixir-smie-define-regexp << "<<")
-  (elixir-smie-define-regexp >> ">>")
-  (elixir-smie-define-regexp-opt parens "(" ")" "{" "}" "[" "]" "<<" ">>"))
-
 (defconst elixir-smie-block-intro-keywords
   '(do else catch after rescue -> OP)
   "Keywords in which newlines cause confusion for the parser.")
