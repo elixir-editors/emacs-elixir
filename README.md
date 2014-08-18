@@ -18,16 +18,13 @@ Please use http://melpa-stable.milkbox.com when retrieving this package.
 If you're not already using ELPA, check the [emacswiki](http://www.emacswiki.org/emacs/ELPA) page to get
 familiar with it.
 
-### Install the most recent version
+### Download latest release
 
-Clone this repository somewhere
+If you would prefer to install from source, you can download the latest tagged
+release from https://github.com/elixir-lang/emacs-elixir/releases/latest/.
 
-```shell
-$ cd ~/.emacs.d/plugins
-$ git clone https://github.com/elixir-lang/emacs-elixir
-```
-
-Add the following in your .emacs file:
+After unzipping either the tarball or zipfile into your desired location, 
+add the following in your .emacs file:
 
 ```lisp
 (add-to-list 'load-path "~/path/to/emacs-elixir/")
