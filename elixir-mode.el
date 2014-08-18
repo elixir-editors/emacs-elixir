@@ -290,7 +290,7 @@
       (identifiers . ,(rx symbol-start
                           (one-or-more (any "A-Z" "a-z""_"))
                           (zero-or-more (any "0-9"))
-                          (zero-or-one (or "!" "?"))
+                          (optional (or "?" "!"))
                           symbol-end))
       (atoms . ,(rx ":"
                     (or
