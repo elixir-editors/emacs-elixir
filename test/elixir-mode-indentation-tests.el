@@ -176,13 +176,19 @@ end
 
 (elixir-def-indentation-test indents-records-correctly ()
   "
-defrecord Money, [:currency_unit, :amount] do
-foo
+defmodule MyModule do
+require Record
+Record.defrecord :money, [:currency_unit, :amount]
+
+Record.defrecord :animal, [:species, :name]
 end
 "
   "
-defrecord Money, [:currency_unit, :amount] do
-  foo
+defmodule MyModule do
+  require Record
+  Record.defrecord :money, [:currency_unit, :amount]
+
+  Record.defrecord :animal, [:species, :name]
 end
 ")
 
