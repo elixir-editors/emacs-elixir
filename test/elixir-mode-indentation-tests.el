@@ -176,26 +176,36 @@ end
 
 (elixir-def-indentation-test indents-records-correctly ()
   "
-defrecord Money, [:currency_unit, :amount] do
-foo
+defmodule MyModule do
+require Record
+Record.defrecord :money, [:currency_unit, :amount]
+
+Record.defrecord :animal, [:species, :name]
 end
 "
   "
-defrecord Money, [:currency_unit, :amount] do
-  foo
+defmodule MyModule do
+  require Record
+  Record.defrecord :money, [:currency_unit, :amount]
+
+  Record.defrecord :animal, [:species, :name]
 end
 ")
 
 (elixir-def-indentation-test indents-continuation-lines ()
   "
-has_something(x) &&
-has_something(y) ||
-has_something(z)
-"
-  "
+def foo do
 has_something(x) &&
   has_something(y) ||
   has_something(z)
+end
+"
+  "
+def foo do
+  has_something(x) &&
+    has_something(y) ||
+    has_something(z)
+end
 ")
 
 (elixir-def-indentation-test indents-continuation-lines-with-comments/1
