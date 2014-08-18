@@ -72,3 +72,30 @@ x = 15"
       "a = \"\" <> \"?\"
 x = 15"
     (should (eq (elixir-test-face-at 15) 'font-lock-variable-name-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-function-name/1 ()
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+      "def fooBar do
+  :foo
+end"
+    (should (eq (elixir-test-face-at 5) 'font-lock-function-name-face))
+    (should (eq (elixir-test-face-at 8) 'font-lock-function-name-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-function-name/2 ()
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+      "def foo? do
+  :foo
+end"
+    (should (eq (elixir-test-face-at 5) 'font-lock-function-name-face))
+    (should (eq (elixir-test-face-at 8) 'font-lock-function-name-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-function-name/3 ()
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+      "def foo! do
+  :foo
+end"
+    (should (eq (elixir-test-face-at 5) 'font-lock-function-name-face))
+    (should (eq (elixir-test-face-at 8) 'font-lock-function-name-face))))

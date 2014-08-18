@@ -287,9 +287,11 @@
                                           (zero-or-more
                                            (any "a-z")))
                             symbol-end))
-      (variables . ,(rx symbol-start
-                        (one-or-more (any "A-Z" "a-z" "0-9" "_"))
-                        symbol-end))
+      (identifiers . ,(rx symbol-start
+                          (one-or-more (any "A-Z" "a-z""_"))
+                          (zero-or-more (any "0-9"))
+                          (optional (or "?" "!"))
+                          symbol-end))
       (atoms . ,(rx ":"
                     (or
                      (one-or-more (any "a-z" "A-Z" "0-9" "_"))
@@ -321,11 +323,11 @@
     ;; Method names, i.e. `def foo do'
     (,(elixir-rx method-defines
                  space
-                 (group (one-or-more (any "a-z" "_"))))
+                 (group identifiers))
      1 font-lock-function-name-face)
 
     ;; Variable definitions
-    (,(elixir-rx (group variables)
+    (,(elixir-rx (group identifiers)
                  (one-or-more space)
                  "="
                  (one-or-more space))
