@@ -76,7 +76,7 @@
        (not (eq (char-before (1- (point))) ?.))))
 
 (defun elixir-smie--implicit-semi-p ()
-  (not (or (memq (char-before) '(?\{ ?\[ ?\,))
+  (not (or (memq (char-before) '(?\{ ?\[))
            (looking-back elixir-smie--operator-regexp (- (point) 3) t))))
 
 (defun elixir-smie-forward-token ()
