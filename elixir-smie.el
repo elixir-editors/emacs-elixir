@@ -34,52 +34,6 @@
     table)
   "Elixir mode syntax table.")
 
-(defmacro elixir-smie-debug (message &rest format-args)
-  `(progn
-     (when elixir-smie-verbose-p
-       (message (format ,message ,@format-args)))
-     nil))
-
-(defconst elixir-smie-block-intro-keywords
-  '(do else catch after rescue -> OP)
-  "Keywords in which newlines cause confusion for the parser.")
-
-(defvar elixir-smie--operator-regexp
-  (regexp-opt '("<<<" ">>>" "^^^" "~~~" "&&&" "|||" "===" "!==" "==" "!=" "<="
-                ">=" "<" ">" "&&" "||" "<>" "++" "--" "//"
-                "/>" "=~" "|>" "->")))
-
-(defun elixir-smie--at-dot-call ()
-  (and (eq ?w (char-syntax (following-char)))
-       (eq (char-before) ?.)
-       (not (eq (char-before (1- (point))) ?.))))
-
-(defun elixir-smie--implicit-semi-p ()
-  (not (or (memq (char-before) '(?\{ ?\[))
-           (looking-back elixir-smie--operator-regexp (- (point) 3) t))))
-
-(defun elixir-smie-forward-token ()
-  (cond
-   ((and (looking-at "\n") (elixir-smie--implicit-semi-p))
-    (if (eolp) (forward-char 1) (forward-comment 1))
-    ";")
-   ((looking-at elixir-smie--operator-regexp)
-    (goto-char (match-end 0))
-    "OP")
-   (t (smie-default-forward-token))))
-
-(defun elixir-smie-backward-token ()
-  (let ((pos (point)))
-    (forward-comment (- (point)))
-    (cond
-     ((and (> pos (line-end-position))
-           (elixir-smie--implicit-semi-p))
-      ";")
-     ((looking-back elixir-smie--operator-regexp (- (point) 3) t)
-      (goto-char (match-beginning 0))
-      "OP")
-     (t (smie-default-backward-token)))))
-
 (defconst elixir-smie-grammar
   (smie-prec2->grammar
    (smie-merge-prec2s
@@ -121,7 +75,49 @@
        (left "+" "-" "<<<" ">>>" "^^^" "~~~" "&&&" "|||")
        (left "*" "/"))))))
 
+(defvar elixir-smie--operator-regexp
+  (regexp-opt '("<<<" ">>>" "^^^" "~~~" "&&&" "|||" "===" "!==" "==" "!=" "<="
+                ">=" "<" ">" "&&" "||" "<>" "++" "--" "//"
+                "/>" "=~" "|>" "->")))
+
 (defvar elixir-smie-indent-basic 2)
+
+(defmacro elixir-smie-debug (message &rest format-args)
+  `(progn
+     (when elixir-smie-verbose-p
+       (message (format ,message ,@format-args)))
+     nil))
+
+(defun elixir-smie--at-dot-call ()
+  (and (eq ?w (char-syntax (following-char)))
+       (eq (char-before) ?.)
+       (not (eq (char-before (1- (point))) ?.))))
+
+(defun elixir-smie--implicit-semi-p ()
+  (not (or (memq (char-before) '(?\{ ?\[))
+           (looking-back elixir-smie--operator-regexp (- (point) 3) t))))
+
+(defun elixir-smie-forward-token ()
+  (cond
+   ((and (looking-at "\n") (elixir-smie--implicit-semi-p))
+    (if (eolp) (forward-char 1) (forward-comment 1))
+    ";")
+   ((looking-at elixir-smie--operator-regexp)
+    (goto-char (match-end 0))
+    "OP")
+   (t (smie-default-forward-token))))
+
+(defun elixir-smie-backward-token ()
+  (let ((pos (point)))
+    (forward-comment (- (point)))
+    (cond
+     ((and (> pos (line-end-position))
+           (elixir-smie--implicit-semi-p))
+      ";")
+     ((looking-back elixir-smie--operator-regexp (- (point) 3) t)
+      (goto-char (match-beginning 0))
+      "OP")
+     (t (smie-default-backward-token)))))
 
 (defun verbose-elixir-smie-rules (kind token)
   (let ((value (elixir-smie-rules kind token)))
