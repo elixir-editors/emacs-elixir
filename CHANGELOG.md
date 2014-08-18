@@ -1,3 +1,6 @@
+## v1.4.4 - 2014/08/18
+* [#79](https://github.com/elixir-lang/emacs-elixir/pull/79) - Remove erroneous defrecord syntax.
+
 ## v1.4.3 - 2014/08/16
 * [#75](https://github.com/elixir-lang/emacs-elixir/pull/75) - Clean up several minor bugbears in elixir-smie.
 * [#74](https://github.com/elixir-lang/emacs-elixir/pull/74) - Remove special indentation rules for operators, except booleans.
