@@ -1,3 +1,6 @@
+## v1.4.5 - 2014/08/18
+* [#81](https://github.com/elixir-lang/emacs-elixir/pull/81) - Rewrite token emitting functions
+
 ## v1.4.4 - 2014/08/18
 * [#79](https://github.com/elixir-lang/emacs-elixir/pull/79) - Remove erroneous defrecord syntax.
 
