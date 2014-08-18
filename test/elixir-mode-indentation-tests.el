@@ -194,14 +194,18 @@ end
 
 (elixir-def-indentation-test indents-continuation-lines ()
   "
-has_something(x) &&
-has_something(y) ||
-has_something(z)
-"
-  "
+def foo do
 has_something(x) &&
   has_something(y) ||
   has_something(z)
+end
+"
+  "
+def foo do
+  has_something(x) &&
+    has_something(y) ||
+    has_something(z)
+end
 ")
 
 (elixir-def-indentation-test indents-continuation-lines-with-comments/1
