@@ -99,7 +99,7 @@
 
 (defun elixir-smie-forward-token ()
   (cond
-   ((and (looking-at "\n") (elixir-smie--implicit-semi-p))
+   ((and (looking-at "[\n#]") (elixir-smie--implicit-semi-p))
     (if (eolp) (forward-char 1) (forward-comment 1))
     ";")
    ((looking-at elixir-smie--operator-regexp)
