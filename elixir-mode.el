@@ -228,10 +228,7 @@
     `(
       ;; Match `@doc' or `@moduledoc' syntax, with or without triple quotes.
       (heredocs . ,(rx symbol-start
-                       (or (and "@"
-                                (zero-or-one "module")
-                                "doc")
-                           "~s")
+                       (or "@doc" "@moduledoc" "~s")
                        symbol-end))
       (keywords . ,(rx symbol-start
                       (or "->" "bc" "lc" "in" "inbits" "inlist" "quote"
