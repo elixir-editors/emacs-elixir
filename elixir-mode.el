@@ -278,18 +278,27 @@
                         (or "+" "++" "<>" "-" "/" "*" "div" "rem" "==" "!=" "<="
                             "<" ">=" ">" "===" "!==" "and" "or" "not" "&&" "||"
                             "!" "." "#" "=" ":=" "<-")))
-      (resource-name . ,(rx symbol-start
-                            (zero-or-more (any "A-Z")
-                                          (zero-or-more
-                                           (any "a-z"))
-                                          "."
-                                          (any "A-Z")
-                                          (zero-or-more
-                                           (any "a-z")))
-                            symbol-end))
+      ;; Module and submodule names start with upper case letter or `_'. This
+      ;; can then be followed by any combination of alphanumeric chars + `_'.
+      ;; In turn, this can be followed by a `.' which begins the notation of
+      ;; a submodule, which follows the same naming pattern of the module.
+      ;; Finally, like other identifiers, it can be terminated with either `?'
+      ;; or `!'.
+      (module-names . ,(rx symbol-start
+                           (one-or-more (any "A-Z" "_"))
+                           (zero-or-more (any "A-Z" "a-z" "_" "0-9"))
+                           (zero-or-more
+                            (and "."
+                                 (one-or-more (any "A-Z" "_"))
+                                  (zero-or-more (any "A-Z" "a-z" "_" "0-9"))))
+                           (optional (or "!" "?"))
+                           symbol-end))
+      ;; The first character of an identifier must be a letter or an underscore.
+      ;; After that, they may contain any alphanumeric character + underscore.
+      ;; Additionally, the final character may be either `?' or `!'.
       (identifiers . ,(rx symbol-start
                           (one-or-more (any "A-Z" "a-z""_"))
-                          (zero-or-more (any "0-9" "_"))
+                          (zero-or-more (any "A-Z" "a-z" "0-9" "_"))
                           (optional (or "?" "!"))
                           symbol-end))
       (atoms . ,(rx ":"
@@ -310,10 +319,10 @@
 
 (defconst elixir-mode-font-lock-defaults
   `(
-    ;; Import, module- and method-defining keywords
-    (,(elixir-rx (or method-defines module-defines imports)
+    ;; Module-defining & namespace builtins
+    (,(elixir-rx (or module-defines imports)
                  space
-                 (group resource-name))
+                 (group module-names))
      1 font-lock-type-face)
 
     ;; Keywords
