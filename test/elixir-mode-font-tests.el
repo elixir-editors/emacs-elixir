@@ -99,3 +99,28 @@ end"
 end"
     (should (eq (elixir-test-face-at 5) 'font-lock-function-name-face))
     (should (eq (elixir-test-face-at 8) 'font-lock-function-name-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-heredoc/1 ()
+  :tags '(fontification heredoc syntax-table)
+  (elixir-test-with-temp-buffer
+      "@doc \"\"\""
+    (should (eq (elixir-test-face-at 1) 'font-lock-builtin-face))
+    (should (eq (elixir-test-face-at 2) 'font-lock-builtin-face))
+    (should (eq (elixir-test-face-at 6) 'font-lock-string-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-heredoc/2 ()
+  :tags '(fontification heredoc syntax-table)
+  (elixir-test-with-temp-buffer
+      "@moduledoc \"\"\""
+    (should (eq (elixir-test-face-at 1) 'font-lock-builtin-face))
+    (should (eq (elixir-test-face-at 2) 'font-lock-builtin-face))
+    (should (eq (elixir-test-face-at 12) 'font-lock-string-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-heredoc/3 ()
+  :tags '(fontification heredoc syntax-table)
+  (elixir-test-with-temp-buffer
+      "~s\"\"\""
+    (should (eq (elixir-test-face-at 1) 'font-lock-builtin-face))
+    (should (eq (elixir-test-face-at 2) 'font-lock-builtin-face))
+    (should (eq (elixir-test-face-at 3) 'font-lock-string-face))))
+

@@ -226,6 +226,10 @@
 (eval-when-compile
   (defconst elixir-rx-constituents
     `(
+      ;; Match `@doc' or `@moduledoc' syntax, with or without triple quotes.
+      (heredocs . ,(rx symbol-start
+                       (or "@doc" "@moduledoc" "~s")
+                       symbol-end))
       (keywords . ,(rx symbol-start
                       (or "->" "bc" "lc" "in" "inbits" "inlist" "quote"
                           "unquote" "unquote_splicing" "var" "do" "after" "for"
@@ -327,6 +331,10 @@
                  space
                  (group module-names))
      1 font-lock-type-face)
+
+    ;; Heredoc
+    (,(elixir-rx (group heredocs))
+     1 font-lock-builtin-face)
 
     ;; Keywords
     (,(elixir-rx (group keywords))
