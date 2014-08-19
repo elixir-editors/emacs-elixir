@@ -438,7 +438,8 @@ end"
   end
 end")
 
-(elixir-def-indentation-test indent-heredoc ()
+(elixir-def-indentation-test indent-heredoc
+    (:expected-result :failed)
   "
 defmodule Foo do
 @doc \"\"\"
