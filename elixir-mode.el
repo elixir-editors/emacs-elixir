@@ -306,7 +306,10 @@
                      (one-or-more (any "a-z" "A-Z" "0-9" "_"))
                      (and "\"" (one-or-more (not (any "\""))) "\"")
                      (and "'" (one-or-more (not (any "'"))) "'"))))
-      (code-point . ,(rx "?" (zero-or-one anything)))))
+      (code-point . ,(rx symbol-start
+                         "?"
+                         anything
+                         symbol-end))))
 
   (defmacro elixir-rx (&rest sexps)
     (let ((rx-constituents (append elixir-rx-constituents rx-constituents)))
