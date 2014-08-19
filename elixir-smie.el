@@ -29,7 +29,7 @@
     (modify-syntax-entry ?\} "){" table)
     (modify-syntax-entry ?\[ "(]" table)
     (modify-syntax-entry ?\] ")[" table)
-    (modify-syntax-entry ?\: "'" table)
+    (modify-syntax-entry ?: "_" table)
     (modify-syntax-entry ?@ "_" table)
     table)
   "Elixir mode syntax table.")
