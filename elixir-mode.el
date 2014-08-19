@@ -388,6 +388,11 @@
                   (and "<" (group (one-or-more (not (any ">")))) ">"))
      1 font-lock-string-face)
 
+    ;; TODO: Figure out why atoms are not being colored with `reference-face'
+    ;; Atoms and singleton-like words like true/false/nil.
+    (,(elixir-rx (or (group atoms) (group bool-and-nil)))
+     1 font-lock-reference-face)
+
     ;; Built-in modules
     (,(elixir-rx (group builtin-modules))
      1 font-lock-constant-face)
@@ -395,10 +400,6 @@
     ;; Operators
     (,(elixir-rx (group operators))
      1 elixir-operator-face)
-
-    ;; Atoms and singleton-like words like true/false/nil.
-    (,(elixir-rx (group (or atoms bool-and-nil)))
-     1 font-lock-reference-face)
 
     ;; Code points
     (,(elixir-rx (group code-point))
