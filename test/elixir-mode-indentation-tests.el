@@ -437,3 +437,27 @@ end"
     end
   end
 end")
+
+(elixir-def-indentation-test indent-heredoc ()
+  "
+defmodule Foo do
+@doc \"\"\"
+this is a heredoc string
+
+\"\"\"
+def convert do
+x = 15
+end
+end
+"
+  "
+defmodule Foo do
+  @doc \"\"\"
+  this is a heredoc string
+
+  \"\"\"
+  def convert do
+    x = 15
+  end
+end
+")
