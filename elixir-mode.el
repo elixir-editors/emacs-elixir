@@ -243,9 +243,9 @@
                            (or "true" "false" "nil")
                            symbol-end))
       (builtins . ,(rx symbol-start
-                       (or "Erlang" "__MODULE__" "__LINE__" "__FILE__"
-                           "__ENV__" "__DIR__")
-                       symbol-end))
+                          (or "_" "Erlang" "__MODULE__" "__LINE__" "__FILE__"
+                              "__ENV__" "__DIR__")
+                          symbol-end))
       (sigils . ,(rx "~" (or "B" "C" "R" "S" "b" "c" "r" "s" "w")))
       (method-defines . ,(rx symbol-start
                       (or "def" "defdelegate" "defmacro" "defmacrop"
@@ -289,7 +289,7 @@
                             symbol-end))
       (identifiers . ,(rx symbol-start
                           (one-or-more (any "A-Z" "a-z""_"))
-                          (zero-or-more (any "0-9"))
+                          (zero-or-more (any "0-9" "_"))
                           (optional (or "?" "!"))
                           symbol-end))
       (atoms . ,(rx ":"
