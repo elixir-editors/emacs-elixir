@@ -1,3 +1,8 @@
+## v1.4.7 - 2014/08/18
+* [#87](https://github.com/elixir-lang/emacs-elixir/pull/87) - Add syntax highlighting for heredocs & failing tests for indentation.
+* [#85](https://github.com/elixir-lang/emacs-elixir/pull/85) - Improve regex for defmodule highlighting.
+* [#84](https://github.com/elixir-lang/emacs-elixir/pull/84) - Improve fontification for identifiers.
+
 ## v1.4.6 - 2014/08/18
 * [#82](https://github.com/elixir-lang/emacs-elixir/pull/82) - Remove broken SMIE rule.
 
