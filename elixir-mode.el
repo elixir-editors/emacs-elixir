@@ -223,6 +223,27 @@
   "For use with escape characters."
   :group 'font-lock-faces)
 
+(defvar elixir-attribute-face 'elixir-attribute-face)
+(defface elixir-attribute-face
+  '((((class color) (min-colors 88) (background light))
+     :foreground "MediumPurple4")
+    (((class color) (background dark))
+     (:foreground "thistle"))
+    (t nil))
+  "For use with escape characters."
+  :group 'font-lock-faces)
+
+(defvar elixir-atom-face 'elixir-atom-face)
+(defface elixir-atom-face
+  '((((class color) (min-colors 88) (background light))
+     :foreground "RoyalBlue4")
+    (((class color) (background dark))
+     (:foreground "light sky blue"))
+    (t nil))
+  "For use with escape characters."
+  :group 'font-lock-faces)
+
+
 (eval-when-compile
   (defconst elixir-rx-constituents
     `(
@@ -343,7 +364,7 @@
     ;; Module attributes
     (,(elixir-rx (group (or heredocs
                             (and "@" (1+ identifiers)))))
-     1 font-lock-builtin-face)
+     1 elixir-attribute-face)
 
     ;; Keywords
     (,(elixir-rx (group (or builtin builtin-declaration builtin-namespace
@@ -396,11 +417,11 @@
 
     ;; Atoms and singleton-like words like true/false/nil.
     (,(elixir-rx (group atoms))
-     1 font-lock-constant-face)
+     1 elixir-atom-face)
 
     ;; Map keys
     (,(elixir-rx (group (and (one-or-more identifiers) ":")))
-     1 font-lock-constant-face)
+     1 elixir-atom-face)
 
     ;; Built-in modules and pseudovariables
     (,(elixir-rx (group (or builtin-modules pseudo-var)))
