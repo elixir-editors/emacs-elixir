@@ -394,10 +394,13 @@
                  (and "<" (group (one-or-more (not (any ">")))) ">"))
      1 font-lock-string-face)
 
-    ;; TODO: Figure out why atoms are not being colored with `reference-face'
     ;; Atoms and singleton-like words like true/false/nil.
     (,(elixir-rx (group atoms))
-     1 font-lock-reference-face)
+     1 font-lock-constant-face)
+
+    ;; Map keys
+    (,(elixir-rx (group (and (one-or-more identifiers) ":")))
+     1 font-lock-constant-face)
 
     ;; Built-in modules and pseudovariables
     (,(elixir-rx (group (or builtin-modules pseudo-var)))

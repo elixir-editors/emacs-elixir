@@ -126,24 +126,19 @@ end"
 
 (ert-deftest elixir-mode-syntax-table/fontify-atoms ()
   :tags '(fontification atom syntax-table)
-  :expected-result :failed
   (elixir-test-with-temp-buffer
       ":oriole
 :andale"
-    ;; This is actually the wrong face. I thought I had set these up
-    ;; to use `font-lock-reference-face' but apparently not. See the
-    ;; TODO in `elixir-mode.el' on this.
-    (should (eq (elixir-test-face-at 3) 'font-lock-reference-face))
-    (should (eq (elixir-test-face-at 5) 'font-lock-reference-face))
-    (should (eq (elixir-test-face-at 10) 'font-lock-reference-face))
-    (should (eq (elixir-test-face-at 13) 'font-lock-reference-face))))
+    (should (eq (elixir-test-face-at 3) 'font-lock-constant-face))
+    (should (eq (elixir-test-face-at 5) 'font-lock-constant-face))
+    (should (eq (elixir-test-face-at 10) 'font-lock-constant-face))
+    (should (eq (elixir-test-face-at 13) 'font-lock-constant-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-map-keys ()
   :tags '(fontification map syntax-table)
   (elixir-test-with-temp-buffer
       "%{a: 1, b: 2}"
-    (should (eq (elixir-test-face-at 3) 'font-lock-variable-name-face))
-    (should (eq (elixir-test-face-at 4) 'font-lock-variable-name-face))
-    (should (eq (elixir-test-face-at 9) 'font-lock-variable-name-face))
-    (should (eq (elixir-test-face-at 10) 'font-lock-variable-name-face))))
-
+    (should (eq (elixir-test-face-at 3) 'font-lock-constant-face))
+    (should (eq (elixir-test-face-at 4) 'font-lock-constant-face))
+    (should (eq (elixir-test-face-at 9) 'font-lock-constant-face))
+    (should (eq (elixir-test-face-at 10) 'font-lock-constant-face))))
