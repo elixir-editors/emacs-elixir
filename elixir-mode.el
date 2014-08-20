@@ -323,42 +323,7 @@
       (punctuation . ,(rx symbol-start
                           (or "\\\\" "<<" ">>" "=>" "(" ")" ":" ";" "" "[" "]")
                           symbol-end))
-      (sigils . ,(rx "~" (or "B" "C" "R" "S" "b" "c" "r" "s" "w")))
-
-      ;; old stuff
-      (keywords . ,(rx symbol-start
-                      (or "->" "bc" "lc" "in" "inbits" "inlist" "quote"
-                          "unquote" "unquote_splicing" "var" "do" "after" "for"
-                          "def" "defdelegate" "defimpl" "defmacro" "defmacrop"
-                          "defmodule" "defoverridable" "defp" "defprotocol"
-                          "defrecord" "defstruct" "destructure" "alias"
-                          "require" "import" "use" "if" "unless" "when" "case"
-                          "cond" "throw" "then" "else" "elsif" "try" "catch"
-                          "rescue" "fn" "function" "receive" "end")
-                      symbol-end))
-      (imports . ,(rx symbol-start
-                      (or "use" "require" "import")
-                      symbol-end))
-      (bool-and-nil . ,(rx symbol-start
-                           (or "true" "false" "nil")
-                           symbol-end))
-      (builtins . ,(rx symbol-start
-                          (or "_" "Erlang" "__MODULE__" "__LINE__" "__FILE__"
-                              "__ENV__" "__DIR__")
-                          symbol-end))
-      (method-defines . ,(rx symbol-start
-                      (or "def" "defdelegate" "defmacro" "defmacrop"
-                          "defoverridable" "defp" "defmacrop")
-                      symbol-end))
-      (module-defines . ,(rx symbol-start
-                             (or "defmodule" "defprotocol" "defimpl"
-                                 "defrecord")
-                             symbol-end))
-      (operators . ,(rx symbol-start
-                        (or "+" "++" "<>" "-" "/" "*" "div" "rem" "==" "!=" "<="
-                            "<" ">=" ">" "===" "!==" "and" "or" "not" "&&" "||"
-                            "!" "." "#" "=" ":=" "<-")))
-      ))
+      (sigils . ,(rx "~" (or "B" "C" "R" "S" "b" "c" "r" "s" "w")))))
 
   (defmacro elixir-rx (&rest sexps)
     (let ((rx-constituents (append elixir-rx-constituents rx-constituents)))
@@ -390,14 +355,14 @@
     (,(elixir-rx (group function-declaration)
                  space
                  (group identifiers))
-     1 font-lock-function-name-face)
+     2 font-lock-function-name-face)
 
     ;; Variable definitions
     (,(elixir-rx (group identifiers)
                  (one-or-more space)
                  "="
                  (one-or-more space))
-     1 font-lock-function-name-face)
+     1 font-lock-variable-name-face)
 
     ;; Sigils
     (,(elixir-rx (group sigils))
@@ -409,30 +374,30 @@
                  (and "/" (group (one-or-more (not (any "/")))) "/"))
      1 font-lock-string-face)
     (,(elixir-rx "~r"
-                  (and "[" (group (one-or-more (not (any "]")))) "]"))
+                 (and "[" (group (one-or-more (not (any "]")))) "]"))
      1 font-lock-string-face)
     (,(elixir-rx "~r"
-                  (and "{" (group (one-or-more (not (any "}")))) "}"))
+                 (and "{" (group (one-or-more (not (any "}")))) "}"))
      1 font-lock-string-face)
     (,(elixir-rx "~r"
-                  (and "(" (group (one-or-more (not (any ")")))) ")"))
+                 (and "(" (group (one-or-more (not (any ")")))) ")"))
      1 font-lock-string-face)
     (,(elixir-rx "~r"
-                  (and "|" (group (one-or-more (not (any "|")))) "|"))
+                 (and "|" (group (one-or-more (not (any "|")))) "|"))
      1 font-lock-string-face)
     (,(elixir-rx "~r"
-                  (and "\"" (group (one-or-more (not (any "\"")))) "\""))
+                 (and "\"" (group (one-or-more (not (any "\"")))) "\""))
      1 font-lock-string-face)
     (,(elixir-rx "~r"
-                  (and "'" (group (one-or-more (not (any "'")))) "'"))
+                 (and "'" (group (one-or-more (not (any "'")))) "'"))
      1 font-lock-string-face)
     (,(elixir-rx "~r"
-                  (and "<" (group (one-or-more (not (any ">")))) ">"))
+                 (and "<" (group (one-or-more (not (any ">")))) ">"))
      1 font-lock-string-face)
 
     ;; TODO: Figure out why atoms are not being colored with `reference-face'
     ;; Atoms and singleton-like words like true/false/nil.
-    (,(elixir-rx (or (group atoms) (group bool-and-nil)))
+    (,(elixir-rx (group atoms))
      1 font-lock-reference-face)
 
     ;; Built-in modules and pseudovariables
@@ -446,87 +411,6 @@
     ;; Code points
     (,(elixir-rx (group code-point))
      1 elixir-negation-face)))
-
-;; (defconst elixir-mode-font-lock-defaults
-;;   `(
-;;     ;; Module-defining & namespace builtins
-;;     (,(elixir-rx (or module-defines imports)
-;;                  space
-;;                  (group module-names))
-;;      1 font-lock-type-face)
-
-;;     ;; Heredoc
-;;     (,(elixir-rx (group heredocs))
-;;      1 font-lock-builtin-face)
-
-;;     ;; Keywords
-;;     (,(elixir-rx (group keywords))
-;;      1 font-lock-keyword-face)
-
-;;     ;; Method names, i.e. `def foo do'
-;;     (,(elixir-rx method-defines
-;;                  space
-;;                  (group identifiers))
-;;      1 font-lock-function-name-face)
-
-;;     ;; Variable definitions
-;;     (,(elixir-rx (group identifiers)
-;;                  (one-or-more space)
-;;                  "="
-;;                  (one-or-more space))
-;;      1 font-lock-variable-name-face)
-
-;;     ;; Built-in constants
-;;     (,(elixir-rx (group builtins))
-;;      1 font-lock-builtin-face)
-
-;;     ;; Sigils
-;;     (,(elixir-rx (group sigils))
-;;      1 font-lock-builtin-face)
-
-;;     ;; Regex patterns. Elixir has support for eight different regex delimiters.
-;;     ;; This isn't a very DRY approach here but it gets the job done.
-;;     (,(elixir-rx "~r"
-;;                  (and "/" (group (one-or-more (not (any "/")))) "/"))
-;;      1 font-lock-string-face)
-;;     (,(elixir-rx "~r"
-;;                   (and "[" (group (one-or-more (not (any "]")))) "]"))
-;;      1 font-lock-string-face)
-;;     (,(elixir-rx "~r"
-;;                   (and "{" (group (one-or-more (not (any "}")))) "}"))
-;;      1 font-lock-string-face)
-;;     (,(elixir-rx "~r"
-;;                   (and "(" (group (one-or-more (not (any ")")))) ")"))
-;;      1 font-lock-string-face)
-;;     (,(elixir-rx "~r"
-;;                   (and "|" (group (one-or-more (not (any "|")))) "|"))
-;;      1 font-lock-string-face)
-;;     (,(elixir-rx "~r"
-;;                   (and "\"" (group (one-or-more (not (any "\"")))) "\""))
-;;      1 font-lock-string-face)
-;;     (,(elixir-rx "~r"
-;;                   (and "'" (group (one-or-more (not (any "'")))) "'"))
-;;      1 font-lock-string-face)
-;;     (,(elixir-rx "~r"
-;;                   (and "<" (group (one-or-more (not (any ">")))) ">"))
-;;      1 font-lock-string-face)
-
-;;     ;; TODO: Figure out why atoms are not being colored with `reference-face'
-;;     ;; Atoms and singleton-like words like true/false/nil.
-;;     (,(elixir-rx (or (group atoms) (group bool-and-nil)))
-;;      1 font-lock-reference-face)
-
-;;     ;; Built-in modules
-;;     (,(elixir-rx (group builtin-modules))
-;;      1 font-lock-constant-face)
-
-;;     ;; Operators
-;;     (,(elixir-rx (group operators))
-;;      1 elixir-operator-face)
-
-;;     ;; Code points
-;;     (,(elixir-rx (group code-point))
-;;      1 elixir-negation-face)))
 
 (defun elixir-mode-cygwin-path (expanded-file-name)
   "Elixir mode get Cygwin absolute path name.
