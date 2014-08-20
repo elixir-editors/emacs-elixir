@@ -220,7 +220,7 @@
     (((class color) (background dark))
      (:foreground "#ff4500"))
     (t nil))
-  "For use with escape characters."
+  "For use with standalone \"?\" to indicate code point."
   :group 'font-lock-faces)
 
 (defvar elixir-attribute-face 'elixir-attribute-face)
@@ -230,7 +230,7 @@
     (((class color) (background dark))
      (:foreground "thistle"))
     (t nil))
-  "For use with escape characters."
+  "For use with module attribute tokens."
   :group 'font-lock-faces)
 
 (defvar elixir-atom-face 'elixir-atom-face)
@@ -240,7 +240,7 @@
     (((class color) (background dark))
      (:foreground "light sky blue"))
     (t nil))
-  "For use with escape characters."
+  "For use with atoms & map keys."
   :group 'font-lock-faces)
 
 
