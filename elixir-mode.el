@@ -427,10 +427,6 @@
     (,(elixir-rx (group (or builtin-modules pseudo-var)))
      1 font-lock-constant-face)
 
-    ;; Operators
-    (,(elixir-rx (group (or operators1 operators2 operators3)))
-     1 elixir-operator-face)
-
     ;; Code points
     (,(elixir-rx (group code-point))
      1 elixir-negation-face)))
