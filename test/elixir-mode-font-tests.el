@@ -138,3 +138,12 @@ end"
     (should (eq (elixir-test-face-at 10) 'font-lock-reference-face))
     (should (eq (elixir-test-face-at 13) 'font-lock-reference-face))))
 
+(ert-deftest elixir-mode-syntax-table/fontify-map-keys ()
+  :tags '(fontification map syntax-table)
+  (elixir-test-with-temp-buffer
+      "%{a: 1, b: 2}"
+    (should (eq (elixir-test-face-at 3) 'font-lock-variable-name-face))
+    (should (eq (elixir-test-face-at 4) 'font-lock-variable-name-face))
+    (should (eq (elixir-test-face-at 9) 'font-lock-variable-name-face))
+    (should (eq (elixir-test-face-at 10) 'font-lock-variable-name-face))))
+
