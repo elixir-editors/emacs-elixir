@@ -279,11 +279,9 @@
       ;; The first character of an identifier must be a letter or an underscore.
       ;; After that, they may contain any alphanumeric character + underscore.
       ;; Additionally, the final character may be either `?' or `!'.
-      (identifiers . ,(rx symbol-start
-                          (one-or-more (any "A-Z" "a-z""_"))
+      (identifiers . ,(rx (one-or-more (any "A-Z" "a-z""_"))
                           (zero-or-more (any "A-Z" "a-z" "0-9" "_"))
-                          (optional (or "?" "!"))
-                          symbol-end))
+                          (optional (or "?" "!"))))
       (keyword . ,(rx symbol-start
                       (or "fn" "do" "end" "after" "else" "rescue" "catch")
                       symbol-end))
@@ -321,7 +319,7 @@
                              "__block__" "__aliases__")
                          symbol-end))
       (punctuation . ,(rx symbol-start
-                          (or "\\\\" "<<" ">>" "=>" "(" ")" ":" ";" "" "[" "]")
+                          (or "\\" "<<" ">>" "=>" "(" ")" ":" ";" "" "[" "]")
                           symbol-end))
       (sigils . ,(rx "~" (or "B" "C" "R" "S" "b" "c" "r" "s" "w")))))
 
@@ -342,8 +340,9 @@
                  (group module-names))
      1 font-lock-type-face)
 
-    ;; Heredoc
-    (,(elixir-rx (group heredocs))
+    ;; Module attributes
+    (,(elixir-rx (group (or heredocs
+                            (and "@" (1+ identifiers)))))
      1 font-lock-builtin-face)
 
     ;; Keywords
