@@ -226,6 +226,46 @@
 (eval-when-compile
   (defconst elixir-rx-constituents
     `(
+      (keyword . ,(rx symbol-start
+                      (or "fn" "do" "end" "after" "else" "rescue" "catch")
+                      symbol-end))
+      (keyword-operator . ,(rx symbol-start
+                               (or "not" "and" "or" "when" "in")
+                               symbol-end))
+      (builtin . ,(rx symbol-start
+                      (or "case" "cond" "for" "if" "unless" "try" "receive"
+                          "raise" "quote" "unquote" "unquote_splicing" "throw"
+                          "super")
+                      symbol-end))
+      (builtin-declaration . ,(rx symbol-start
+                                  (or "def" "defp" "defmodule" "defprotocol"
+                                      "defmacro" "defmacrop" "defdelegate"
+                                      "defexception" "defstruct" "defimpl"
+                                      "defcallback")
+                                  symbol-end))
+      (builtin-namespace . ,(rx symbol-start
+                                (or "import" "require" "use" "alias")
+                                symbol-end))
+      (pseudo_var . ,(rx symbol-start
+                         (or "_" "__module__" "__dir__" "__env__" "__caller__")
+                         symbol-end))
+
+      (operators3 . ,(rx symbol-start
+                         (or "<<<" ">>>" "|||" "&&&" "^^^" "~~~" "===" "!==")
+                         symbol-end))
+      (operators2 . ,(rx symbol-start
+                         (or
+                          "==" "!=" "<=" ">=" "&&" "||" "<>" "++" "--" "|>" "=~"
+                          "->" "<-" "|" "." "=")
+                         symbol-end))
+      (operators1 . ,(rx symbol-start
+                         (or "<" ">" "+" "-" "*" "/" "!" "^" "&")
+                         symbol-end))
+
+      (punctuation . ,(rx symbol-start
+                          (or "\\\\" "<<" ">>" "=>" "(" ")" ":" ";" "" "[" "]")
+                          symbol-end))
+
       ;; Match `@doc' or `@moduledoc' syntax, with or without triple quotes.
       (heredocs . ,(rx symbol-start
                        (or "@doc" "@moduledoc" "~s")
