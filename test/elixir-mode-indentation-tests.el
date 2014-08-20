@@ -503,3 +503,14 @@ x = do_something(:foo, fn (arg) ->
 x = do_something(:foo, fn (arg) ->
                          do_another(arg)
                        end)")
+
+(elixir-def-indentation-test indent-lone-keyword
+    (:expected-result :failed)
+  "
+def foo do #comment
+  :bar
+end"
+    "
+def foo do #comment
+  :bar
+end")
