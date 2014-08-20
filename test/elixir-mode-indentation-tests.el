@@ -462,3 +462,44 @@ defmodule Foo do
   end
 end
 ")
+
+(elixir-def-indentation-test indent-pipes
+    (:expected-result :failed)
+  "def foo(x) do
+  a = x
+    |> Enum.reverse
+end"
+  "def foo(x) do
+  a = x
+    |> Enum.reverse
+end")
+
+(elixir-def-indentation-test indent-inside-parens
+    (:expected-result :failed)
+  "x = do_something(
+  :foo,
+  :bar
+)"
+  "x = do_something(
+  :foo,
+  :bar
+)")
+
+(elixir-def-indentation-test indent-inside-parens/2 ()
+  "
+x = do_something(:foo,
+                 :bar)"
+    "
+x = do_something(:foo,
+                 :bar)")
+
+(elixir-def-indentation-test indent-inside-parens/3
+    (:expected-result :failed)
+  "
+x = do_something(:foo, fn (arg) ->
+                         do_another(arg)
+                       end)"
+"
+x = do_something(:foo, fn (arg) ->
+                         do_another(arg)
+                       end)")
