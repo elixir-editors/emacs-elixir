@@ -226,12 +226,11 @@
 (eval-when-compile
   (defconst elixir-rx-constituents
     `(
-      (keyword . ,(rx symbol-start
-                      (or "fn" "do" "end" "after" "else" "rescue" "catch")
-                      symbol-end))
-      (keyword-operator . ,(rx symbol-start
-                               (or "not" "and" "or" "when" "in")
-                               symbol-end))
+      (atoms . ,(rx ":"
+                    (or
+                     (one-or-more (any "a-z" "A-Z" "_" "\"" "'"))
+                     (and "\"" (one-or-more (not (any "\""))) "\"")
+                     (and "'" (one-or-more (not (any "'"))) "'"))))
       (builtin . ,(rx symbol-start
                       (or "case" "cond" "for" "if" "unless" "try" "receive"
                           "raise" "quote" "unquote" "unquote_splicing" "throw"
@@ -243,33 +242,90 @@
                                       "defexception" "defstruct" "defimpl"
                                       "defcallback")
                                   symbol-end))
+      (builtin-modules . ,(rx symbol-start
+                              (or "Agent" "Application" "Atom" "Base"
+                                  "Behaviour" "Bitwise" "Builtin" "Code" "Dict"
+                                  "EEx" "Elixir" "Enum" "ExUnit" "Exception"
+                                  "File" "File.Stat" "File.Stream" "Float"
+                                  "Function" "GenEvent" "GenServer" "GenTCP"
+                                  "HashDict" "HashSet" "IO" "IO.ANSI"
+                                  "IO.Stream" "Inspect.Algebra" "Inspect.Opts"
+                                  "Integer" "Kernel" "Kernel.ParallelCompiler"
+                                  "Kernel.ParallelRequire" "Kernel.SpecialForms"
+                                  "Kernel.Typespec" "Keyword" "List" "Macro"
+                                  "Macro.Env" "Map" "Math" "Module" "Node"
+                                  "OptionParser" "OrdDict" "Path" "Port"
+                                  "Process" "Protocol" "Range" "Record" "Regex"
+                                  "Set" "Stream" "String" "StringIO"
+                                  "Supervisor" "Supervisor.Spec" "System" "Task"
+                                  "Task.Supervisor" "Tuple" "URI"
+                                  "UnboundMethod" "Version")
+                              symbol-end))
       (builtin-namespace . ,(rx symbol-start
                                 (or "import" "require" "use" "alias")
                                 symbol-end))
-      (pseudo_var . ,(rx symbol-start
-                         (or "_" "__module__" "__dir__" "__env__" "__caller__")
+      ;; Set aside code point syntax for `elixir-negation-face'.
+      (code-point . ,(rx symbol-start
+                         "?"
+                         anything
                          symbol-end))
-
-      (operators3 . ,(rx symbol-start
-                         (or "<<<" ">>>" "|||" "&&&" "^^^" "~~~" "===" "!==")
+      (function-declaration . ,(rx symbol-start
+                       (or "def" "defp")
+                       symbol-end))
+      ;; Match `@doc' or `@moduledoc' syntax, with or without triple quotes.
+      (heredocs . ,(rx symbol-start
+                       (or "@doc" "@moduledoc" "~s")
+                       symbol-end))
+      ;; The first character of an identifier must be a letter or an underscore.
+      ;; After that, they may contain any alphanumeric character + underscore.
+      ;; Additionally, the final character may be either `?' or `!'.
+      (identifiers . ,(rx symbol-start
+                          (one-or-more (any "A-Z" "a-z""_"))
+                          (zero-or-more (any "A-Z" "a-z" "0-9" "_"))
+                          (optional (or "?" "!"))
+                          symbol-end))
+      (keyword . ,(rx symbol-start
+                      (or "fn" "do" "end" "after" "else" "rescue" "catch")
+                      symbol-end))
+      (keyword-operator . ,(rx symbol-start
+                               (or "not" "and" "or" "when" "in")
+                               symbol-end))
+      ;; Module and submodule names start with upper case letter or `_'. This
+      ;; can then be followed by any combination of alphanumeric chars + `_'.
+      ;; In turn, this can be followed by a `.' which begins the notation of
+      ;; a submodule, which follows the same naming pattern of the module.
+      ;; Finally, like other identifiers, it can be terminated with either `?'
+      ;; or `!'.
+      (module-names . ,(rx symbol-start
+                           (one-or-more (any "A-Z" "_"))
+                           (zero-or-more (any "A-Z" "a-z" "_" "0-9"))
+                           (zero-or-more
+                            (and "."
+                                 (one-or-more (any "A-Z" "_"))
+                                  (zero-or-more (any "A-Z" "a-z" "_" "0-9"))))
+                           (optional (or "!" "?"))
+                           symbol-end))
+      (operators1 . ,(rx symbol-start
+                         (or "<" ">" "+" "-" "*" "/" "!" "^" "&")
                          symbol-end))
       (operators2 . ,(rx symbol-start
                          (or
                           "==" "!=" "<=" ">=" "&&" "||" "<>" "++" "--" "|>" "=~"
                           "->" "<-" "|" "." "=")
                          symbol-end))
-      (operators1 . ,(rx symbol-start
-                         (or "<" ">" "+" "-" "*" "/" "!" "^" "&")
+      (operators3 . ,(rx symbol-start
+                         (or "<<<" ">>>" "|||" "&&&" "^^^" "~~~" "===" "!==")
                          symbol-end))
-
+      (pseudo-var . ,(rx symbol-start
+                         (or "_" "__MODULE__" "__DIR__" "__ENV__" "__CALLER__"
+                             "__block__" "__aliases__")
+                         symbol-end))
       (punctuation . ,(rx symbol-start
                           (or "\\\\" "<<" ">>" "=>" "(" ")" ":" ";" "" "[" "]")
                           symbol-end))
+      (sigils . ,(rx "~" (or "B" "C" "R" "S" "b" "c" "r" "s" "w")))
 
-      ;; Match `@doc' or `@moduledoc' syntax, with or without triple quotes.
-      (heredocs . ,(rx symbol-start
-                       (or "@doc" "@moduledoc" "~s")
-                       symbol-end))
+      ;; old stuff
       (keywords . ,(rx symbol-start
                       (or "->" "bc" "lc" "in" "inbits" "inlist" "quote"
                           "unquote" "unquote_splicing" "var" "do" "after" "for"
@@ -290,7 +346,6 @@
                           (or "_" "Erlang" "__MODULE__" "__LINE__" "__FILE__"
                               "__ENV__" "__DIR__")
                           symbol-end))
-      (sigils . ,(rx "~" (or "B" "C" "R" "S" "b" "c" "r" "s" "w")))
       (method-defines . ,(rx symbol-start
                       (or "def" "defdelegate" "defmacro" "defmacrop"
                           "defoverridable" "defp" "defmacrop")
@@ -299,61 +354,11 @@
                              (or "defmodule" "defprotocol" "defimpl"
                                  "defrecord")
                              symbol-end))
-      (builtin-modules . ,(rx symbol-start
-                              (or "Agent" "Application" "Atom" "Base"
-                                  "Behaviour" "Bitwise" "Builtin" "Code" "Dict"
-                                  "EEx" "Elixir" "Enum" "ExUnit" "Exception"
-                                  "File" "File.Stat" "File.Stream" "Float"
-                                  "Function" "GenEvent" "GenServer" "GenTCP"
-                                  "HashDict" "HashSet" "IO" "IO.ANSI"
-                                  "IO.Stream" "Inspect.Algebra" "Inspect.Opts"
-                                  "Integer" "Kernel" "Kernel.ParallelCompiler"
-                                  "Kernel.ParallelRequire" "Kernel.SpecialForms"
-                                  "Kernel.Typespec" "Keyword" "List" "Macro"
-                                  "Macro.Env" "Map" "Math" "Module" "Node"
-                                  "OptionParser" "OrdDict" "Path" "Port"
-                                  "Process" "Protocol" "Range" "Record" "Regex"
-                                  "Set" "Stream" "String" "StringIO"
-                                  "Supervisor" "Supervisor.Spec" "System" "Task"
-                                  "Task.Supervisor" "Tuple" "URI"
-                                  "UnboundMethod" "Version")
-                              symbol-end))
       (operators . ,(rx symbol-start
                         (or "+" "++" "<>" "-" "/" "*" "div" "rem" "==" "!=" "<="
                             "<" ">=" ">" "===" "!==" "and" "or" "not" "&&" "||"
                             "!" "." "#" "=" ":=" "<-")))
-      ;; Module and submodule names start with upper case letter or `_'. This
-      ;; can then be followed by any combination of alphanumeric chars + `_'.
-      ;; In turn, this can be followed by a `.' which begins the notation of
-      ;; a submodule, which follows the same naming pattern of the module.
-      ;; Finally, like other identifiers, it can be terminated with either `?'
-      ;; or `!'.
-      (module-names . ,(rx symbol-start
-                           (one-or-more (any "A-Z" "_"))
-                           (zero-or-more (any "A-Z" "a-z" "_" "0-9"))
-                           (zero-or-more
-                            (and "."
-                                 (one-or-more (any "A-Z" "_"))
-                                  (zero-or-more (any "A-Z" "a-z" "_" "0-9"))))
-                           (optional (or "!" "?"))
-                           symbol-end))
-      ;; The first character of an identifier must be a letter or an underscore.
-      ;; After that, they may contain any alphanumeric character + underscore.
-      ;; Additionally, the final character may be either `?' or `!'.
-      (identifiers . ,(rx symbol-start
-                          (one-or-more (any "A-Z" "a-z""_"))
-                          (zero-or-more (any "A-Z" "a-z" "0-9" "_"))
-                          (optional (or "?" "!"))
-                          symbol-end))
-      (atoms . ,(rx ":"
-                    (or
-                     (one-or-more (any "a-z" "A-Z" "0-9" "_"))
-                     (and "\"" (one-or-more (not (any "\""))) "\"")
-                     (and "'" (one-or-more (not (any "'"))) "'"))))
-      (code-point . ,(rx symbol-start
-                         "?"
-                         anything
-                         symbol-end))))
+      ))
 
   (defmacro elixir-rx (&rest sexps)
     (let ((rx-constituents (append elixir-rx-constituents rx-constituents)))
@@ -367,7 +372,7 @@
 (defconst elixir-mode-font-lock-defaults
   `(
     ;; Module-defining & namespace builtins
-    (,(elixir-rx (or module-defines imports)
+    (,(elixir-rx (or builtin-declaration builtin-namespace)
                  space
                  (group module-names))
      1 font-lock-type-face)
@@ -377,11 +382,12 @@
      1 font-lock-builtin-face)
 
     ;; Keywords
-    (,(elixir-rx (group keywords))
+    (,(elixir-rx (group (or builtin builtin-declaration builtin-namespace
+                            keyword keyword-operator)))
      1 font-lock-keyword-face)
 
-    ;; Method names, i.e. `def foo do'
-    (,(elixir-rx method-defines
+    ;; Function names, i.e. `def foo do'.
+    (,(elixir-rx (group function-declaration)
                  space
                  (group identifiers))
      1 font-lock-function-name-face)
@@ -391,11 +397,7 @@
                  (one-or-more space)
                  "="
                  (one-or-more space))
-     1 font-lock-variable-name-face)
-
-    ;; Built-in constants
-    (,(elixir-rx (group builtins))
-     1 font-lock-builtin-face)
+     1 font-lock-function-name-face)
 
     ;; Sigils
     (,(elixir-rx (group sigils))
@@ -433,17 +435,98 @@
     (,(elixir-rx (or (group atoms) (group bool-and-nil)))
      1 font-lock-reference-face)
 
-    ;; Built-in modules
-    (,(elixir-rx (group builtin-modules))
+    ;; Built-in modules and pseudovariables
+    (,(elixir-rx (group (or builtin-modules pseudo-var)))
      1 font-lock-constant-face)
 
     ;; Operators
-    (,(elixir-rx (group operators))
+    (,(elixir-rx (group (or operators1 operators2 operators3)))
      1 elixir-operator-face)
 
     ;; Code points
     (,(elixir-rx (group code-point))
      1 elixir-negation-face)))
+
+;; (defconst elixir-mode-font-lock-defaults
+;;   `(
+;;     ;; Module-defining & namespace builtins
+;;     (,(elixir-rx (or module-defines imports)
+;;                  space
+;;                  (group module-names))
+;;      1 font-lock-type-face)
+
+;;     ;; Heredoc
+;;     (,(elixir-rx (group heredocs))
+;;      1 font-lock-builtin-face)
+
+;;     ;; Keywords
+;;     (,(elixir-rx (group keywords))
+;;      1 font-lock-keyword-face)
+
+;;     ;; Method names, i.e. `def foo do'
+;;     (,(elixir-rx method-defines
+;;                  space
+;;                  (group identifiers))
+;;      1 font-lock-function-name-face)
+
+;;     ;; Variable definitions
+;;     (,(elixir-rx (group identifiers)
+;;                  (one-or-more space)
+;;                  "="
+;;                  (one-or-more space))
+;;      1 font-lock-variable-name-face)
+
+;;     ;; Built-in constants
+;;     (,(elixir-rx (group builtins))
+;;      1 font-lock-builtin-face)
+
+;;     ;; Sigils
+;;     (,(elixir-rx (group sigils))
+;;      1 font-lock-builtin-face)
+
+;;     ;; Regex patterns. Elixir has support for eight different regex delimiters.
+;;     ;; This isn't a very DRY approach here but it gets the job done.
+;;     (,(elixir-rx "~r"
+;;                  (and "/" (group (one-or-more (not (any "/")))) "/"))
+;;      1 font-lock-string-face)
+;;     (,(elixir-rx "~r"
+;;                   (and "[" (group (one-or-more (not (any "]")))) "]"))
+;;      1 font-lock-string-face)
+;;     (,(elixir-rx "~r"
+;;                   (and "{" (group (one-or-more (not (any "}")))) "}"))
+;;      1 font-lock-string-face)
+;;     (,(elixir-rx "~r"
+;;                   (and "(" (group (one-or-more (not (any ")")))) ")"))
+;;      1 font-lock-string-face)
+;;     (,(elixir-rx "~r"
+;;                   (and "|" (group (one-or-more (not (any "|")))) "|"))
+;;      1 font-lock-string-face)
+;;     (,(elixir-rx "~r"
+;;                   (and "\"" (group (one-or-more (not (any "\"")))) "\""))
+;;      1 font-lock-string-face)
+;;     (,(elixir-rx "~r"
+;;                   (and "'" (group (one-or-more (not (any "'")))) "'"))
+;;      1 font-lock-string-face)
+;;     (,(elixir-rx "~r"
+;;                   (and "<" (group (one-or-more (not (any ">")))) ">"))
+;;      1 font-lock-string-face)
+
+;;     ;; TODO: Figure out why atoms are not being colored with `reference-face'
+;;     ;; Atoms and singleton-like words like true/false/nil.
+;;     (,(elixir-rx (or (group atoms) (group bool-and-nil)))
+;;      1 font-lock-reference-face)
+
+;;     ;; Built-in modules
+;;     (,(elixir-rx (group builtin-modules))
+;;      1 font-lock-constant-face)
+
+;;     ;; Operators
+;;     (,(elixir-rx (group operators))
+;;      1 elixir-operator-face)
+
+;;     ;; Code points
+;;     (,(elixir-rx (group code-point))
+;;      1 elixir-negation-face)))
 
 (defun elixir-mode-cygwin-path (expanded-file-name)
   "Elixir mode get Cygwin absolute path name.
