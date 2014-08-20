@@ -1,3 +1,8 @@
+## v1.4.8 - 2014/08/19
+* [#92](https://github.com/elixir-lang/emacs-elixir/pull/92) - Update Rakefile to also run the release.py script. Refs #88.
+* [#91](https://github.com/elixir-lang/emacs-elixir/pull/91) - Updates to regexes for various lexemes
+* [#90](https://github.com/elixir-lang/emacs-elixir/pull/90) - Fix bug in atom highlighting. 
+
 ## v1.4.7 - 2014/08/18
 * [#87](https://github.com/elixir-lang/emacs-elixir/pull/87) - Add syntax highlighting for heredocs & failing tests for indentation.
 * [#85](https://github.com/elixir-lang/emacs-elixir/pull/85) - Improve regex for defmodule highlighting.
