@@ -78,7 +78,10 @@
 (defvar elixir-smie--operator-regexp
   (regexp-opt '("<<<" ">>>" "^^^" "~~~" "&&&" "|||" "===" "!==" "==" "!=" "<="
                 ">=" "<" ">" "&&" "||" "<>" "++" "--" "//"
-                "/>" "=~" "|>" "->")))
+                "/>" "=~" "|>")))
+
+(defvar elixir-smie--block-operator-regexp
+  (rx "->"))
 
 (defvar elixir-smie--spaces-til-eol-regexp
   (rx (and (1+ space) eol))
@@ -106,6 +109,9 @@
    ((and (looking-at "[\n#]") (elixir-smie--implicit-semi-p))
     (if (eolp) (forward-char 1) (forward-comment 1))
     ";")
+   ((looking-at elixir-smie--block-operator-regexp)
+    (goto-char (match-end 0))
+    "MATCH-STATEMENT-DELIMITER")
    ((looking-at elixir-smie--operator-regexp)
     (goto-char (match-end 0))
     "OP")
@@ -118,6 +124,9 @@
      ((and (> pos (line-end-position))
            (elixir-smie--implicit-semi-p))
       ";")
+     ((looking-back elixir-smie--block-operator-regexp (- (point) 3) t)
+      (goto-char (match-beginning 0))
+      "MATCH-STATEMENT-DELIMITER")
      ((looking-back elixir-smie--operator-regexp (- (point) 3) t)
       (goto-char (match-beginning 0))
       "OP")
@@ -140,6 +149,11 @@
       ((smie-rule-sibling-p) nil)
       ((smie-rule-hanging-p) (smie-rule-parent elixir-smie-indent-basic))
       (t elixir-smie-indent-basic)))
+    (`(:before . "MATCH-STATEMENT-DELIMITER")
+     (if (smie-rule-sibling-p)
+         (smie-rule-parent)))
+    (`(:after . "MATCH-STATEMENT-DELIMITER")
+     (smie-rule-parent elixir-smie-indent-basic))
     (`(:before . ";")
      (cond
       ((smie-rule-parent-p "after" "catch" "def" "defmodule" "defp" "do" "else"
