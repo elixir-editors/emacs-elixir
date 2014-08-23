@@ -148,11 +148,27 @@
       ((smie-rule-sibling-p) nil)
       ((smie-rule-hanging-p) (smie-rule-parent elixir-smie-indent-basic))
       (t elixir-smie-indent-basic)))
+
     (`(:before . "MATCH-STATEMENT-DELIMITER")
-     (if (smie-rule-sibling-p)
-         (smie-rule-parent)))
+     (cond
+      ((and (not (smie-rule-sibling-p))
+            (smie-rule-hanging-p))
+       (smie-rule-parent elixir-smie-indent-basic))
+      ((and (smie-rule-hanging-p)
+            (smie-rule-sibling-p))
+       (smie-rule-parent))))
+
     (`(:after . "MATCH-STATEMENT-DELIMITER")
-     (smie-rule-parent elixir-smie-indent-basic))
+     (cond
+      ;; We don't want to specify any rules for the first `->' after `do' or
+      ;; `fn', since SMIE will look at the BNF to see how to handle indentation
+      ;; in that case.
+      ((and (not (smie-rule-parent-p "fn" "do"))
+            (smie-rule-hanging-p))
+       (smie-rule-parent elixir-smie-indent-basic))
+      ((smie-rule-parent-p "fn" "do")
+       elixir-smie-indent-basic)))
+
     (`(:before . ";")
      (cond
       ((smie-rule-parent-p "after" "catch" "def" "defmodule" "defp" "do" "else"
@@ -160,7 +176,7 @@
        (smie-rule-parent elixir-smie-indent-basic))))
     (`(:after . ";")
      (if (smie-rule-parent-p "if")
-         (smie-rule-parent 0)))))
+         (smie-rule-parent)))))
 
 (define-minor-mode elixir-smie-mode
   "SMIE-based indentation and syntax for Elixir"
