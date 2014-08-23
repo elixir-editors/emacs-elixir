@@ -165,9 +165,7 @@
       ;; in that case.
       ((and (not (smie-rule-parent-p "fn" "do"))
             (smie-rule-hanging-p))
-       (smie-rule-parent elixir-smie-indent-basic))
-      ((smie-rule-parent-p "fn" "do")
-       elixir-smie-indent-basic)))
+       (smie-rule-parent elixir-smie-indent-basic))))
 
     (`(:before . ";")
      (cond
