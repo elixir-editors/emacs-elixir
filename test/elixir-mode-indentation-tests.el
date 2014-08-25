@@ -514,3 +514,24 @@ end"
 def foo do #comment
   :bar
 end")
+
+(elixir-def-indentation-test indent-after-require-Record
+    ()
+  ;; Mind the significant whitespace after `Record' in each case. There should
+  ;; be two spaces after `Record', otherwise this test is meaningless.
+  "
+defmodule RSS do
+require Record  
+
+def zip(list1, list2) when length(list1) == length(list2) do
+x = 1
+end
+end"
+  "
+defmodule RSS do
+  require Record  
+
+  def zip(list1, list2) when length(list1) == length(list2) do
+    x = 1
+  end
+end")
