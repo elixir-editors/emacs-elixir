@@ -80,6 +80,10 @@
                 ">=" "<" ">" "&&" "||" "<>" "++" "--" "//"
                 "/>" "=~" "|>" "->")))
 
+(defvar elixir-smie--spaces-til-eol-regexp
+  (rx (and (1+ space) eol))
+  "Regex representing one or more whitespace characters concluding with eol.")
+
 (defvar elixir-smie-indent-basic 2)
 
 (defmacro elixir-smie-debug (message &rest format-args)
@@ -94,6 +98,11 @@
 
 (defun elixir-smie-forward-token ()
   (cond
+   ;; If there is nothing but whitespace between the last token and eol, emit
+   ;; a semicolon.
+   ((looking-at elixir-smie--spaces-til-eol-regexp)
+    (goto-char (match-end 0))
+    ";")
    ((and (looking-at "[\n#]") (elixir-smie--implicit-semi-p))
     (if (eolp) (forward-char 1) (forward-comment 1))
     ";")
