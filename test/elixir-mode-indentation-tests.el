@@ -535,3 +535,12 @@ defmodule RSS do
     x = 1
   end
 end")
+
+;; We don't want automatic whitespace cleanup here because of the significant
+;; whitespace after `Record' above. By setting `whitespace-action' to nil,
+;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
+;; config, anyway).
+
+;;; Local Variables:
+;;; whitespace-action: nil
+;;; End:
