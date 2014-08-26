@@ -540,6 +540,33 @@ def foo do
 end"
   )
 
+(elixir-def-indentation-test indent-multiline-match/2 ()
+  "
+def foo do
+  case is_string(x) do
+    true ->
+      x2 = \" one\"
+      x <> x2
+
+    false ->
+      x2 = \" two\"
+      x <> x2
+  end
+end"
+  "
+def foo do
+  case is_string(x) do
+    true ->
+      x2 = \" one\"
+      x <> x2
+
+    false ->
+      x2 = \" two\"
+      x <> x2
+  end
+end"
+  )
+
 (elixir-def-indentation-test indent-after-require-Record
     ()
   ;; Mind the significant whitespace after `Record' in each case. There should
