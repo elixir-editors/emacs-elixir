@@ -132,7 +132,9 @@
     (cond
      ((and (> pos (line-end-position))
            (elixir-smie--implicit-semi-p))
-      ";")
+      (if (elixir-smie--semi-ends-match)
+          "MATCH-STATEMENT-DELIMITER"
+        ";"))
      ((looking-back elixir-smie--block-operator-regexp (- (point) 3) t)
       (goto-char (match-beginning 0))
       "MATCH-STATEMENT-DELIMITER")
