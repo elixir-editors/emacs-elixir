@@ -183,6 +183,10 @@
       ((smie-rule-hanging-p)
        (smie-rule-parent elixir-smie-indent-basic))))
 
+    (`(:after . "->")
+     (if (smie-rule-hanging-p)
+         elixir-smie-indent-basic))
+
     (`(:before . ";")
      (cond
       ((smie-rule-parent-p "after" "catch" "def" "defmodule" "defp" "do" "else"
