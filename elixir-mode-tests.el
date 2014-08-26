@@ -22,7 +22,9 @@
 
 (load "test/elixir-mode-indentation-tests.el")
 (load "test/elixir-mode-font-tests.el")
-(load "test/elixir-quoted-minor-mode-tests.el")
+
+(when (functionp 'font-lock-ensure)
+  (load "test/elixir-quoted-minor-mode-tests.el"))
 
 (provide 'elixir-mode-tests)
 ;;; elixir-mode-tests.el ends here

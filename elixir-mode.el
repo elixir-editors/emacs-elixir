@@ -494,19 +494,6 @@ Argument FILE-NAME ."
     (when (string= compiler-output "")
       (message "Compiled and saved as %s" (elixir-mode-compiled-file-name)))))
 
-(defun elixir-quoted--initialize-buffer (quoted)
-  (pop-to-buffer elixir-quoted--buffer-name)
-  (setq buffer-undo-list nil) ; Get rid of undo information from
-                              ; previous expansions
-  (let ((inhibit-read-only t)
-        (buffer-undo-list t)) ; Ignore undo information
-    (erase-buffer)
-    (insert quoted)
-    (goto-char (point-min))
-    (elixir-mode)
-    (elixir-quoted-minor-mode 1)
-    (font-lock-ensure)))
-
 ;;;###autoload
 (defun elixir-mode-iex (&optional args-p)
   "Elixir mode interactive REPL.
@@ -661,11 +648,25 @@ Argument END End of the region."
    (t
     (remove-hook 'after-save-hook 'elixir-mode-compile-file t))))
 
-(define-minor-mode elixir-quoted-minor-mode
-  "Minor mode for displaying elixir quoted expressions"
-  :group 'elixir-quoted :lighter " quoted"
-  :keymap '(("q" . quit-window))
-  (setq buffer-read-only t))
+(when (functionp 'font-lock-ensure)
+  (defun elixir-quoted--initialize-buffer (quoted)
+    (pop-to-buffer elixir-quoted--buffer-name)
+    (setq buffer-undo-list nil) ; Get rid of undo information from
+                                ; previous expansions
+    (let ((inhibit-read-only t)
+          (buffer-undo-list t)) ; Ignore undo information
+      (erase-buffer)
+      (insert quoted)
+      (goto-char (point-min))
+      (elixir-mode)
+      (elixir-quoted-minor-mode 1)
+      (font-lock-ensure)))
+
+  (define-minor-mode elixir-quoted-minor-mode
+    "Minor mode for displaying elixir quoted expressions"
+    :group 'elixir-quoted :lighter " quoted"
+    :keymap '(("q" . quit-window))
+    (setq buffer-read-only t)))
 
 ;;;###autoload
 (defun elixir-mode-run-tests ()
