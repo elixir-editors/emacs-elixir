@@ -102,9 +102,11 @@
   "Return non-nil if the current line concludes a match block."
   (save-excursion
     (forward-char)
-    (if (eolp) nil
+    (if (eolp)
+        nil
       (progn (move-end-of-line 1)
-             (looking-back elixir-smie--operator-regexp)))))
+             (looking-back elixir-smie--block-operator-regexp
+                           (- (point) 2) t)))))
 
 (defun elixir-smie-forward-token ()
   (cond
@@ -120,7 +122,7 @@
       ";"))
    ((looking-at elixir-smie--block-operator-regexp)
     (goto-char (match-end 0))
-    "MATCH-STATEMENT-DELIMITER")
+    "->")
    ((looking-at elixir-smie--operator-regexp)
     (goto-char (match-end 0))
     "OP")
@@ -137,7 +139,7 @@
         ";"))
      ((looking-back elixir-smie--block-operator-regexp (- (point) 3) t)
       (goto-char (match-beginning 0))
-      "MATCH-STATEMENT-DELIMITER")
+      "->")
      ((looking-back elixir-smie--operator-regexp (- (point) 3) t)
       (goto-char (match-beginning 0))
       "OP")
@@ -165,10 +167,10 @@
      (cond
       ((and (not (smie-rule-sibling-p))
             (smie-rule-hanging-p))
-       (smie-rule-parent elixir-smie-indent-basic))
-      ((and (smie-rule-hanging-p)
-            (smie-rule-sibling-p))
-       (smie-rule-parent))))
+       (smie-rule-parent elixir-smie-indent-basic))))
+      ;; ((and (smie-rule-hanging-p)
+      ;;       (smie-rule-sibling-p))
+      ;;  (smie-rule-parent))))
 
     (`(:after . "MATCH-STATEMENT-DELIMITER")
      (cond
@@ -177,6 +179,11 @@
       ;; in that case.
       ((and (not (smie-rule-parent-p "fn" "do"))
             (smie-rule-hanging-p))
+       (smie-rule-parent elixir-smie-indent-basic))))
+
+    (`(:before . "->")
+     (cond
+      ((smie-rule-hanging-p)
        (smie-rule-parent elixir-smie-indent-basic))))
 
     (`(:before . ";")
