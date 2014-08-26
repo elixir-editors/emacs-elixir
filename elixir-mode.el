@@ -243,6 +243,33 @@
   "For use with atoms & map keys."
   :group 'font-lock-faces)
 
+(defun elixir-syntax-propertize-interpolation ()
+  (let* ((beg (match-beginning 0))
+         (context (save-excursion (save-match-data (syntax-ppss beg)))))
+    (put-text-property beg (1+ beg) 'elixir-interpolation
+                       (cons (nth 3 context) (match-data)))))
+
+(defun elixir-syntax-propertize-function (start end)
+  (let ((case-fold-search nil))
+    (goto-char start)
+    (remove-text-properties start end '(elixir-interpolation))
+    (funcall
+     (syntax-propertize-rules
+      ((rx (group "#{" (0+ (not (any "}"))) "}"))
+       (0 (ignore (elixir-syntax-propertize-interpolation)))))
+     start end)))
+
+(defun elixir-match-interpolation (limit)
+  (let ((pos (next-single-char-property-change (point) 'elixir-interpolation
+                                               nil limit)))
+    (when (and pos (> pos (point)))
+      (goto-char pos)
+      (let ((value (get-text-property pos 'elixir-interpolation)))
+        (if (eq (car value) ?\")
+            (progn
+              (set-match-data (cdr value))
+              t)
+          (elixir-match-interpolation limit))))))
 
 (eval-when-compile
   (defconst elixir-rx-constituents
@@ -353,8 +380,11 @@
             (t
              (rx-to-string (car sexps) t))))))
 
-(defconst elixir-mode-font-lock-defaults
+(defconst elixir-font-lock-keywords
   `(
+    ;; String interpolation
+    (elixir-match-interpolation 0 font-lock-variable-name-face t)
+
     ;; Module-defining & namespace builtins
     (,(elixir-rx (or builtin-declaration builtin-namespace)
                  space
@@ -593,13 +623,17 @@ Argument END End of the region."
   "Major mode for editing Elixir code.
 
 \\{elixir-mode-map}"
-  (set (make-local-variable 'font-lock-defaults) '(elixir-mode-font-lock-defaults))
+  (set (make-local-variable 'font-lock-defaults)
+       '(elixir-font-lock-keywords))
   (set (make-local-variable 'comment-start) "# ")
   (set (make-local-variable 'comment-end) "")
   (set (make-local-variable 'comment-use-syntax) t)
   (set (make-local-variable 'tab-width) elixir-basic-offset)
-  (set (make-local-variable 'imenu-generic-expression) elixir-imenu-generic-expression)
-  (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules ; 'elixir-smie-rules
+  (set (make-local-variable 'syntax-propertize-function)
+       #'elixir-syntax-propertize-function)
+  (set (make-local-variable 'imenu-generic-expression)
+       elixir-imenu-generic-expression)
+  (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token))
 

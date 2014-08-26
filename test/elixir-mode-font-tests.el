@@ -142,3 +142,12 @@ end"
     (should (eq (elixir-test-face-at 4) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 9) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 10) 'elixir-atom-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-interpolation ()
+  :tags '(fontification interpolation syntax-table)
+  (elixir-test-with-temp-buffer
+      "\"#{1 + 2} is 3.\""
+    (should (eq (elixir-test-face-at 1) 'font-lock-string-face))
+    (should (eq (elixir-test-face-at 3) 'font-lock-variable-name-face))
+    (should (eq (elixir-test-face-at 11) 'font-lock-string-face))))
+
