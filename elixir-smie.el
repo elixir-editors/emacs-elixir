@@ -42,7 +42,7 @@
        (statements (statement)
                    (statement ";" statements))
        (statement ("def" non-block-expr "do" statements "end")
-                  (non-block-expr "fn" match-statement "end")
+                  (non-block-expr "fn" match-statements "end")
                   (non-block-expr "do" statements "end")
                   ("if" non-block-expr "do" statements "else" statements "end")
                   ("if" non-block-expr "do" statements "end")
@@ -105,8 +105,7 @@
     (if (eolp)
         nil
       (progn (move-end-of-line 1)
-             (looking-back elixir-smie--block-operator-regexp
-                           (- (point) 2) t)))))
+             (looking-back elixir-smie--block-operator-regexp)))))
 
 (defun elixir-smie-forward-token ()
   (cond
