@@ -106,6 +106,10 @@
       (progn (move-end-of-line 1)
              (looking-back elixir-smie--block-operator-regexp)))))
 
+(defun elixir-smie--same-line-as-parent (parent-pos child-pos)
+  "Return non-nil if `child-pos' is on same line as `parent-pos'."
+  (= (line-number-at-pos parent-pos) (line-number-at-pos child-pos)))
+
 (defun elixir-smie-forward-token ()
   (cond
    ;; If there is nothing but whitespace between the last token and eol, emit
@@ -184,8 +188,29 @@
        (smie-rule-parent elixir-smie-indent-basic))))
 
     (`(:after . "->")
-     (if (smie-rule-hanging-p)
-         elixir-smie-indent-basic))
+     (cond
+      ;; This first condition is kind of complicated so I'll try to make this
+      ;; comment as clear as possible.
+
+      ;; "If `->' is the last thing on the line, and its parent token
+      ;; is `fn' ..."
+      ((and (smie-rule-hanging-p)
+            (smie-rule-parent-p "fn"))
+       ;; "... and if:
+
+       ;; 1. `smie--parent' is non-nil
+       ;; 2. the `->' token in question is on the same line as its parent (if
+       ;;    the logic has gotten this far, its parent will be `fn')
+
+       ;; ... then indent the line after the `->' aligned with the
+       ;; parent, offset by `elixir-smie-indent-basic'."
+       (if (and smie--parent (elixir-smie--same-line-as-parent
+                              (nth 1 smie--parent)
+                              (point)))
+           (smie-rule-parent elixir-smie-indent-basic)))
+      ;; Otherwise, if just indent by two.
+      ((smie-rule-hanging-p)
+       elixir-smie-indent-basic)))
 
     (`(:before . ";")
      (cond
