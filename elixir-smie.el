@@ -86,6 +86,10 @@
   (rx (and (1+ space) eol))
   "Regex representing one or more whitespace characters concluding with eol.")
 
+(defvar elixir-smie--comment-regexp
+  (rx (and (0+ space) "#" (0+ not-newline)))
+  "Regex matching comments.")
+
 (defvar elixir-smie-indent-basic 2)
 
 (defmacro elixir-smie-debug (message &rest format-args)
@@ -139,8 +143,12 @@
    ((looking-at elixir-smie--spaces-til-eol-regexp)
     (goto-char (match-end 0))
     ";")
-   ((and (looking-at "[\n#]") (elixir-smie--implicit-semi-p))
+   ((and (or (looking-at elixir-smie--comment-regexp)
+             (looking-at "[\n#]"))
+         (elixir-smie--implicit-semi-p))
     (if (eolp) (forward-char 1) (forward-comment 1))
+    ;; Note: `elixir-smie--semi-ends-match' will be called when the point is at
+    ;; the beginning of a new line. Keep that in mind.
     (if (elixir-smie--semi-ends-match)
         "MATCH-STATEMENT-DELIMITER"
       ";"))
