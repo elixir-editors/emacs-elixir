@@ -425,10 +425,10 @@ is used to limit the scan."
                                 (or (not (any ?\\ ?\' ?\")) point
                                     ;; Quotes might be preceded by a escaped quote.
                                     (and (or (not (any ?\\)) point) ?\\
-                                         (* ?\\ ?\\) (any ?\' ?\")))
+                                         (* ?\\ ?\\) (any ?\")))
                                 (* ?\\ ?\\)
                                 ;; Match single or triple quotes of any kind.
-                                (group (or  "\"" "\"\"\"" "'" "'''")))))))
+                                (group (or  "\"" "\"\"\"")))))))
 
   (defmacro elixir-rx (&rest sexps)
     (let ((rx-constituents (append elixir-rx-constituents rx-constituents)))
