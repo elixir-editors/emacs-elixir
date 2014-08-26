@@ -101,7 +101,6 @@
 (defun elixir-smie--semi-ends-match ()
   "Return non-nil if the current line concludes a match block."
   (save-excursion
-    (forward-char)
     (if (eolp)
         nil
       (progn (move-end-of-line 1)
@@ -176,8 +175,7 @@
       ;; We don't want to specify any rules for the first `->' after `do' or
       ;; `fn', since SMIE will look at the BNF to see how to handle indentation
       ;; in that case.
-      ((and (not (smie-rule-parent-p "fn" "do"))
-            (smie-rule-hanging-p))
+      ((smie-rule-hanging-p)
        (smie-rule-parent elixir-smie-indent-basic))))
 
     (`(:before . "->")
