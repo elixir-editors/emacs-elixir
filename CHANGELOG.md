@@ -1,3 +1,7 @@
+## v1.4.10 - 2014/08/26
+* [#102](https://github.com/elixir-lang/emacs-elixir/pull/102) - Add support for syntax highlighting for variable interpolation. Fixes #93
+* [#101](https://github.com/elixir-lang/emacs-elixir/pull/101) - Fix indentation after inline comment. Fixes #95
+
 ## v1.4.9 - 2014/08/25
 * [#100](https://github.com/elixir-lang/emacs-elixir/pull/100) - Fix indentation in multi-line match expressions. Fixes #98
 * [#99](https://github.com/elixir-lang/emacs-elixir/pull/99) - Tokenize trailing whitespace properly. Fixes #97
