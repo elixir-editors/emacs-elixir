@@ -115,7 +115,9 @@
     ";")
    ((and (looking-at "[\n#]") (elixir-smie--implicit-semi-p))
     (if (eolp) (forward-char 1) (forward-comment 1))
-    ";")
+    (if (elixir-smie--semi-ends-match)
+        "MATCH-STATEMENT-DELIMITER"
+      ";"))
    ((looking-at elixir-smie--block-operator-regexp)
     (goto-char (match-end 0))
     "MATCH-STATEMENT-DELIMITER")
