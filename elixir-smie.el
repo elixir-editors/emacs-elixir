@@ -112,21 +112,21 @@
     ;; The point here is that we want to treat blank lines as a single semi-
     ;; colon when it comes to detecting the end of match statements. This could
     ;; also be handled by a `while' expression or some other looping mechanism.
-    (cond
-     ((and (eolp) (bolp))
-      (forward-char)
-      (if (< (point) (point-max))
-          (elixir-smie--semi-ends-match)
-        nil))
-     ((looking-at elixir-smie--spaces-til-eol-regexp)
-      (move-beginning-of-line 2)
-      (if (< (point) (point-max))
-          (elixir-smie--semi-ends-match)
-        nil))
-     ;; And if we're NOT on a blank line, move to the end of the line, and see
-     ;; if we're looking back at a block operator.
-     (t (move-end-of-line 1)
-        (looking-back elixir-smie--block-operator-regexp)))))
+    (flet ((self-call ()
+                      (if (< (point) (point-max))
+                          (elixir-smie--semi-ends-match)
+                        nil)))
+      (cond
+       ((and (eolp) (bolp))
+        (forward-char)
+        (self-call))
+       ((looking-at elixir-smie--spaces-til-eol-regexp)
+        (move-beginning-of-line 2)
+        (self-call))
+       ;; And if we're NOT on a blank line, move to the end of the line, and see
+       ;; if we're looking back at a block operator.
+       (t (move-end-of-line 1)
+          (looking-back elixir-smie--block-operator-regexp))))))
 
 (defun elixir-smie--same-line-as-parent (parent-pos child-pos)
   "Return non-nil if `child-pos' is on same line as `parent-pos'."
