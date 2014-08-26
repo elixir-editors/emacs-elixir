@@ -1,3 +1,8 @@
+## v1.4.9 - 2014/08/25
+* [#100](https://github.com/elixir-lang/emacs-elixir/pull/100) - Fix indentation in multi-line match expressions. Fixes #98
+* [#99](https://github.com/elixir-lang/emacs-elixir/pull/99) - Tokenize trailing whitespace properly. Fixes #97
+* [#96](https://github.com/elixir-lang/emacs-elixir/pull/96) - Remove syntax highlighting for operators.
+
 ## v1.4.8 - 2014/08/19
 * [#92](https://github.com/elixir-lang/emacs-elixir/pull/92) - Update Rakefile to also run the release.py script. Refs #88.
 * [#91](https://github.com/elixir-lang/emacs-elixir/pull/91) - Updates to regexes for various lexemes
