@@ -101,8 +101,24 @@
 (defun elixir-smie--semi-ends-match ()
   "Return non-nil if the current line concludes a match block."
   (save-excursion
-    (if (eolp)
-        nil
+    ;; Warning: Recursion.
+    ;; This is easy though.
+
+    ;; 1. If we're at a blank line, move forward a character. This takes us to
+    ;;    the next line.
+    ;; 2. If we're not at the end of the buffer, call this function again.
+    ;;    (Otherwise, return nil.)
+
+    ;; The point here is that we want to treat blank lines as a single semi-
+    ;; colon when it comes to detecting the end of match statements. This could
+    ;; also be handled by a `while' expression or some other looping mechanism.
+    (if (and (eolp) (bolp))
+        (progn (forward-char)
+               (if (< (point) (point-max))
+                   (elixir-smie--semi-ends-match)
+                 nil))
+      ;; And if we're NOT on a blank line, move to the end of the line, and see
+      ;; if we're looking back at a block operator.
       (progn (move-end-of-line 1)
              (looking-back elixir-smie--block-operator-regexp)))))
 
