@@ -200,17 +200,6 @@
       ((and (not (smie-rule-sibling-p))
             (smie-rule-hanging-p))
        (smie-rule-parent elixir-smie-indent-basic))))
-      ;; ((and (smie-rule-hanging-p)
-      ;;       (smie-rule-sibling-p))
-      ;;  (smie-rule-parent))))
-
-    (`(:after . "MATCH-STATEMENT-DELIMITER")
-     (cond
-      ;; We don't want to specify any rules for the first `->' after `do' or
-      ;; `fn', since SMIE will look at the BNF to see how to handle indentation
-      ;; in that case.
-      ((smie-rule-hanging-p)
-       (smie-rule-parent elixir-smie-indent-basic))))
 
     (`(:before . "->")
      (cond
