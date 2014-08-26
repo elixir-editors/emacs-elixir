@@ -15,7 +15,7 @@
 ;; indeed broken. My intention is that while working on a specific problem,
 ;; the failure expectation will be removed so that we know when the test case
 ;; passes.
-(elixir-def-indentation-test indents-use-dot-module-newline ()
+(elixir-def-indentation-test indent-use-dot-module-newline ()
   "defmodule Foo do
 use GenServer.Behaviour
 
@@ -31,7 +31,7 @@ end"
   end
 end")
 
-(elixir-def-indentation-test indents-use-dot-module ()
+(elixir-def-indentation-test indent-use-dot-module ()
   "
 defmodule Foo do
 use GenServer.Behaviour
@@ -47,7 +47,7 @@ defmodule Foo do
   end
 end")
 
-(elixir-def-indentation-test indents-do-blocks ()
+(elixir-def-indentation-test indent-do-blocks ()
   "
 defmodule Foo do
 def foobar do
@@ -63,7 +63,7 @@ defmodule Foo do
   end
 end")
 
-(elixir-def-indentation-test indents-do-blocks-after-linebreak-two ()
+(elixir-def-indentation-test indent-do-blocks-after-linebreak-two ()
   "
 defmodule FooBar do
 def foo do
@@ -89,7 +89,7 @@ defmodule FooBar do
   end
 end")
 
-(elixir-def-indentation-test indents-do-blocks-after-linebreak-three ()
+(elixir-def-indentation-test indent-do-blocks-after-linebreak-three ()
   "
 defmodule FooBar do
 def foo do
@@ -125,7 +125,7 @@ defmodule FooBar do
   end
 end")
 
-(elixir-def-indentation-test indents-do-blocks-with-space-after-inline ()
+(elixir-def-indentation-test indent-do-blocks-with-space-after-inline ()
   "defmodule Foo do
 def foobar do
 if true, do: IO.puts \"yay\"
@@ -141,7 +141,7 @@ end"
   end
 end")
 
-(elixir-def-indentation-test indents-after-empty-line
+(elixir-def-indentation-test indent-after-empty-line
     ()
   "
 def foo do
@@ -160,7 +160,7 @@ def foo do
   c = a * b
 end")
 
-(elixir-def-indentation-test indents-function-calls-without-parens ()
+(elixir-def-indentation-test indent-function-calls-without-parens ()
   "
 test \"foo\" do
 assert true, \"should be true\"
@@ -174,7 +174,7 @@ test \"foo\" do
 end
 ")
 
-(elixir-def-indentation-test indents-records-correctly ()
+(elixir-def-indentation-test indent-records-correctly ()
   "
 defmodule MyModule do
 require Record
@@ -192,7 +192,7 @@ defmodule MyModule do
 end
 ")
 
-(elixir-def-indentation-test indents-continuation-lines ()
+(elixir-def-indentation-test indent-continuation-lines ()
   "
 def foo do
 has_something(x) &&
@@ -208,7 +208,7 @@ def foo do
 end
 ")
 
-(elixir-def-indentation-test indents-continuation-lines-with-comments/1
+(elixir-def-indentation-test indent-continuation-lines-with-comments/1
     ()
   "
 has_something(x) &&  # foo
@@ -221,7 +221,7 @@ has_something(x) &&  # foo
   has_something(z)
 ")
 
-(elixir-def-indentation-test indents-continuation-lines-with-comments/2 ()
+(elixir-def-indentation-test indent-continuation-lines-with-comments/2 ()
   "
 has_something(x) &&
 has_something(y) || # foo
@@ -233,7 +233,7 @@ has_something(x) &&
   has_something(z)
 ")
 
-(elixir-def-indentation-test indents-last-commented-line
+(elixir-def-indentation-test indent-last-commented-line
     ()
   "
 defmodule Foo do
@@ -254,7 +254,7 @@ defmodule Foo do
 end
 ")
 
-(elixir-def-indentation-test indents-if ()
+(elixir-def-indentation-test indent-if ()
   "
 if condition do
 yes
@@ -264,7 +264,7 @@ if condition do
   yes
 end")
 
-(elixir-def-indentation-test indents-if-else ()
+(elixir-def-indentation-test indent-if-else ()
   "
 if condition do
 yes
@@ -278,7 +278,7 @@ else
   no
 end")
 
-(elixir-def-indentation-test indents-try ()
+(elixir-def-indentation-test indent-try ()
   "
 try do
 foo
@@ -290,7 +290,7 @@ try do
   bar
 end")
 
-(elixir-def-indentation-test indents-try/after ()
+(elixir-def-indentation-test indent-try/after ()
   "
 try do
 foo
@@ -308,7 +308,7 @@ after
   post_that()
 end")
 
-(elixir-def-indentation-test indents-try/catch/after ()
+(elixir-def-indentation-test indent-try/catch/after ()
   "
 try do
 foo
@@ -336,7 +336,7 @@ after
   post_that()
 end")
 
-(elixir-def-indentation-test indents-fn-in-assignment ()
+(elixir-def-indentation-test indent-fn-in-assignment ()
   "
 f = fn x, y ->
 x + y
@@ -346,7 +346,7 @@ f = fn x, y ->
   x + y
 end")
 
-(elixir-def-indentation-test indents-fn-as-arguments ()
+(elixir-def-indentation-test indent-fn-as-arguments ()
   "
 Enum.map 1..10, fn x ->
 x + 1
@@ -356,7 +356,7 @@ Enum.map 1..10, fn x ->
   x + 1
 end")
 
-(elixir-def-indentation-test indents-list-argument-continuation-lines-nicely ()
+(elixir-def-indentation-test indent-list-argument-continuation-lines-nicely ()
   "
 to_process = [27, 33, 35, 11, 36, 29, 18, 37, 21, 31, 19, 10, 14, 30,
 15, 17, 23, 28, 25, 34, 22, 20, 13, 16, 32, 12, 26, 24]
@@ -379,7 +379,7 @@ end"
   end
 end")
 
-(elixir-def-indentation-test indents-list-of-floats-aligns
+(elixir-def-indentation-test indent-list-of-floats-aligns
     ()
   "
 [1.2,
@@ -514,6 +514,58 @@ end"
 def foo do #comment
   :bar
 end")
+
+(elixir-def-indentation-test indent-multiline-match ()
+  "
+def foo do
+  case is_string(x) do
+    true ->
+      x2 = \" one\"
+      x <> x2
+    false ->
+      x2 = \" two\"
+      x <> x2
+  end
+end"
+  "
+def foo do
+  case is_string(x) do
+    true ->
+      x2 = \" one\"
+      x <> x2
+    false ->
+      x2 = \" two\"
+      x <> x2
+  end
+end"
+  )
+
+(elixir-def-indentation-test indent-multiline-match/2 ()
+  "
+def foo do
+  case is_string(x) do
+    true ->
+      x2 = \" one\"
+      x <> x2
+
+    false ->
+      x2 = \" two\"
+      x <> x2
+  end
+end"
+  "
+def foo do
+  case is_string(x) do
+    true ->
+      x2 = \" one\"
+      x <> x2
+
+    false ->
+      x2 = \" two\"
+      x <> x2
+  end
+end"
+  )
 
 (elixir-def-indentation-test indent-after-require-Record
     ()
