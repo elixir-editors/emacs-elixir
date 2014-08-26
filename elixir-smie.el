@@ -98,6 +98,14 @@
   (not (or (memq (char-before) '(?\{ ?\[))
            (looking-back elixir-smie--operator-regexp (- (point) 3) t))))
 
+(defun elixir-smie--semi-ends-match ()
+  "Return non-nil if the current line concludes a match block."
+  (save-excursion
+    (forward-char)
+    (if (eolp) nil
+      (progn (move-end-of-line 1)
+             (looking-back elixir-smie--operator-regexp)))))
+
 (defun elixir-smie-forward-token ()
   (cond
    ;; If there is nothing but whitespace between the last token and eol, emit
