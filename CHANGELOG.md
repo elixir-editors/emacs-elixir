@@ -1,3 +1,8 @@
+## v1.5.0 - 2014/08/27
+* [#103](https://github.com/elixir-lang/emacs-elixir/pull/103) - Add elixir-quoted-minor-mode.
+* [#102](https://github.com/elixir-lang/emacs-elixir/pull/102) - Add support for syntax highlighting for variable interpolation. Fixes #93
+* [#101](https://github.com/elixir-lang/emacs-elixir/pull/101) - Fix indentation after inline comment. Fixes #95
+
 ## v1.4.10 - 2014/08/26
 * [#102](https://github.com/elixir-lang/emacs-elixir/pull/102) - Add support for syntax highlighting for variable interpolation. Fixes #93
 * [#101](https://github.com/elixir-lang/emacs-elixir/pull/101) - Fix indentation after inline comment. Fixes #95
