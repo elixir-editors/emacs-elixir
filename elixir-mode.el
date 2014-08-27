@@ -199,6 +199,8 @@
 
 (defvar elixir-mode--eval-filename "elixir-mode-tmp-eval-file.exs")
 
+(defvar elixir-quoted--buffer-name "*elixir-quoted*")
+
 (defvar elixir-basic-offset 2)
 (defvar elixir-key-label-offset 0)
 (defvar elixir-match-label-offset 2)
@@ -492,6 +494,18 @@ Argument FILE-NAME ."
     (when (string= compiler-output "")
       (message "Compiled and saved as %s" (elixir-mode-compiled-file-name)))))
 
+(defun elixir-quoted--initialize-buffer (quoted)
+  (pop-to-buffer elixir-quoted--buffer-name)
+  (setq buffer-undo-list nil) ; Get rid of undo information from
+                              ; previous expansions
+  (let ((inhibit-read-only t)
+        (buffer-undo-list t)) ; Ignore undo information
+    (erase-buffer)
+    (insert quoted)
+    (goto-char (point-min))
+    (elixir-mode)
+    (elixir-quoted-minor-mode 1)))
+
 ;;;###autoload
 (defun elixir-mode-iex (&optional args-p)
   "Elixir mode interactive REPL.
@@ -542,7 +556,7 @@ Optional argument ARGS-P ."
           file))
 
 (defun elixir-mode--code-string-to-quoted-command (file)
-  (format "%s -e 'IO.puts inspect(elem(Code.string_to_quoted(File.read!(\"%s\")), 1))'"
+  (format "%s -e 'IO.puts inspect(elem(Code.string_to_quoted(File.read!(\"%s\")), 1), pretty: true)'"
           elixir-mode-command
           file))
 
@@ -566,7 +580,7 @@ Optional argument ARGS-P ."
 
 (defun elixir-mode--string-to-quoted (string)
   (let* ((output (elixir-mode--execute-elixir-with-code-string-to-quoted string)))
-    (message output)))
+    (elixir-quoted--initialize-buffer output)))
 
 (defun elixir-mode-eval-on-region (beg end)
   "Evaluate the Elixir code on the marked region.
@@ -645,6 +659,12 @@ Argument END End of the region."
     (add-hook 'after-save-hook 'elixir-mode-compile-file nil t))
    (t
     (remove-hook 'after-save-hook 'elixir-mode-compile-file t))))
+
+(define-minor-mode elixir-quoted-minor-mode
+  "Minor mode for displaying elixir quoted expressions"
+  :group 'elixir-quoted :lighter " quoted"
+  :keymap '(("q" . quit-window))
+  (setq buffer-read-only t))
 
 ;;;###autoload
 (defun elixir-mode-run-tests ()
