@@ -54,8 +54,7 @@
                   ("try" "do" statements "catch" match-statements "end")
                   ("try" "do" statements "end")
                   ("case" non-block-expr "do" match-statements "end"))
-       (non-block-expr ("when" non-block-expr)
-                       (non-block-expr "OP" non-block-expr)
+       (non-block-expr (non-block-expr "OP" non-block-expr)
                        (non-block-expr "COMMA" non-block-expr)
                        ("(" non-block-expr ")")
                        ("{" non-block-expr "}")
@@ -70,22 +69,11 @@
        (left "OP")))
 
     (smie-precs->prec2
-     '((left "<-" "\\")
-       (right "when")
-       (right "::")
-       (right "|")
-       (right "=")
-       (left "||" "|||" "or")
-       (left "&&" "&&&" "and")
-       (left "==" "!=" "=~" "===" "!==")
-       (left "<" "<=" ">=" ">")
-       (left "|>" "<<<" ">>>")
-       (left "in")
-       (right "++" "--" ".." "<>")
-       (left "+" "-")
-       (left "*" "/")
-       (left "^^^")
-       (left "."))))))
+     '((left "||")
+       (left "&&")
+       (nonassoc "=~" "===" "!==" "==" "!=" "<=" ">=" "<" ">")
+       (left "+" "-" "<<<" ">>>" "^^^" "~~~" "&&&" "|||")
+       (left "*" "/"))))))
 
 (defvar elixir-smie--operator-regexp
   (rx (or "<<<" ">>>" "^^^" "~~~" "&&&" "|||" "===" "!==" "==" "!=" "<="
