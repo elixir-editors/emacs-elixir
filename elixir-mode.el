@@ -504,8 +504,7 @@ Argument FILE-NAME ."
     (insert quoted)
     (goto-char (point-min))
     (elixir-mode)
-    (elixir-quoted-minor-mode 1)
-    (font-lock-ensure)))
+    (elixir-quoted-minor-mode 1)))
 
 ;;;###autoload
 (defun elixir-mode-iex (&optional args-p)
