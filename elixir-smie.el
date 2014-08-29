@@ -63,7 +63,11 @@
        (match-statements (match-statement "MATCH-STATEMENT-DELIMITER"
                                           match-statements)
                          (match-statement))
-       (match-statement (non-block-expr "->" statements)))
+       (match-statement (non-block-expr "->" statements))
+       ;; "HEREDOC" is the token associated with "@doc" and "@moduledoc".
+       ;; "TQ" is the token emitted for "\"\"\"".
+       (heredoc ("HEREDOC" "TQ")
+                ("HEREDOC" "STRING")))
      '((assoc "if" "do:" "else:")
        (assoc "COMMA")
        (left "OP")))
@@ -89,6 +93,14 @@
 (defvar elixir-smie--comment-regexp
   (rx (and (0+ space) "#" (0+ not-newline)))
   "Regex matching comments.")
+
+(defvar elixir-smie--tq-regexp
+  "\"\"\"")
+
+(defvar elixir-smie--heredoc-regexp
+  (rx symbol-start
+      (or "@doc" "@moduledoc" "~s")
+      symbol-end))
 
 (defvar elixir-smie-indent-basic 2)
 
@@ -155,6 +167,9 @@
    ((looking-at elixir-smie--block-operator-regexp)
     (goto-char (match-end 0))
     "->")
+   ((looking-at elixir-smie--heredoc-regexp)
+    (goto-char (match-end 0))
+    "HEREDOC")
    ((looking-at elixir-smie--operator-regexp)
     (goto-char (match-end 0))
     "OP")
@@ -164,6 +179,9 @@
   (let ((pos (point)))
     (forward-comment (- (point)))
     (cond
+     ((looking-back elixir-smie--tq-regexp (- (point) 3) t)
+      (goto-char (match-beginning 0))
+      "TQ")
      ((and (> pos (line-end-position))
            (elixir-smie--implicit-semi-p))
       (if (elixir-smie--semi-ends-match)
