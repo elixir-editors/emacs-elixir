@@ -245,6 +245,7 @@
   nil nil nil nil
   (set (make-local-variable 'comment-start) "# ")
   (set (make-local-variable 'comment-end) "")
+  (set (make-local-variable 'comment-start-skip) "#+ *")
   (smie-setup elixir-smie-grammar 'elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token))
