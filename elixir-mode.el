@@ -641,6 +641,7 @@ Argument END End of the region."
        '(elixir-font-lock-keywords))
   (set (make-local-variable 'comment-start) "# ")
   (set (make-local-variable 'comment-end) "")
+  (set (make-local-variable 'comment-start-skip) "#+ *")
   (set (make-local-variable 'comment-use-syntax) t)
   (set (make-local-variable 'tab-width) elixir-basic-offset)
   (set (make-local-variable 'syntax-propertize-function)

@@ -233,6 +233,18 @@ has_something(x) &&
   has_something(z)
 ")
 
+(elixir-def-indentation-test indent-continuation-lines-with-comments/3 ()
+  "
+def str(s, sub, start_pos, end_pos) when is_binary(s) and is_binary(sub) do # and start_pos <= end_pos do
+                                                                             len = end_pos-start_pos
+end
+"
+  "
+def str(s, sub, start_pos, end_pos) when is_binary(s) and is_binary(sub) do # and start_pos <= end_pos do
+  len = end_pos-start_pos
+end
+")
+
 (elixir-def-indentation-test indent-last-commented-line
     ()
   "
