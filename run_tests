@@ -1,7 +1,17 @@
 #!/bin/bash
 # -*- shell-script -*-
 OUTPUT=/tmp/test-output.txt
-emacs -batch -l ert-bootstrap.el -l elixir-mode-tests.el -f ert-run-tests-batch-and-exit 2> $OUTPUT
+
+EMACS_BINARY="emacs"
+
+EMACS_VERSION=$1
+if [ -n "$EMACS_VERSION" ]; then
+    EMACS_BINARY=`evm bin $EMACS_VERSION`
+fi
+
+LOAD_FILES="-l ert-bootstrap.el -l elixir-mode-tests.el"
+
+$EMACS_BINARY -batch $LOAD_FILES -f ert-run-tests-batch-and-exit 2> $OUTPUT
 
 if [ $? == 0 ]; then
     echo "Success -- All tests passed."
@@ -17,7 +27,7 @@ else
                 break
                 ;;
             *)
-                emacs -l elixir-mode-tests.el -f ert-run-tests-interactively
+                $EMACS_BINARY -q $LOAD_FILES -f ert-run-tests-interactively
                 break
                 ;;
         esac
