@@ -17,16 +17,17 @@
    (should-error (call-interactively (key-binding "w")))))
 
 (ert-deftest elixir-quoted-minor-mode/multiple-invocation ()
-  (elixir-test-with-temp-buffer
-   "sum(1,2)"
-   (elixir-mode-string-to-quoted-on-current-line)
-   (should (search-forward "{:sum, [line: 1], [1, 2]}"  nil t))
-   (quit-window)
-   (erase-buffer)
-   (insert "sum(3, 2)")
-   (elixir-mode-string-to-quoted-on-current-line)
-   (should-not (search-forward "{:sum, [line: 1], [1, 2]}"  nil t))
-   (should (search-forward "{:sum, [line: 1], [3, 2]}"  nil t))))
+  (let ((test-buffer (current-buffer)))
+    (elixir-test-with-temp-buffer
+     "sum(1,2)"
+     (elixir-mode-string-to-quoted-on-current-line)
+     (should (search-forward "{:sum, [line: 1], [1, 2]}"  nil t))
+     (pop-to-buffer test-buffer)
+     (erase-buffer)
+     (insert "sum(3, 2)")
+     (elixir-mode-string-to-quoted-on-current-line)
+     (should-not (search-forward "{:sum, [line: 1], [1, 2]}"  nil t))
+     (should (search-forward "{:sum, [line: 1], [3, 2]}"  nil t)))))
 
 (ert-deftest elixir-quoted-minor-mode/indentation ()
   (elixir-test-with-temp-buffer
@@ -41,12 +42,13 @@
    (should (search-forward " [{:a, [line: 1], nil}"  nil t))))
 
 (ert-deftest elixir-quoted-minor-mode/undo ()
-  (elixir-test-with-temp-buffer
-   "sum(1, 2)"
-   (elixir-mode-string-to-quoted-on-current-line)
-   (should-error (undo))
-   (quit-window)
-   (erase-buffer)
-   (insert "sum(3, 2)")
-   (elixir-mode-string-to-quoted-on-current-line)
-   (should-error (undo))))
+  (let ((test-buffer (current-buffer)))
+    (elixir-test-with-temp-buffer
+     "sum(1, 2)"
+     (elixir-mode-string-to-quoted-on-current-line)
+     (should-error (undo))
+     (pop-to-buffer test-buffer)
+     (erase-buffer)
+     (insert "sum(3, 2)")
+     (elixir-mode-string-to-quoted-on-current-line)
+     (should-error (undo)))))
