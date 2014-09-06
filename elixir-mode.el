@@ -115,10 +115,6 @@
 ;;
 ;;           Open the Elixir documentation for the latest stable release.
 ;;
-;;       M-x elixir-mode-run-tests
-;;
-;;           Run ERT tests for `elixir-mode`.
-;;
 ;;       M-x elixir-mode-show-version
 ;;
 ;;           Print `elixir-mode` version.
@@ -666,13 +662,6 @@ Argument END End of the region."
   :group 'elixir-quoted :lighter " quoted"
   :keymap '(("q" . quit-window))
   (setq buffer-read-only t))
-
-;;;###autoload
-(defun elixir-mode-run-tests ()
-  "Run ERT test for `elixir-mode'."
-  (interactive)
-  (load "elixir-mode-tests")
-  (ert-run-tests-interactively "^elixir-ert-.*$"))
 
 ;; Invoke elixir-mode when appropriate
 
