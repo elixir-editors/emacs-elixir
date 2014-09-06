@@ -102,10 +102,6 @@ add the following in your .emacs file:
         <td>Open the Elixir documentation for the latest stable release.</td>
     </tr>
     <tr>
-        <td><code>elixir-mode-run-tests</code></td>
-        <td>Run ERT tests for `elixir-mode`.</td>
-    </tr>
-    <tr>
         <td><code>elixir-mode-show-version</code></td>
         <td>Print version info for elixir-mode.</td>
     </tr>
