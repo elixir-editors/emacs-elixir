@@ -1,3 +1,9 @@
+## v2.0.0 - 2014/09/08
+* [#113](https://github.com/elixir-lang/emacs-elixir/pull/113) - Cask and ert-runner support
+* [#110](https://github.com/elixir-lang/emacs-elixir/pull/110) - Added: ability to run tests via EVM
+* [#111](https://github.com/elixir-lang/emacs-elixir/pull/111) - Fixed: elixir-quoted-minor-mode tests for ert-run-tests-interactively
+* [#108](https://github.com/elixir-lang/emacs-elixir/pull/108) - 
+
 ## v1.5.0 - 2014/08/27
 * [#103](https://github.com/elixir-lang/emacs-elixir/pull/103) - Add elixir-quoted-minor-mode.
 
