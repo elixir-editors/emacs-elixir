@@ -43,6 +43,6 @@
      (goto-char (point-min))
      ,@body))
 
-(when window-system
+(when (s-contains? "--win" (getenv "ERT_RUNNER_ARGS"))
   (defun ert-runner/run-tests-batch-and-exit (selector)
     (ert-run-tests-interactively selector)))
