@@ -1,16 +1,6 @@
 ;; `elixir-test-with-temp-buffer' and `elixir-test-face-at' are both slightly
 ;; modified versions of the original at
 ;; https://github.com/lunaryorn/puppet-mode/blob/master/test/puppet-mode-test.el
-(defmacro elixir-test-with-temp-buffer (content &rest body)
-  "Evaluate BODY in a temporary buffer with CONTENTS."
-  (declare (debug t)
-           (indent 1))
-  `(with-temp-buffer
-     (insert ,content)
-     (elixir-mode)
-     (font-lock-fontify-buffer)
-     (goto-char (point-min))
-     ,@body))
 
 (defun elixir-test-face-at (pos &optional content)
   "Get the face at POS in CONTENT.
