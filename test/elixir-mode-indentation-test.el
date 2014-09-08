@@ -516,6 +516,21 @@ x = do_something(:foo, fn (arg) ->
                          do_another(arg)
                        end)")
 
+(elixir-def-indentation-test indent-try-rescue
+    (:expected-result :failed)
+  "try do
+      something()
+      rescue
+      e in SomeError -> dosomethingelse()
+    end
+)"
+"try do
+something()
+rescue
+e in SomeError -> dosomethingelse()
+end
+)")
+
 (elixir-def-indentation-test indent-lone-keyword ()
   "
 def foo do #comment
