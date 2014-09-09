@@ -55,3 +55,93 @@ In order to be merged into emacs-elixir, contributions must have the following:
 If your contribution lacks any of these things, they will have to be added
 by a core contributor before being merged into emacs-elixir proper, which may take
 substantial time for the all-volunteer team to get to.
+
+## How to run tests
+
+There are three tools that helps us to test emacs-elixir:
+
+* [EVM](https://github.com/rejeep/evm) - a command-line tool which allows you to easily install, manage, and work with multiple Emacs versions.
+* [Cask](https://github.com/cask/cask) - a project management tool for Emacs that helps automate the package development cycle.
+* [Ert-runner](https://github.com/rejeep/ert-runner.el) - a tool for Emacs projects tested using Ert.
+
+### Emacs Version Manager
+
+To install [EVM](https://github.com/rejeep/evm), run:
+
+```shell
+$ sudo mkdir /usr/local/evm
+$ sudo chown $USER: /usr/local/evm
+$ curl -fsSkL https://raw.github.com/rejeep/evm/master/go | bash
+$ export PATH="~/.evm/bin:$PATH" # Add it to your .bashrc or analogue
+```
+
+To list all available Emacs versions you can install, run:
+
+```shell
+$ evm list
+```
+
+To install a version (for example `emacs-24.3-bin`), run:
+
+```shell
+$ evm install emacs-24.3-bin
+```
+
+Read more about [EVM](https://github.com/rejeep/evm).
+
+### Cask and ert-runner
+
+To install Cask, run:
+
+```shell
+$ curl -fsSkL https://raw.github.com/cask/cask/master/go | python
+$ export PATH="~/.cask/bin:$PATH" # Add it to your .bashrc or analogue
+```
+
+To install [Ert-runner](https://github.com/rejeep/ert-runner.el), run:
+
+```shell
+$ cd path/to/emacs-elixir
+$ cask install # install ert-runner
+$ EMACS=`evm bin emacs-24.3-bin` cask install # install ert-runner for Emacs 24.3
+```
+
+#### Examples of usage
+
+* Run all tests:
+
+```shell
+$ cask exec ert-runner
+```
+
+* Run all tests for Emacs 24.3:
+
+```shell
+$ EMACS=`evm bin emacs-24.3-bin` cask exec ert-runner
+```
+
+Run all tests which are tagged `fontification`:
+
+```shell
+$ cask exec ert-runner -t fontification
+```
+
+Run all tests with `elixir-smie-verbose-p` equal to `t`:
+
+```shell
+$ cask exec ert-runner --verbose
+```
+
+Run all tests interactively:
+
+```shell
+$ cask exec ert-runner --win
+```
+
+Run all tests which are tagged `fontification` for Emacs 24.3 interactively:
+
+```shell
+$ EMACS=`evm bin emacs-24.3-bin` cask exec ert-runner -t fontification --win
+```
+
+Read more about [Cask](https://github.com/cask/cask) and [Ert-runner](https://github.com/rejeep/ert-runner.el).
