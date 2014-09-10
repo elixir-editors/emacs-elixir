@@ -52,6 +52,7 @@
                    "else:" non-block-expr)
                   ("try" "do" statements "after" statements "end")
                   ("try" "do" statements "catch" match-statements "end")
+                  ("try" "do" statements "rescue" match-statements "end")
                   ("try" "do" statements "end")
                   ("case" non-block-expr "do" match-statements "end"))
        (non-block-expr (non-block-expr "OP" non-block-expr)
