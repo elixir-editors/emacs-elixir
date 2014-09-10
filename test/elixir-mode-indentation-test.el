@@ -348,6 +348,42 @@ after
   post_that()
 end")
 
+(elixir-def-indentation-test indent-try/rescue/1
+  (:tags '(indentation))
+  "
+try do
+raise 'some error'
+rescue
+RuntimeError -> 'rescued a runtime error'
+end
+"
+  "
+try do
+  raise 'some error'
+rescue
+  RuntimeError -> 'rescued a runtime error'
+end
+")
+
+(elixir-def-indentation-test indent-try/rescue/2
+  (:tags '(indentation))
+  "
+try do
+raise 'some error'
+rescue
+x in [RuntimeError] ->
+x.message
+end
+"
+  "
+try do
+  raise 'some error'
+rescue
+  x in [RuntimeError] ->
+    x.message
+end
+")
+
 (elixir-def-indentation-test indent-fn-in-assignment ()
   "
 f = fn x, y ->
