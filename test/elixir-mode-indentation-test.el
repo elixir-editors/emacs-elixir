@@ -523,12 +523,14 @@ end"
 end")
 
 (elixir-def-indentation-test indent-inside-parens
-    (:expected-result :failed)
-  "x = do_something(
-  :foo,
-  :bar
+    (:tags '(indentation))
+  "
+x = do_something(
+:foo,
+:bar
 )"
-  "x = do_something(
+  "
+x = do_something(
   :foo,
   :bar
 )")
