@@ -2,6 +2,45 @@
 
 (require 'smie)
 
+;; HACK: Patch for Emacs 24.3 smie that fix
+;; https://github.com/elixir-lang/emacs-elixir/issues/107.
+;;
+;; defadvice is used to change the behavior only for elixir-mode.
+;; Definition of advice is a definition of corresponding function
+;; in Emacs 24.4.
+(when (and (= 24 emacs-major-version)
+           (= 3  emacs-minor-version))
+  (defadvice smie-rule-parent (around elixir-mode-patch activate)
+    (if (not (eq major-mode 'elixir-mode))
+        (progn ad-do-it)
+      (setq ad-return-value
+            (save-excursion
+              (goto-char (cadr (smie-indent--parent)))
+              (cons 'column
+                    (+ (or offset 0)
+                       (smie-indent-virtual)))))))
+
+  (defadvice smie-indent-comment (around elixir-mode-patch activate)
+    (if (not (eq major-mode 'elixir-mode))
+        (progn ad-do-it)
+      (setq ad-return-value
+            (and (smie-indent--bolp)
+                 (let ((pos (point)))
+                   (save-excursion
+                     (beginning-of-line)
+                     (and (re-search-forward comment-start-skip (line-end-position) t)
+                          (eq pos (or (match-end 1) (match-beginning 0))))))
+                 (save-excursion
+                   (forward-comment (point-max))
+                   (skip-chars-forward " \t\r\n")
+                   (unless
+                       (save-excursion
+                         (let ((next (funcall smie-forward-token-function)))
+                           (or (if (zerop (length next))
+                                   (or (eobp) (eq (car (syntax-after (point))) 5)))
+                               (rassoc next smie-closer-alist))))
+                     (smie-indent-calculate))))))))
+
 ;; FIXME: This is me being lazy. CL is a compile-time dep only.
 ;; (But for now, there is no real file-compilation plot, so let's
 ;; scrape by with the runtime dep.)
