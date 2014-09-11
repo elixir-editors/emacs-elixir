@@ -271,14 +271,26 @@
       ((smie-rule-hanging-p)
        elixir-smie-indent-basic)))
 
+    ;; Closing paren on the other line
+    (`(:before . "(")
+     (smie-rule-parent))
+
     (`(:before . ";")
      (cond
       ((smie-rule-parent-p "after" "catch" "def" "defmodule" "defp" "do" "else"
                            "fn" "if" "rescue" "try" "unless")
        (smie-rule-parent elixir-smie-indent-basic))))
+
     (`(:after . ";")
-     (if (smie-rule-parent-p "if")
-         (smie-rule-parent)))))
+     (cond
+      ((smie-rule-parent-p "if")
+       (smie-rule-parent))
+
+      ((and (smie-rule-parent-p "(")
+            (save-excursion
+              (goto-char (cadr smie--parent))
+              (smie-rule-hanging-p)))
+       (smie-rule-parent elixir-smie-indent-basic))))))
 
 (define-minor-mode elixir-smie-mode
   "SMIE-based indentation and syntax for Elixir"
