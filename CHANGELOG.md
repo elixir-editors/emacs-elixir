@@ -1,3 +1,10 @@
+## v2.0.1 - 2014/09/11
+* [#119](https://github.com/elixir-lang/emacs-elixir/pull/119) - Fixed: indent-inside-parens
+* [#117](https://github.com/elixir-lang/emacs-elixir/pull/117) - Fixed: emacs 24.3 tests
+* [#116](https://github.com/elixir-lang/emacs-elixir/pull/116) - Add "How to run tests" section to CONTRIBUTING.md
+* [#118](https://github.com/elixir-lang/emacs-elixir/pull/118) - Added: try/rescue rule
+* [#114](https://github.com/elixir-lang/emacs-elixir/pull/114) - Fixed: run tests interectively for terminal
+
 ## v2.0.0 - 2014/09/08
 * [#113](https://github.com/elixir-lang/emacs-elixir/pull/113) - Cask and ert-runner support
 * [#110](https://github.com/elixir-lang/emacs-elixir/pull/110) - Added: ability to run tests via EVM
