@@ -1,0 +1,21 @@
+language: erlang
+otp_release:
+   - 17.1
+env:
+  - EMACS=emacs24 EMACS_REPO=cassou/emacs
+  - EMACS=emacs-snapshot EMACS_REPO=ubuntu-elisp/ppa
+before_install:
+  - sudo add-apt-repository -y ppa:$EMACS_REPO
+  - sudo apt-get update
+  - sudo apt-get install $EMACS
+  - cd /tmp
+  - wget https://github.com/elixir-lang/elixir/releases/download/v1.0.0/Precompiled.zip
+  - unzip Precompiled.zip
+  - export PATH="$PWD/bin:$PATH"
+  - cd -
+  - curl -fsSkL https://raw.github.com/cask/cask/master/go | python
+  - export PATH="/home/travis/.cask/bin:$PATH"
+install:
+  - cask install
+script:
+  - cask exec ert-runner
