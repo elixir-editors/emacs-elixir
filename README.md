@@ -1,4 +1,4 @@
-# Elixir Mode [![Build Status](https://travis-ci.org/elixir-lang/emacs-elixir.svg?branch=travis-ci)](https://travis-ci.org/elixir-lang/emacs-elixir)
+# Elixir Mode [![Build Status](https://travis-ci.org/elixir-lang/emacs-elixir.svg?branch=master)](https://travis-ci.org/elixir-lang/emacs-elixir)
 
 Provides font-locking, indentation and navigation support for the
 [Elixir programming language.](http://elixir-lang.org/)
