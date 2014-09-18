@@ -486,6 +486,29 @@ end"
   end
 end")
 
+(elixir-def-indentation-test cond-comment
+    (:expected-result :failed)
+  "
+def foo() do
+cond do
+yadda ->
+:ok
+badda -> # comment throws this off
+:what
+end
+end
+"
+  "
+def foo() do
+  cond do
+    yadda ->
+      :ok
+    badda -> # comment throws this off
+      :what
+  end
+end
+")
+
 (elixir-def-indentation-test indent-heredoc
     (:expected-result :failed)
   "
