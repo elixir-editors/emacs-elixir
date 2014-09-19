@@ -141,3 +141,26 @@ end"
     (should (eq (elixir-test-face-at 3) 'font-lock-variable-name-face))
     (should (eq (elixir-test-face-at 11) 'font-lock-string-face))))
 
+(ert-deftest elixir-mode-syntax-table/fontify-continuation-lines-assignment ()
+  :expected-result :failed
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "some_var =
+some_expr"
+   (should (eq (elixir-test-face-at 1) 'font-lock-variable-name-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-assignment-with-pattern/1 ()
+  :expected-result :failed
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "{x, y} = some_expr"
+   (should (eq (elixir-test-face-at 2) 'font-lock-variable-name-face))
+   (should (eq (elixir-test-face-at 5) 'font-lock-variable-name-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-assignment-with-pattern/2 ()
+  :expected-result :failed
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "[h|t] = some_expr"
+   (should (eq (elixir-test-face-at 2) 'font-lock-variable-name-face))
+   (should (eq (elixir-test-face-at 4) 'font-lock-variable-name-face))))
