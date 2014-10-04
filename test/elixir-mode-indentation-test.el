@@ -245,6 +245,17 @@ def str(s, sub, start_pos, end_pos) when is_binary(s) and is_binary(sub) do # an
 end
 ")
 
+(elixir-def-indentation-test indent-continuation-lines-assignment
+  (:expected-result :failed
+   :tags '(indentation))
+  "
+some_var =
+some_expr
+" "
+some_var =
+  some_expr
+")
+
 (elixir-def-indentation-test indent-last-commented-line
     ()
   "
@@ -564,6 +575,21 @@ def foo do #comment
   :bar
 end")
 
+(elixir-def-indentation-test indent-single-line-match
+  (:expected-result :failed
+   :tags '(indentation))
+   "
+case x do
+a -> b
+c -> d
+end
+" "
+case x do
+  a -> b
+  c -> d
+end
+")
+
 (elixir-def-indentation-test indent-multiline-match ()
   "
 def foo do
@@ -615,6 +641,25 @@ def foo do
   end
 end"
   )
+
+(elixir-def-indentation-test indent-mixed-match
+  (:expected-result :failed
+   :tags '(indentation))
+   "
+case x do
+a -> b
+c ->
+d
+e -> f
+end
+" "
+case x do
+  a -> b
+  c ->
+    d
+  e -> f
+end
+")
 
 (elixir-def-indentation-test indent-after-require-Record
     ()
