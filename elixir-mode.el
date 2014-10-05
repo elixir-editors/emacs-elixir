@@ -532,13 +532,13 @@ Optional argument ARGS-P ."
 (defun elixir-mode-open-docs-master ()
   "Elixir mode go to master documentation."
   (interactive)
-  (browse-url (concat elixir-mode--website-url "/docs/master")))
+  (browse-url (concat elixir-mode--website-url "/docs/master/elixir")))
 
 ;;;###autoload
 (defun elixir-mode-open-docs-stable ()
   "Elixir mode go to stable documentation."
   (interactive)
-  (browse-url (concat elixir-mode--website-url "/docs/stable")))
+  (browse-url (concat elixir-mode--website-url "/docs/stable/elixir")))
 
 ;;;###autoload
 (defun elixir-mode-show-version ()
