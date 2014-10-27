@@ -120,7 +120,7 @@
           ">=" "<" ">" "&&" "||" "<>" "++" "--" "//" "/>" "=~" "|>")))
 
 (defvar elixir-smie--block-operator-regexp
-  (rx "->"))
+  (rx "->" (0+ nonl)))
 
 (defvar elixir-smie--spaces-til-eol-regexp
   (rx (and (1+ space) eol))
