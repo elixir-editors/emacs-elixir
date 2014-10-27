@@ -6,4 +6,5 @@
 (files "*.el")
 
 (development
+ (depends-on "undercover")
  (depends-on "ert-runner"))
