@@ -25,7 +25,6 @@ end
 
 def update_version(content, from, to)
   content = content.gsub("Version: #{from}", "Version: #{to}")
-  content = content.gsub("elixir-mode--version \"#{from}\"", "elixir-mode--version \"#{to}\"")
 end
 
 def run(command)
