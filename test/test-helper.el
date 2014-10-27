@@ -1,6 +1,5 @@
 
 (require 'ert-x)
-(require 'undercover)
 
 (message "Running tests on Emacs %s" emacs-version)
 
@@ -10,7 +9,6 @@
               indent-tabs-mode nil)
 
 ;; Load the elixir-mode under test
-(undercover "*.el")
 (require 'elixir-mode)
 
 ;; Helpers
