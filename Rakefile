@@ -4,7 +4,7 @@ CASK = "cask"
 task default: %w[test]
 
 desc "Create a new release."
-task 'release' do
+task release: [:test] do
   current_version = run('git tag').split(/\n/).last.strip[1..-1]
   version = ask("What version do you want to release? (current: #{current_version}): ")
   version_tag = "v%s" % version
@@ -41,7 +41,8 @@ task "test" do
   process_info "Run test suite"
   say ""
   system "#{CASK} exec ert-runner"
-  say ""
+
+  exit_when_failed!("Test suite failed!\n")
 end
 
 def git_changes(version, version_tag)
@@ -53,6 +54,13 @@ end
 
 def update_version(content, from, to)
   content = content.gsub("Version: #{from}", "Version: #{to}")
+end
+
+def exit_when_failed!(message)
+  if $?.exitstatus != 0
+    warning(message)
+    exit(1)
+  end
 end
 
 def ansi
@@ -85,6 +93,10 @@ end
 
 def info(message)
   puts "#{ansi[:green]}#{ansi[:bold]}#{message}#{ansi[:ending]}#{ansi[:ending]}"
+end
+
+def warning(message)
+  puts "#{ansi[:red]}#{ansi[:bold]}#{message}#{ansi[:ending]}#{ansi[:ending]}"
 end
 
 def ask(question, type=:white)
