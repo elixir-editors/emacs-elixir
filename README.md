@@ -1,6 +1,6 @@
 [![License GPL 3][badge-license]](http://www.gnu.org/licenses/gpl-3.0.txt)
 [![Build Status](https://travis-ci.org/elixir-lang/emacs-elixir.svg?branch=master)](https://travis-ci.org/elixir-lang/emacs-elixir)
-[![MELPA](http://melpa.org/packages/elixir-mode-badge.svg)](http://melpa.org/#/elixir-mode)
+[![MELPA Stable](http://stable.melpa.org/packages/elixir-mode-badge.svg)](http://stable.melpa.org/#/elixir-mode)
 
 # Elixir Mode
 
@@ -23,12 +23,14 @@ Provides font-locking, indentation and navigation support for the
 ### ELPA
 
 elixir-mode is available on the community maintained repository -
-[MELPA](http://melpa-stable.milkbox.net/). Just run `M-x package-install
+[MELPA](http://stable.melpa.org/). Just run `M-x package-install
 [RET] elixir-mode [RET]` inside your emacs and you're ready to go.
 
-**Please take note of the MELPA URL.** If you are using http://melpa.milkbox.net
-then you are not getting the latest *stable* version of this package.
-Please use http://melpa-stable.milkbox.net when retrieving this package.
+**Please take note of the MELPA URL.** We strive for the most responsible
+release management possible (to the best of our knowledge & abilities). To that
+end, please ensure you are *only* using [MELPA Stable](http://stable.melpa.org)
+to retrieve this package. If you use [regular MELPA](http://melpa.org), you will
+be installing the latest changes to master, not the latest release.
 
 If you're not already using ELPA, check the [emacswiki](http://www.emacswiki.org/emacs/ELPA) page to get
 familiar with it.
