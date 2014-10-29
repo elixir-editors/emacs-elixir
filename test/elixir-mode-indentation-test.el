@@ -497,8 +497,7 @@ end"
   end
 end")
 
-(elixir-def-indentation-test cond-comment
-    (:expected-result :failed)
+(elixir-def-indentation-test cond-comment ()
   "
 def foo() do
 cond do
@@ -599,8 +598,7 @@ def foo do #comment
 end")
 
 (elixir-def-indentation-test indent-single-line-match
-  (:expected-result :failed
-   :tags '(indentation))
+  (:tags '(indentation))
    "
 case x do
 a -> b
