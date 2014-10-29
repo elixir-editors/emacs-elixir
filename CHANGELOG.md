@@ -1,3 +1,18 @@
+## v2.0.2 - 2014/10/29
+* [#136](https://github.com/elixir-lang/emacs-elixir/pull/136) - Expand def of block operator regex to include non-newlines.
+* [#137](https://github.com/elixir-lang/emacs-elixir/pull/137) - update rake tasks
+* [#135](https://github.com/elixir-lang/emacs-elixir/pull/135) - Update README so the MELPA badge points to stable build.
+* [#133](https://github.com/elixir-lang/emacs-elixir/pull/133) - refine readme
+* [#134](https://github.com/elixir-lang/emacs-elixir/pull/134) - refine the ability to show the current elixir-mode version
+* [#132](https://github.com/elixir-lang/emacs-elixir/pull/132) - Added: test coverage with undercover.el
+* [#131](https://github.com/elixir-lang/emacs-elixir/pull/131) - Fix documentation url
+* [#127](https://github.com/elixir-lang/emacs-elixir/pull/127) - Add failing test for comment in cond expression (fixed)
+* [#128](https://github.com/elixir-lang/emacs-elixir/pull/128) - Added: collection of failing tests
+* [#124](https://github.com/elixir-lang/emacs-elixir/pull/124) - Fixed: Build Status badge
+* [#123](https://github.com/elixir-lang/emacs-elixir/pull/123) - TravisCI: add-apt-repository and apt-get install fix
+* [#121](https://github.com/elixir-lang/emacs-elixir/pull/121) - Add TravisCI support
+* [#122](https://github.com/elixir-lang/emacs-elixir/pull/122) - Remove unused code
+
 ## v2.0.1 - 2014/09/11
 * [#119](https://github.com/elixir-lang/emacs-elixir/pull/119) - Fixed: indent-inside-parens
 * [#117](https://github.com/elixir-lang/emacs-elixir/pull/117) - Fixed: emacs 24.3 tests
