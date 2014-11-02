@@ -156,10 +156,10 @@
     ;; The point here is that we want to treat blank lines as a single semi-
     ;; colon when it comes to detecting the end of match statements. This could
     ;; also be handled by a `while' expression or some other looping mechanism.
-    (flet ((self-call ()
-                      (if (< (point) (point-max))
-                          (elixir-smie--semi-ends-match)
-                        nil)))
+    (cl-flet ((self-call ()
+                         (if (< (point) (point-max))
+                             (elixir-smie--semi-ends-match)
+                           nil)))
       (cond
        ((and (eolp) (bolp))
         (forward-char)
