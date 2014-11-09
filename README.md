@@ -201,6 +201,8 @@ experience, you can add the following to your `elixir-mode-hook`:
 
 If you looking for elixir tooling integration for emacs, check: [alchemist.el](https://github.com/tonini/alchemist.el)
 
+You can use [web-mode.el](http://web-mode.org) to edit elixir templates (eex files).
+
 ## History
 
 This mode is based on the
