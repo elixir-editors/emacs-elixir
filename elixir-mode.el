@@ -1,10 +1,12 @@
 ;;; elixir-mode.el --- Major mode for editing Elixir files
 
-;; Copyright 2011 secondplanet
-;;           2013 Andreas Fuchs, Samuel Tonini
+;; Copyright 2011-2014 secondplanet
+;;           2013-2014 Matt DeBoard, Samuel Tonini, Andreas Fuchs
 ;; Authors: Humza Yaqoob,
 ;;          Andreas Fuchs <asf@boinkor.net>,
+;;          Matt DeBoard
 ;;          Samuel Tonini <tonini.samuel@gmail.com>
+
 ;; URL: https://github.com/elixir-lang/emacs-elixir
 ;; Created: Mon Nov 7 2011
 ;; Keywords: languages elixir
@@ -131,10 +133,11 @@
 
 ;;; Code:
 
-(require 'comint)       ; for interactive REPL
-(require 'easymenu)     ; for menubar features
+(require 'comint)             ; for interactive REPL
+(require 'easymenu)           ; for menubar features
 
-(require 'elixir-smie)  ; syntax and indentation support
+(require 'elixir-smie)				; syntax and indentation support
+(require 'elixir-deprecated)	; deprecated messages
 
 (defvar elixir-mode--website-url
   "http://elixir-lang.org")
@@ -484,6 +487,7 @@ Argument FILE-NAME ."
 (defun elixir-mode-compile-file ()
   "Elixir mode compile and save current file."
   (interactive)
+  (elixir-deprecated-message-compile-file)
   (let ((compiler-output (shell-command-to-string (elixir-mode-command-compile (buffer-file-name)))))
     (when (string= compiler-output "")
       (message "Compiled and saved as %s" (elixir-mode-compiled-file-name)))))
