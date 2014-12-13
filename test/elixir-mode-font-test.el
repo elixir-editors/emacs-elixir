@@ -142,7 +142,6 @@ end"
     (should (eq (elixir-test-face-at 11) 'font-lock-string-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-continuation-lines-assignment ()
-  :expected-result :failed
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "some_var =

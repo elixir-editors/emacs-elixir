@@ -339,12 +339,13 @@ bar
 catch
 baz ->
 nope
-\[yeah] ->
+[yeah] ->
 maybe
 after
 after_everything()
 post_that()
-end"
+end
+"
   "
 try do
   foo
@@ -357,7 +358,8 @@ catch
 after
   after_everything()
   post_that()
-end")
+end
+")
 
 (elixir-def-indentation-test indent-try/rescue/1
   (:tags '(indentation))
@@ -545,14 +547,16 @@ end
 ")
 
 (elixir-def-indentation-test indent-pipes
-    (:expected-result :failed)
-  "def foo(x) do
+  (:tags '(indentation))
+    "
+def foo(x) do
   a = x
-    |> Enum.reverse
+       |> Enum.reverse
 end"
-  "def foo(x) do
+    "
+def foo(x) do
   a = x
-    |> Enum.reverse
+  |> Enum.reverse
 end")
 
 (elixir-def-indentation-test indent-inside-parens
@@ -664,8 +668,7 @@ end"
   )
 
 (elixir-def-indentation-test indent-mixed-match
-  (:expected-result :failed
-   :tags '(indentation))
+  (:tags '(indentation))
    "
 case x do
 a -> b
@@ -688,7 +691,7 @@ end
   ;; be two spaces after `Record', otherwise this test is meaningless.
   "
 defmodule RSS do
-require Record  
+require Record
 
 def zip(list1, list2) when length(list1) == length(list2) do
 x = 1
@@ -696,7 +699,7 @@ end
 end"
   "
 defmodule RSS do
-  require Record  
+  require Record
 
   def zip(list1, list2) when length(list1) == length(list2) do
     x = 1
