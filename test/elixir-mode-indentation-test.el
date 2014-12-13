@@ -545,14 +545,16 @@ end
 ")
 
 (elixir-def-indentation-test indent-pipes
-    (:expected-result :failed)
-  "def foo(x) do
+  (:tags '(indentation))
+    "
+def foo(x) do
   a = x
-    |> Enum.reverse
+       |> Enum.reverse
 end"
-  "def foo(x) do
+    "
+def foo(x) do
   a = x
-    |> Enum.reverse
+  |> Enum.reverse
 end")
 
 (elixir-def-indentation-test indent-inside-parens
@@ -688,7 +690,7 @@ end
   ;; be two spaces after `Record', otherwise this test is meaningless.
   "
 defmodule RSS do
-require Record  
+require Record
 
 def zip(list1, list2) when length(list1) == length(list2) do
 x = 1
@@ -696,7 +698,7 @@ end
 end"
   "
 defmodule RSS do
-  require Record  
+  require Record
 
   def zip(list1, list2) when length(list1) == length(list2) do
     x = 1
