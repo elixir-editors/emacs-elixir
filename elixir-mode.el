@@ -407,7 +407,8 @@
     (,(elixir-rx (group identifiers)
                  (one-or-more space)
                  "="
-                 (one-or-more space))
+                 (or (one-or-more space)
+                     (one-or-more "\n")))
      1 font-lock-variable-name-face)
 
     ;; Sigils
