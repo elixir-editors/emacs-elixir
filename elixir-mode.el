@@ -1,7 +1,7 @@
 ;;; elixir-mode.el --- Major mode for editing Elixir files
 
 ;; Copyright 2011-2014 secondplanet
-;;           2013-2014 Matt DeBoard, Samuel Tonini, Andreas Fuchs
+;;           2013-2014 Samuel Tonini, Matt DeBoard, Andreas Fuchs
 ;; Authors: Humza Yaqoob,
 ;;          Andreas Fuchs <asf@boinkor.net>,
 ;;          Matt DeBoard
@@ -510,6 +510,7 @@ Argument FILE-NAME ."
   "Elixir mode interactive REPL.
 Optional argument ARGS-P ."
   (interactive "P")
+  (elixir-deprecated-message-iex)
   (let ((switches (if (equal args-p nil)
                       '()
                     (split-string (read-string "Additional args: ")))))

@@ -54,4 +54,10 @@
 Please use the package *alchemist.el* for compilation functionality.\n
 Alchemist: http://www.github.com/tonini/alchemist.el"))
 
+(defun elixir-deprecated-message-iex ()
+  (elixir-deprecated--warning "elixir-mode-iex"
+                              "This function will be removed in version 3.0.0.\n
+Please use the package *alchemist.el* for IEx integration functionality.\n
+Alchemist: http://www.github.com/tonini/alchemist.el"))
+
 (provide 'elixir-deprecated)
