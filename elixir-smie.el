@@ -269,7 +269,11 @@
            (smie-rule-parent elixir-smie-indent-basic)))
       ;; Otherwise, if just indent by two.
       ((smie-rule-hanging-p)
-       elixir-smie-indent-basic)))
+       (cond
+        ((smie-rule-parent-p "after" "catch" "do" "rescue" "try")
+         elixir-smie-indent-basic)
+        (t
+         (smie-rule-parent elixir-smie-indent-basic))))))
 
     ;; Closing paren on the other line
     (`(:before . "(")

@@ -339,12 +339,13 @@ bar
 catch
 baz ->
 nope
-\[yeah] ->
+[yeah] ->
 maybe
 after
 after_everything()
 post_that()
-end"
+end
+"
   "
 try do
   foo
@@ -357,7 +358,8 @@ catch
 after
   after_everything()
   post_that()
-end")
+end
+")
 
 (elixir-def-indentation-test indent-try/rescue/1
   (:tags '(indentation))
@@ -666,8 +668,7 @@ end"
   )
 
 (elixir-def-indentation-test indent-mixed-match
-  (:expected-result :failed
-   :tags '(indentation))
+  (:tags '(indentation))
    "
 case x do
 a -> b
