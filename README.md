@@ -24,19 +24,19 @@ Provides font-locking, indentation and navigation support for the
 
 If you're not already using ELPA, check the
 [emacswiki](http://www.emacswiki.org/emacs/ELPA) page to get familiar with it.
-elixir-mode is available on the community maintained repository:
-[MELPA](http://stable.melpa.org/)
+`elixir-mode` is available on [MELPA](http://stable.melpa.org/), the community
+maintained repository.
 
 1. Add the (stable) package source: `http://stable.melpa.org/packages/`
-2. Install elixir-mode package
+2. Install `elixir-mode` package
 
 
-[In your (e.g.) .emacs](http://stable.melpa.org/#/getting-started)
+[In your emacs initialization file:](http://stable.melpa.org/#/getting-started)
 
     (add-to-list 'package-archives
                  '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 
-In your emacs
+In your emacs:
 
     M-x package-install
     elixir-mode
@@ -44,8 +44,9 @@ In your emacs
 **Please take note of the [packages URL](http://stable.melpa.org/packages/)!**
 We strive for the most responsible release management possible (to the best
 of our knowledge & abilities). To that end, please ensure you are *only* using
-[MELPA Stable](http://stable.melpa.org). If you use [regular MELPA](http://melpa.org), you will be installing the *latest changes to master*, not the latest
-release.
+[MELPA Stable](http://stable.melpa.org). If you use
+[regular MELPA](http://melpa.org), you will be installing the *latest changes
+to master*, not the latest release.
 
 ### Download latest release
 
