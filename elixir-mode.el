@@ -488,7 +488,7 @@ Argument FILE-NAME ."
 (defun elixir-mode-compile-file ()
   "Elixir mode compile and save current file."
   (interactive)
-  (elixir-deprecated-message-compile-file)
+  (elixir-deprecated-use-alchemist "elixir-mode-compile-file")
   (let ((compiler-output (shell-command-to-string (elixir-mode-command-compile (buffer-file-name)))))
     (when (string= compiler-output "")
       (message "Compiled and saved as %s" (elixir-mode-compiled-file-name)))))
@@ -510,7 +510,7 @@ Argument FILE-NAME ."
   "Elixir mode interactive REPL.
 Optional argument ARGS-P ."
   (interactive "P")
-  (elixir-deprecated-message-iex)
+  (elixir-deprecated-use-alchemist "elixir-mode-iex")
   (let ((switches (if (equal args-p nil)
                       '()
                     (split-string (read-string "Additional args: ")))))
@@ -600,6 +600,7 @@ just return nil."
 Argument BEG Start of the region.
 Argument END End of the region."
   (interactive (list (point) (mark)))
+  (elixir-deprecated-use-alchemist "elixir-mode-eval-on-region")
   (unless (and beg end)
     (error "The mark is not set now, so there is no region"))
   (let* ((region (buffer-substring-no-properties beg end)))
@@ -608,12 +609,14 @@ Argument END End of the region."
 (defun elixir-mode-eval-on-current-line ()
   "Evaluate the Elixir code on the current line."
   (interactive)
+  (elixir-deprecated-use-alchemist "elixir-mode-eval-on-current-line")
   (let ((current-line (thing-at-point 'line)))
     (elixir-mode--eval-string current-line)))
 
 (defun elixir-mode-eval-on-current-buffer ()
   "Evaluate the Elixir code on the current buffer."
   (interactive)
+  (elixir-deprecated-use-alchemist "elixir-mode-eval-on-current-buffer")
   (let ((current-buffer (buffer-substring-no-properties (point-max) (point-min))))
     (elixir-mode--eval-string current-buffer)))
 
@@ -622,6 +625,7 @@ Argument END End of the region."
 Argument BEG Start of the region.
 Argument END End of the region."
   (interactive (list (point) (mark)))
+  (elixir-deprecated-use-alchemist "elixir-mode-string-to-quoted-on-region")
   (unless (and beg end)
     (error "The mark is not set now, so there is no region"))
   (let ((region (buffer-substring-no-properties beg end)))
@@ -630,6 +634,7 @@ Argument END End of the region."
 (defun elixir-mode-string-to-quoted-on-current-line ()
   "Get the representation of the expression on the current line."
   (interactive)
+  (elixir-deprecated-use-alchemist "elixir-mode-string-to-quoted-on-current-line")
   (let ((current-line (thing-at-point 'line)))
     (elixir-mode--string-to-quoted current-line)))
 

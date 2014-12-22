@@ -39,8 +39,12 @@
   :group 'elixir-deprecated)
 
 (defun elixir-deprecated--warning (function-name message)
-  (message
-   (concat (propertize "DEPRECATION WARNING: "
+  (let ((buffer (get-buffer "*Warnings*")))
+    (when buffer
+      (kill-buffer buffer)))
+  (warn
+   (concat "\n\n"
+           (propertize "DEPRECATION WARNING: "
                        'face 'elixir-deprecated--warning-face)
            (propertize (format "[ %s ]\n\n" function-name)
                        'face 'elixir-deprecated--function-face)
@@ -48,16 +52,12 @@
 
 ;; DEPRECATED MESSAGES FOR RELEASE 3.0.0
 
-(defun elixir-deprecated-message-compile-file ()
-  (elixir-deprecated--warning "elixir-mode-compile-file"
-                              "This function will be removed in version 3.0.0.\n
+(defvar elixir-deprecated--alchemist-message "This function will be removed in version 3.0.0.\n
 Please use the package *alchemist.el* for compilation functionality.\n
-Alchemist: http://www.github.com/tonini/alchemist.el"))
+Alchemist: http://www.github.com/tonini/alchemist.el")
 
-(defun elixir-deprecated-message-iex ()
-  (elixir-deprecated--warning "elixir-mode-iex"
-                              "This function will be removed in version 3.0.0.\n
-Please use the package *alchemist.el* for IEx integration functionality.\n
-Alchemist: http://www.github.com/tonini/alchemist.el"))
+(defun elixir-deprecated-use-alchemist (function-name)
+  (elixir-deprecated--warning function-name
+			      elixir-deprecated--alchemist-message))
 
 (provide 'elixir-deprecated)
