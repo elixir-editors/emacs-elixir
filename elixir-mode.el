@@ -510,7 +510,6 @@ Argument FILE-NAME ."
   "Elixir mode interactive REPL.
 Optional argument ARGS-P ."
   (interactive "P")
-  (elixir-deprecated-use-alchemist "elixir-mode-iex")
   (let ((switches (if (equal args-p nil)
                       '()
                     (split-string (read-string "Additional args: ")))))
@@ -518,7 +517,8 @@ Optional argument ARGS-P ."
       (set-buffer
        (apply 'make-comint "IEX"
               elixir-iex-command nil switches))))
-  (pop-to-buffer "*IEX*"))
+  (pop-to-buffer "*IEX*")
+  (elixir-deprecated-use-alchemist "elixir-mode-iex"))
 
 ;;;###autoload
 (defun elixir-mode-open-modegithub ()

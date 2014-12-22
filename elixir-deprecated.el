@@ -41,14 +41,14 @@
 (defun elixir-deprecated--warning (function-name message)
   (let ((buffer (get-buffer "*Warnings*")))
     (when buffer
-      (kill-buffer buffer)))
-  (warn
-   (concat "\n\n"
-           (propertize "DEPRECATION WARNING: "
-                       'face 'elixir-deprecated--warning-face)
-           (propertize (format "[ %s ]\n\n" function-name)
-                       'face 'elixir-deprecated--function-face)
-           message)))
+      (kill-buffer buffer))
+    (display-warning :deprecated
+		     (concat "\n\n"
+			     (propertize "DEPRECATION WARNING: "
+					 'face 'elixir-deprecated--warning-face)
+			     (propertize (format "[ %s ]\n\n" function-name)
+					 'face 'elixir-deprecated--function-face)
+			     message)) :warning))
 
 ;; DEPRECATED MESSAGES FOR RELEASE 3.0.0
 
