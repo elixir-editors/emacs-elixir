@@ -7,6 +7,7 @@
   * [Indentation] Fix the indentation for mixed matchings.
   * [Indentation] Pipe |> indentation works correctly.
   * [Syntax Highlighting] Fontify continuation lines assignment.
+  * [Deprecated] Add deprecated message for eval and quoted functions.
 
 ## v2.0.2 - 2014/10/29
   * [#136](https://github.com/elixir-lang/emacs-elixir/pull/136) - Expand def of block operator regex to include non-newlines.
