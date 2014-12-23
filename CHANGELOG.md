@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.1.0-dev (unreleased)
+## v2.1.0
 
 ### Enhancements
 
