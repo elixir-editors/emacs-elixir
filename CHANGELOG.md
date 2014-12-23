@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+  * [Indentation] Continue of indentation in multiple line assignment.
   * [Indentation] Always indent with only 2 spaces except when function arguments span multiple lines.
   * [Indentation] Fix the indentation for mixed matchings.
   * [Indentation] Pipe |> indentation works correctly.
