@@ -8,7 +8,7 @@ Provides font-locking, indentation and navigation support for the
 [Elixir programming language.](http://elixir-lang.org/)
 
 - [Installation](#installation)
-  - [ELPA](#installation-via-packageel)
+  - [Via package.el](#via-packageel)
   - [Via el-get](#via-el-get)
   - [Manual](#manual)
 - [Usage](#usage)
@@ -23,14 +23,14 @@ Provides font-locking, indentation and navigation support for the
 
 ## Installation
 
-### Installation via package.el
+### Via package.el
 
 `package.el` is the built-in package manager in Emacs.
 
 `Elixir-Mode` is available on the two major community maintained repositories -
 [MELPA STABLE](melpa-stable.milkbox.net) and [MELPA](http://melpa.milkbox.net).
 
-You can install `Elixir-Mode` with the following commnad:
+You can install `Elixir-Mode` with the following command:
 
 <kbd>M-x package-install [RET] elixir-mode [RET]</kbd>
 
