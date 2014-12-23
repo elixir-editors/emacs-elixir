@@ -9,6 +9,9 @@
   * [Indentation] Fix the indentation for mixed matchings.
   * [Indentation] Pipe |> indentation works correctly.
   * [Syntax Highlighting] Fontify continuation lines assignment.
+
+### Changes
+
   * [Deprecated] Add deprecated message for eval and quoted functions.
 
 ## v2.0.2 - 2014/10/29
