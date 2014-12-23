@@ -117,7 +117,7 @@
 
 (defvar elixir-smie--operator-regexp
   (rx (or "<<<" ">>>" "^^^" "~~~" "&&&" "|||" "===" "!==" "==" "!=" "<="
-          ">=" "<" ">" "&&" "||" "<>" "++" "--" "//" "/>" "=~" "|>")))
+	  "=" ">=" "<" ">" "&&" "||" "<>" "++" "--" "//" "/>" "=~" "|>")))
 
 (defvar elixir-smie--block-operator-regexp
   (rx "->" (0+ nonl)))
@@ -283,7 +283,7 @@
 
     ;; Closing paren on the other line
     (`(:before . "(")
-     (smie-rule-parent))
+     (unless smie--parent 0))
 
     (`(:before . ";")
      (cond

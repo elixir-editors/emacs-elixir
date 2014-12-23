@@ -246,14 +246,29 @@ end
 ")
 
 (elixir-def-indentation-test indent-continuation-lines-assignment
-  (:expected-result :failed
-   :tags '(indentation))
+			     (:tags '(indentation))
   "
 some_var =
 some_expr
 " "
 some_var =
   some_expr
+")
+
+(elixir-def-indentation-test indent-continuation-lines-assignment/2
+			     (:tags '(indentation))
+  "
+next_fun =
+        case raw do
+ true  -> &IO.each_binstream(&1, line_or_bytes)
+      false -> &IO.each_stream(&1, line_or_bytes)
+       end
+" "
+next_fun =
+  case raw do
+    true  -> &IO.each_binstream(&1, line_or_bytes)
+    false -> &IO.each_stream(&1, line_or_bytes)
+  end
 ")
 
 (elixir-def-indentation-test indent-last-commented-line
