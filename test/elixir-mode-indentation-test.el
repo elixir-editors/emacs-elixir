@@ -572,24 +572,25 @@ x = do_something(
   :bar
 )")
 
-(elixir-def-indentation-test indent-inside-parens/2 ()
-  "
+(elixir-def-indentation-test indent-inside-parens/2
+    (:tags '(indentation))
+"
 x = do_something(:foo,
-                 :bar)"
-    "
+                    :bar)"
+"
 x = do_something(:foo,
                  :bar)")
 
 (elixir-def-indentation-test indent-inside-parens/3
-    (:expected-result :failed)
-  "
+			     (:tags '(indentation))
+"
 x = do_something(:foo, fn (arg) ->
                          do_another(arg)
                        end)"
 "
 x = do_something(:foo, fn (arg) ->
-                         do_another(arg)
-                       end)")
+  do_another(arg)
+end)")
 
 (elixir-def-indentation-test indent-lone-keyword ()
   "
