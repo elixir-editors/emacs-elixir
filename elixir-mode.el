@@ -604,4 +604,5 @@ Argument END End of the region."
   (add-to-list 'auto-mode-alist '("\\.exs\\'" . elixir-mode)))
 
 (provide 'elixir-mode)
+
 ;;; elixir-mode.el ends here

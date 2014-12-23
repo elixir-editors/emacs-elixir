@@ -1,5 +1,30 @@
 ;;; elixir-smie.el --- Structural syntax support for elixir-mode
 
+;; Copyright 2011-2014 secondplanet
+;;           2013-2014 Samuel Tonini, Matt DeBoard, Andreas Fuchs
+
+;; This file is not a part of GNU Emacs.
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 2, or (at your option)
+;; any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program; if not, write to the Free Software
+;; Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+;;; Commentary:
+
+;;  Structural syntax support for elixir-mode
+
+;;; Code:
+
 (require 'smie)
 
 ;; HACK: Patch for Emacs 24.3 smie that fix
@@ -303,3 +328,5 @@
        (smie-rule-parent elixir-smie-indent-basic))))))
 
 (provide 'elixir-smie)
+
+;;; elixir-smie.el ends here
