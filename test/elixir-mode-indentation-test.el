@@ -412,6 +412,30 @@ rescue
 end
 ")
 
+(elixir-def-indentation-test indent-block-inside-fn-match ()
+"
+defp into(stream, device, raw) do
+ fn
+   :ok, {:cont, x} ->
+  case raw do
+true  -> IO.binwrite(device, x)
+false -> IO.write(device, x)
+end
+:ok, _ -> stream
+end
+end"
+"
+defp into(stream, device, raw) do
+  fn
+    :ok, {:cont, x} ->
+      case raw do
+        true  -> IO.binwrite(device, x)
+        false -> IO.write(device, x)
+      end
+    :ok, _ -> stream
+  end
+end")
+
 (elixir-def-indentation-test indent-fn-in-assignment ()
   "
 f = fn x, y ->
