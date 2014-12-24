@@ -258,19 +258,23 @@
      (cond
       ((smie-rule-sibling-p) nil)
       ((smie-rule-hanging-p) (smie-rule-parent elixir-smie-indent-basic))
-      (t elixir-smie-indent-basic)))
-
+      (t (smie-rule-parent))))
     (`(:before . "MATCH-STATEMENT-DELIMITER")
      (cond
       ((and (not (smie-rule-sibling-p))
             (smie-rule-hanging-p))
        (smie-rule-parent elixir-smie-indent-basic))))
-
+    (`(:before . "fn")
+     (smie-rule-parent))
+    (`(:before . "end")
+     (smie-rule-parent))
+    ;; Closing paren on the other line
+    (`(:before . "(")
+     (smie-rule-parent))
     (`(:before . "->")
      (cond
       ((smie-rule-hanging-p)
        (smie-rule-parent elixir-smie-indent-basic))))
-
     (`(:after . "->")
      (cond
       ;; This first condition is kind of complicated so I'll try to make this
@@ -300,23 +304,11 @@
          elixir-smie-indent-basic)
         (t
          (smie-rule-parent elixir-smie-indent-basic))))))
-
-    (`(:before . "fn")
-     (smie-rule-parent))
-
-    (`(:before . "end")
-     (smie-rule-parent))
-
-    ;; Closing paren on the other line
-    (`(:before . "(")
-     (unless smie--parent 0))
-
     (`(:before . ";")
      (cond
       ((smie-rule-parent-p "after" "catch" "def" "defmodule" "defp" "do" "else"
                            "fn" "if" "rescue" "try" "unless")
        (smie-rule-parent elixir-smie-indent-basic))))
-
     (`(:after . ";")
      (cond
       ((smie-rule-parent-p "if")

@@ -1,10 +1,14 @@
 # Changelog
 
-## v2.2.0-dev (unreleased)
+## v2.1.1
 
 ### Enhancements
 
   * [Indentation] Indent block inside a fn match.
+
+### Bugfixes
+
+  * [Indentation] #152 Fix indentation inside parens wrapped around def
 
 ## v2.1.0 - 2014/12/23
 
