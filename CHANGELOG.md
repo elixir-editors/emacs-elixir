@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.1.1
+## v2.1.1 - 2014/12/24
 
 ### Enhancements
 
