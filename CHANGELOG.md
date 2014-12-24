@@ -2,6 +2,10 @@
 
 ## v2.2.0-dev (unreleased)
 
+### Enhancements
+
+  * [Indentation] Indent block inside a fn match.
+
 ## v2.1.0 - 2014/12/23
 
 ### Enhancements
