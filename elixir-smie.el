@@ -291,7 +291,8 @@
        (if (and smie--parent (elixir-smie--same-line-as-parent
                               (nth 1 smie--parent)
                               (point)))
-           (smie-rule-parent elixir-smie-indent-basic)))
+           (smie-rule-parent elixir-smie-indent-basic)
+	 elixir-smie-indent-basic))
       ;; Otherwise, if just indent by two.
       ((smie-rule-hanging-p)
        (cond
