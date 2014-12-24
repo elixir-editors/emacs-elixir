@@ -631,6 +631,46 @@ x = do_something(:foo, fn (arg) ->
   do_another(arg)
 end)")
 
+(elixir-def-indentation-test indent-inside-parens/4
+			     (:tags '(indentation))
+"
+defmodule Something do
+def something do
+x = do_something(:foo, fn (arg) ->
+                         do_another(arg)
+                       end)
+end
+end"
+"
+defmodule Something do
+  def something do
+    x = do_something(:foo, fn (arg) ->
+      do_another(arg)
+    end)
+  end
+end")
+
+(elixir-def-indentation-test indent-inside-parens/5
+			     (:tags '(indentation))
+"
+defmodule IndentPlayground do
+def my_func(arr) do
+ Enum.map(arr, fn(x) ->
+  x * 2
+end)
+   #back here
+end
+end"
+"
+defmodule IndentPlayground do
+  def my_func(arr) do
+    Enum.map(arr, fn(x) ->
+      x * 2
+    end)
+    #back here
+  end
+end")
+
 (elixir-def-indentation-test indent-lone-keyword ()
   "
 def foo do #comment
