@@ -850,6 +850,25 @@ defmodule Greeter do
   end
 end")
 
+(elixir-def-indentation-test indent-binary-sequence
+			     (:tags '(indentation))
+"
+defmodule ExampleTest do
+     test \"the truth\" do
+       assert <<1,2>> == <<1,2>>
+assert 1 + 1 == 2
+  end
+end"
+
+"
+defmodule ExampleTest do
+  test \"the truth\" do
+    assert <<1,2>> == <<1,2>>
+    assert 1 + 1 == 2
+  end
+end")
+
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
