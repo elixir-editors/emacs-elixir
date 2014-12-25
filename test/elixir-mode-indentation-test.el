@@ -1,27 +1,14 @@
 ;;; elixir-mode-indentation-test.el --- Indentation testsuite
 
 ;;; Commentary:
-;; 
-
-;;; Code:
-
-(defmacro* elixir-def-indentation-test (name args initial-contents expected-output)
-  (declare (indent 2))
-  `(elixir-deftest ,name ,args
-     (elixir-ert-with-test-buffer (:name ,(format "(Expected)" name))
-         ,initial-contents
-       (let ((indented (ert-buffer-string-reindented)))
-         (delete-region (point-min) (point-max))
-         (insert ,expected-output)
-         (ert-with-test-buffer (:name ,(format "(Actual)" name))
-           (elixir-mode)
-           (insert indented)
-           (should (equal indented ,expected-output)))))))
-
+;;
 ;; Expected test failures indicates that the code tested by that test case is
 ;; indeed broken. My intention is that while working on a specific problem,
 ;; the failure expectation will be removed so that we know when the test case
 ;; passes.
+
+;;; Code:
+
 (elixir-def-indentation-test indent-use-dot-module-newline
 			     (:tags '(indentation))
   "defmodule Foo do

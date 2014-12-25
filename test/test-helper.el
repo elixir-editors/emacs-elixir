@@ -39,7 +39,7 @@
      ,@body))
 
 (defmacro elixir-test-with-temp-buffer (content &rest body)
-  "Evaluate BODY in a temporary buffer with CONTENTS."
+  "Evaluate BODY in a temporary buffer with CONTENT."
   (declare (debug t)
            (indent 1))
   `(with-temp-buffer
@@ -48,6 +48,19 @@
      (font-lock-fontify-buffer)
      (goto-char (point-min))
      ,@body))
+
+(defmacro* elixir-def-indentation-test (name args initial-contents expected-output)
+  (declare (indent 2))
+  `(elixir-deftest ,name ,args
+     (elixir-ert-with-test-buffer (:name ,(format "(Expected)" name))
+         ,initial-contents
+       (let ((indented (ert-buffer-string-reindented)))
+         (delete-region (point-min) (point-max))
+         (insert ,expected-output)
+         (ert-with-test-buffer (:name ,(format "(Actual)" name))
+           (elixir-mode)
+           (insert indented)
+           (should (equal indented ,expected-output)))))))
 
 (when (s-contains? "--win" (getenv "ERT_RUNNER_ARGS"))
   (defun ert-runner/run-tests-batch-and-exit (selector)
