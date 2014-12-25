@@ -1,3 +1,10 @@
+;;; elixir-mode-indentation-test.el --- Indentation testsuite
+
+;;; Commentary:
+;; 
+
+;;; Code:
+
 (defmacro* elixir-def-indentation-test (name args initial-contents expected-output)
   (declare (indent 2))
   `(elixir-deftest ,name ,args
@@ -794,3 +801,7 @@ end")
 ;;; Local Variables:
 ;;; whitespace-action: nil
 ;;; End:
+
+(provide 'elixir-mode-indentation-test)
+
+;;; elixir-mode-indentation-test.el ends here

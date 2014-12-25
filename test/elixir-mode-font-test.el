@@ -1,6 +1,12 @@
+;;; elixir-mode-font-test.el --- Font highlighting testsuite
+
+;;; Commentary:
+;;
 ;; `elixir-test-with-temp-buffer' and `elixir-test-face-at' are both slightly
 ;; modified versions of the original at
 ;; https://github.com/lunaryorn/puppet-mode/blob/master/test/puppet-mode-test.el
+
+;;; Code:
 
 (defun elixir-test-face-at (pos &optional content)
   "Get the face at POS in CONTENT.
@@ -163,3 +169,7 @@ some_expr"
    "[h|t] = some_expr"
    (should (eq (elixir-test-face-at 2) 'font-lock-variable-name-face))
    (should (eq (elixir-test-face-at 4) 'font-lock-variable-name-face))))
+
+(provide 'elixir-mode-font-test)
+
+;;; elixir-mode-font-test.el ends here

@@ -1,3 +1,9 @@
+;;; test-helper.el --- Test helper
+
+;;; Commentary:
+;; 
+
+;;; Code:
 
 (require 'ert-x)
 
@@ -46,3 +52,7 @@
 (when (s-contains? "--win" (getenv "ERT_RUNNER_ARGS"))
   (defun ert-runner/run-tests-batch-and-exit (selector)
     (ert-run-tests-interactively selector)))
+
+(provide 'test-helper)
+
+;;; test-helper.el ends here

@@ -1,3 +1,9 @@
+;;; elixir-quoted-minor-mode-test.el --- Quoted minor mode testsuite
+
+;;; Commentary:
+;; 
+
+;;; Code:
 
 (ert-deftest elixir-quoted-minor-mode/base ()
   (elixir-test-with-temp-buffer
@@ -52,3 +58,7 @@
      (insert "sum(3, 2)")
      (elixir-mode-string-to-quoted-on-current-line)
      (should-error (undo)))))
+
+(provide 'elixir-quoted-minor-mode-test)
+
+;;; elixir-quoted-minor-mode-test.el ends here
