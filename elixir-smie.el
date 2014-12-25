@@ -169,6 +169,7 @@
 
 (defun elixir-smie--semi-ends-match ()
   "Return non-nil if the current line concludes a match block."
+  (when (not (eobp))
   (save-excursion
     ;; Warning: Recursion.
     ;; This is easy though.
@@ -195,7 +196,7 @@
        ;; And if we're NOT on a blank line, move to the end of the line, and see
        ;; if we're looking back at a block operator.
        (t (move-end-of-line 1)
-          (looking-back elixir-smie--block-operator-regexp))))))
+          (looking-back elixir-smie--block-operator-regexp)))))))
 
 (defun elixir-smie--same-line-as-parent (parent-pos child-pos)
   "Return non-nil if `child-pos' is on same line as `parent-pos'."
@@ -211,7 +212,10 @@
    ((and (or (looking-at elixir-smie--comment-regexp)
              (looking-at "[\n#]"))
          (elixir-smie--implicit-semi-p))
-    (if (eolp) (forward-char 1) (forward-comment 1))
+    (when (not (save-excursion
+		 (forward-comment 1)
+		 (eobp)))
+      (if (eolp) (forward-char 1) (forward-comment 1)))
     ;; Note: `elixir-smie--semi-ends-match' will be called when the point is at
     ;; the beginning of a new line. Keep that in mind.
     (if (elixir-smie--semi-ends-match)
@@ -313,7 +317,6 @@
      (cond
       ((smie-rule-parent-p "if")
        (smie-rule-parent))
-
       ((and (smie-rule-parent-p "(")
             (save-excursion
               (goto-char (cadr smie--parent))
