@@ -315,6 +315,8 @@
        (smie-rule-parent elixir-smie-indent-basic))))
     (`(:after . ";")
      (cond
+      ((smie-rule-parent-p "def")
+       (smie-rule-parent))
       ((smie-rule-parent-p "if")
        (smie-rule-parent))
       ((and (smie-rule-parent-p "(")

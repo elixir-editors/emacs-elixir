@@ -828,6 +828,28 @@ variable =
     end
   end")
 
+(elixir-def-indentation-test indent-after-def-do-online
+			     (:tags '(indentation))
+"
+defmodule Greeter do
+ def hello, do: IO.puts \"hello\"
+     def bye, do: IO.puts \"bye\"
+
+  def hi(name) do
+IO.puts \"Hi #{name}\"
+end
+end"
+
+"
+defmodule Greeter do
+  def hello, do: IO.puts \"hello\"
+  def bye, do: IO.puts \"bye\"
+
+  def hi(name) do
+    IO.puts \"Hi #{name}\"
+  end
+end")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
