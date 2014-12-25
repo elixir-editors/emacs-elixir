@@ -2,6 +2,10 @@
 
 ## v2.2.0-dev (unreleased)
 
+### Enhancements
+
+  * [Indentation] Correct behavior after last line in buffer. (#145)
+
 ## v2.1.1 - 2014/12/24
 
 ### Enhancements
