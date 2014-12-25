@@ -30,7 +30,7 @@ task 'info' do
   system "#{CASK} exec #{EMACS} --version | head -1"
 end
 
-desc "Run the test suite"
+desc "Run test suite"
 task "test" do
   process_info "Install package dependencies"
   say ""
@@ -43,6 +43,38 @@ task "test" do
   system "#{CASK} exec ert-runner"
 
   exit_when_failed!("Test suite failed!\n")
+end
+
+namespace :testing do
+  desc "Run indentation test suite"
+  task "indentation" do
+    process_info "Install package dependencies"
+    say ""
+    say "#{indent(3)}Command: ", :yellow, false
+    sh "cask install"
+    say ""
+
+    process_info "Run test suite"
+    say ""
+    system "#{CASK} exec ert-runner -t indentation"
+
+    exit_when_failed!("Test suite failed!\n")
+  end
+
+  desc "Run font highlighting test suite"
+  task "fontification" do
+    process_info "Install package dependencies"
+    say ""
+    say "#{indent(3)}Command: ", :yellow, false
+    sh "cask install"
+    say ""
+
+    process_info "Run test suite"
+    say ""
+    system "#{CASK} exec ert-runner -t fontification,syntax-table"
+
+    exit_when_failed!("Test suite failed!\n")
+  end
 end
 
 def git_changes(version, version_tag)
