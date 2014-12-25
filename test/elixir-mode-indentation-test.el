@@ -806,6 +806,28 @@ defmodule RSS do
   end
 end")
 
+(elixir-def-indentation-test indent-fn-in-multiline-assignment
+			     (:expected-result :failed :tags '(indentation))
+"
+variable =
+fn ->
+case :file.open(path, modes) do
+{:ok, device}    -> device
+{:error, reason} ->
+raise File.Error, reason: reason
+end
+end"
+
+"
+variable =
+  fn ->
+    case :file.open(path, modes) do
+      {:ok, device}    -> device
+      {:error, reason} ->
+        raise File.Error, reason: reason
+    end
+  end")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
