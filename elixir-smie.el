@@ -169,33 +169,34 @@
 
 (defun elixir-smie--semi-ends-match ()
   "Return non-nil if the current line concludes a match block."
-  (save-excursion
-    ;; Warning: Recursion.
-    ;; This is easy though.
+  (when (not (eobp))
+    (save-excursion
+      ;; Warning: Recursion.
+      ;; This is easy though.
 
-    ;; 1. If we're at a blank line, move forward a character. This takes us to
-    ;;    the next line.
-    ;; 2. If we're not at the end of the buffer, call this function again.
-    ;;    (Otherwise, return nil.)
+      ;; 1. If we're at a blank line, move forward a character. This takes us to
+      ;;    the next line.
+      ;; 2. If we're not at the end of the buffer, call this function again.
+      ;;    (Otherwise, return nil.)
 
-    ;; The point here is that we want to treat blank lines as a single semi-
-    ;; colon when it comes to detecting the end of match statements. This could
-    ;; also be handled by a `while' expression or some other looping mechanism.
-    (cl-flet ((self-call ()
-                         (if (< (point) (point-max))
-                             (elixir-smie--semi-ends-match)
-                           nil)))
-      (cond
-       ((and (eolp) (bolp))
-        (forward-char)
-        (self-call))
-       ((looking-at elixir-smie--spaces-til-eol-regexp)
-        (move-beginning-of-line 2)
-        (self-call))
-       ;; And if we're NOT on a blank line, move to the end of the line, and see
-       ;; if we're looking back at a block operator.
-       (t (move-end-of-line 1)
-          (looking-back elixir-smie--block-operator-regexp))))))
+      ;; The point here is that we want to treat blank lines as a single semi-
+      ;; colon when it comes to detecting the end of match statements. This could
+      ;; also be handled by a `while' expression or some other looping mechanism.
+      (cl-flet ((self-call ()
+			   (if (< (point) (point-max))
+			       (elixir-smie--semi-ends-match)
+			     nil)))
+	(cond
+	 ((and (eolp) (bolp))
+	  (forward-char)
+	  (self-call))
+	 ((looking-at elixir-smie--spaces-til-eol-regexp)
+	  (move-beginning-of-line 2)
+	  (self-call))
+	 ;; And if we're NOT on a blank line, move to the end of the line, and see
+	 ;; if we're looking back at a block operator.
+	 (t (move-end-of-line 1)
+	    (looking-back elixir-smie--block-operator-regexp)))))))
 
 (defun elixir-smie--same-line-as-parent (parent-pos child-pos)
   "Return non-nil if `child-pos' is on same line as `parent-pos'."
@@ -211,7 +212,10 @@
    ((and (or (looking-at elixir-smie--comment-regexp)
              (looking-at "[\n#]"))
          (elixir-smie--implicit-semi-p))
-    (if (eolp) (forward-char 1) (forward-comment 1))
+    (when (not (save-excursion
+		 (forward-comment 1)
+		 (eobp)))
+      (if (eolp) (forward-char 1) (forward-comment 1)))
     ;; Note: `elixir-smie--semi-ends-match' will be called when the point is at
     ;; the beginning of a new line. Keep that in mind.
     (if (elixir-smie--semi-ends-match)
@@ -313,7 +317,6 @@
      (cond
       ((smie-rule-parent-p "if")
        (smie-rule-parent))
-
       ((and (smie-rule-parent-p "(")
             (save-excursion
               (goto-char (cadr smie--parent))
