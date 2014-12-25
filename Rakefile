@@ -88,7 +88,7 @@ def say(message, type=:white, newline=true)
 end
 
 def process_info(message)
-  puts "#{ansi[:on_green]}#{ansi[:red]}#{message}#{ansi[:ending]}#{ansi[:ending]}"
+  puts "#{ansi[:bold]}#{ansi[:green]}#{message}#{ansi[:ending]}#{ansi[:ending]}"
 end
 
 def info(message)
