@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+  * [Indentation] indent correct after oneline `def ... do:` function
   * [Indentation] Correct behavior after last line in buffer. (#145)
 
 ## v2.1.1 - 2014/12/24
