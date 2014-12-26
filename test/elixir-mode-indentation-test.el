@@ -868,6 +868,52 @@ defmodule ExampleTest do
   end
 end")
 
+(elixir-def-indentation-test indent-binary-sequence-inside-match-block/2
+			     (:expected-result :failed :tags '(indentation))
+"
+case asd do
+<<c1::5, c2::5, c3::5, c4::5, c5::5, c6::5, c7::2>> ->
+<<main::binary,
+enc.(c1)::8, enc.(c2)::8, enc.(c3)::8, enc.(c4)::8,
+enc.(c5)::8, enc.(c6)::8, enc.(bsl(c7, 3))::8, ?=>>
+<<c1::5, c2::5, c3::5, c4::5, c5::4>> ->
+<<main::binary,
+enc.(c1)::8, enc.(c2)::8, enc.(c3)::8, enc.(c4)::8,
+enc.(bsl(c5, 1))::8, ?=,  ?=, ?=>>
+<<c1::5, c2::5, c3::5, c4::1>> ->
+<<main::binary,
+enc.(c1)::8, enc.(c2)::8,  enc.(c3)::8, enc.(bsl(c4, 4))::8,
+?=, ?=,  ?=, ?=>>
+<<c1::5, c2::3>> ->
+<<main::binary,
+enc.(c1)::8, enc.(bsl(c2, 2))::8, ?=, ?=,
+?=, ?=, ?=, ?=>>
+<<>> ->
+main
+end"
+
+"
+case asd do
+  <<c1::5, c2::5, c3::5, c4::5, c5::5, c6::5, c7::2>> ->
+    <<main::binary,
+    enc.(c1)::8, enc.(c2)::8, enc.(c3)::8, enc.(c4)::8,
+    enc.(c5)::8, enc.(c6)::8, enc.(bsl(c7, 3))::8, ?=>>
+  <<c1::5, c2::5, c3::5, c4::5, c5::4>> ->
+    <<main::binary,
+    enc.(c1)::8, enc.(c2)::8, enc.(c3)::8, enc.(c4)::8,
+    enc.(bsl(c5, 1))::8, ?=,  ?=, ?=>>
+  <<c1::5, c2::5, c3::5, c4::1>> ->
+    <<main::binary,
+    enc.(c1)::8, enc.(c2)::8,  enc.(c3)::8, enc.(bsl(c4, 4))::8,
+    ?=, ?=,  ?=, ?=>>
+  <<c1::5, c2::3>> ->
+    <<main::binary,
+    enc.(c1)::8, enc.(bsl(c2, 2))::8, ?=, ?=,
+    ?=, ?=, ?=, ?=>>
+  <<>> ->
+    main
+end")
+
 
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
