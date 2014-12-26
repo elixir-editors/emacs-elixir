@@ -4,7 +4,8 @@
 
 ### Enhancements
 
-  * [Indentation] indent correct after oneline `def ... do:` function
+  * [Indentation] Ident correct after a binary sequence `<<1,2,3,4>>`.
+  * [Indentation] Indent correct after oneline `def ... do:` function
   * [Indentation] Correct behavior after last line in buffer. (#145)
 
 ## v2.1.1 - 2014/12/24

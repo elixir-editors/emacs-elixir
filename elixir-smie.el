@@ -144,6 +144,9 @@
   (rx (or "<<<" ">>>" "^^^" "~~~" "&&&" "|||" "===" "!==" "==" "!=" "<="
 	  "=" ">=" "<" ">" "&&" "||" "<>" "++" "--" "//" "/>" "=~" "|>")))
 
+(defvar elixir-smie--binary-sequence-regexp
+  (rx (or "<<" ">>")))
+
 (defvar elixir-smie--block-operator-regexp
   (rx "->" (0+ nonl)))
 
@@ -241,6 +244,9 @@
      ((looking-back elixir-smie--block-operator-regexp (- (point) 3) t)
       (goto-char (match-beginning 0))
       "->")
+     ((looking-back elixir-smie--binary-sequence-regexp (- (point) 3) t)
+      (goto-char (match-beginning 0))
+      "OP")
      ((looking-back elixir-smie--operator-regexp (- (point) 3) t)
       (goto-char (match-beginning 0))
       "OP")
