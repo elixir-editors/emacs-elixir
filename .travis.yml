@@ -4,6 +4,10 @@ otp_release:
 env:
   - EMACS=emacs24 EMACS_REPO=cassou/emacs
   - EMACS=emacs-snapshot EMACS_REPO=ubuntu-elisp/ppa
+matrix:
+  allow_failures:
+    - env:
+      - EMACS=emacs-snapshot
 before_install:
   - sudo add-apt-repository -y ppa:$EMACS_REPO
   - sudo apt-get update
