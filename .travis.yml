@@ -2,8 +2,8 @@ language: erlang
 otp_release:
    - 17.1
 env:
-  - EMACS=emacs24 EMACS_REPO=cassou/emacs
-  - EMACS=emacs-snapshot EMACS_REPO=ubuntu-elisp/ppa
+  - EMACS=emacs24 EMACS_REPO=cassou/emacs TEST_RUN="rake test"
+  - EMACS=emacs-snapshot EMACS_REPO=ubuntu-elisp/ppa TEST_RUN="rake test-no-gui"
 before_install:
   - sudo add-apt-repository -y ppa:$EMACS_REPO
   - sudo apt-get update
@@ -16,4 +16,4 @@ before_install:
   - curl -fsSkL https://raw.github.com/cask/cask/master/go | python
   - export PATH="/home/travis/.cask/bin:$PATH"
 script:
-  - rake test
+  - $TEST_RUN

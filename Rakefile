@@ -45,6 +45,22 @@ task "test" do
   exit_when_failed!("Test suite failed!\n")
 end
 
+desc "Run test suite with Emacs without GUI window"
+task "test-no-gui" do
+  process_info "Install package dependencies"
+  say ""
+  say "#{indent(3)}Command: ", :yellow, false
+  sh "cask install"
+  say ""
+
+  process_info "Run test suite with --no-win"
+  say ""
+  system "#{CASK} exec ert-runner --no-win"
+
+  print_when_success("Test suite success\n")
+  exit_when_failed!("Test suite failed!\n")
+end
+
 namespace :testing do
   desc "Run indentation test suite"
   task "indentation" do
@@ -92,6 +108,12 @@ def exit_when_failed!(message)
   if $?.exitstatus != 0
     warning(message)
     exit(1)
+  end
+end
+
+def print_when_success(message)
+  if $?.exitstatus == 0
+    info(message)
   end
 end
 
