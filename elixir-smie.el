@@ -264,6 +264,10 @@
 
 (defun elixir-smie-rules (kind token)
   (pcase (cons kind token)
+    (`(:before . "OP")
+     (when (and (not (smie-rule-hanging-p))
+                (smie-rule-prev-p "OP"))
+       -2))
     (`(:after . "OP")
      (cond
       ((smie-rule-sibling-p) nil)
