@@ -914,6 +914,19 @@ case asd do
     main
 end")
 
+(elixir-def-indentation-test indent-inside-square-brackets
+			     (:tags '(indentation))
+"
+children = [
+        supervisor(Task.Supervisor, [[name: KVServer.TaskSupervisor]]),
+worker(Task, [KVServer, :accept, [4040]])
+]"
+
+"
+children = [
+  supervisor(Task.Supervisor, [[name: KVServer.TaskSupervisor]]),
+  worker(Task, [KVServer, :accept, [4040]])
+]")
 
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
