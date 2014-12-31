@@ -869,7 +869,7 @@ defmodule ExampleTest do
 end")
 
 (elixir-def-indentation-test indent-binary-sequence-inside-match-block/2
-			     (:expected-result :failed :tags '(indentation))
+			     (:tags '(indentation))
 "
 case asd do
 <<c1::5, c2::5, c3::5, c4::5, c5::5, c6::5, c7::2>> ->
