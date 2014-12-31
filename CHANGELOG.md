@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+  * [Indentation] Indent listing inside square brackets. (#160)
   * [Indentation] Ident correct after a binary sequence `<<1,2,3,4>>`.
   * [Indentation] Indent correct after oneline `def ... do:` function
   * [Indentation] Correct behavior after last line in buffer. (#145)
