@@ -276,6 +276,29 @@ next_fun =
   end
 ")
 
+(elixir-def-indentation-test indent-continuation-lines-assignment/3
+			     (:expected-result :failed :tags '(indentation))
+  "
+start_fun =
+    fn ->
+ case :file.open(path, modes) do
+  {:ok, device}    -> device
+{:error, reason} ->
+raise File.Error, reason: reason, action: \"stream\", path: path
+end
+end
+" "
+start_fun =
+  fn ->
+    case :file.open(path, modes) do
+      {:ok, device}    -> device
+      {:error, reason} ->
+        raise File.Error, reason: reason, action: \"stream\", path: path
+    end
+  end
+")
+
+
 (elixir-def-indentation-test indent-last-commented-line
 			     (:tags '(indentation))
   "
