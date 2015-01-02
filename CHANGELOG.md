@@ -1,5 +1,7 @@
 # Changelog
 
+## v2.3.0-dev (unreleased)
+
 ## v2.2.0 2014/12/31
 
 ### Enhancements
