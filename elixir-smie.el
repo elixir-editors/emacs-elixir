@@ -1,7 +1,7 @@
 ;;; elixir-smie.el --- Structural syntax support for elixir-mode
 
-;; Copyright 2011-2014 secondplanet
-;;           2013-2014 Samuel Tonini, Matt DeBoard, Andreas Fuchs
+;; Copyright 2011-2015 secondplanet
+;;           2013-2015 Samuel Tonini, Matt DeBoard, Andreas Fuchs
 
 ;; This file is not a part of GNU Emacs.
 
@@ -142,7 +142,7 @@
 
 (defvar elixir-smie--operator-regexp
   (rx (or "<<<" ">>>" "^^^" "~~~" "&&&" "|||" "===" "!==" "==" "!=" "<="
-	  "=" ">=" "<" ">" "&&" "||" "<>" "++" "--" "//" "/>" "=~" "|>")))
+          "=" ">=" "<" ">" "&&" "||" "<>" "++" "--" "//" "/>" "=~" "|>")))
 
 (defvar elixir-smie--binary-sequence-regexp
   (rx (or "<<" ">>")))
@@ -186,20 +186,20 @@
       ;; colon when it comes to detecting the end of match statements. This could
       ;; also be handled by a `while' expression or some other looping mechanism.
       (cl-flet ((self-call ()
-			   (if (< (point) (point-max))
-			       (elixir-smie--semi-ends-match)
-			     nil)))
-	(cond
-	 ((and (eolp) (bolp))
-	  (forward-char)
-	  (self-call))
-	 ((looking-at elixir-smie--spaces-til-eol-regexp)
-	  (move-beginning-of-line 2)
-	  (self-call))
-	 ;; And if we're NOT on a blank line, move to the end of the line, and see
-	 ;; if we're looking back at a block operator.
-	 (t (move-end-of-line 1)
-	    (looking-back elixir-smie--block-operator-regexp)))))))
+                           (if (< (point) (point-max))
+                               (elixir-smie--semi-ends-match)
+                             nil)))
+        (cond
+         ((and (eolp) (bolp))
+          (forward-char)
+          (self-call))
+         ((looking-at elixir-smie--spaces-til-eol-regexp)
+          (move-beginning-of-line 2)
+          (self-call))
+         ;; And if we're NOT on a blank line, move to the end of the line, and see
+         ;; if we're looking back at a block operator.
+         (t (move-end-of-line 1)
+            (looking-back elixir-smie--block-operator-regexp)))))))
 
 (defun elixir-smie--same-line-as-parent (parent-pos child-pos)
   "Return non-nil if `child-pos' is on same line as `parent-pos'."
@@ -216,8 +216,8 @@
              (looking-at "[\n#]"))
          (elixir-smie--implicit-semi-p))
     (when (not (save-excursion
-		 (forward-comment 1)
-		 (eobp)))
+                 (forward-comment 1)
+                 (eobp)))
       (if (eolp) (forward-char 1) (forward-comment 1)))
     ;; Note: `elixir-smie--semi-ends-match' will be called when the point is at
     ;; the beginning of a new line. Keep that in mind.
@@ -318,7 +318,7 @@
                               (nth 1 smie--parent)
                               (point)))
            (smie-rule-parent elixir-smie-indent-basic)
-	 elixir-smie-indent-basic))
+         elixir-smie-indent-basic))
       ;; Otherwise, if just indent by two.
       ((smie-rule-hanging-p)
        (cond

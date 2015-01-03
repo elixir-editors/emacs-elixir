@@ -1,7 +1,7 @@
 ;;; elixir-mode.el --- Major mode for editing Elixir files
 
-;; Copyright 2011-2014 secondplanet
-;;           2013-2014 Samuel Tonini, Matt DeBoard, Andreas Fuchs
+;; Copyright 2011-2015 secondplanet
+;;           2013-2015 Samuel Tonini, Matt DeBoard, Andreas Fuchs
 ;; Authors: Humza Yaqoob,
 ;;          Andreas Fuchs <asf@boinkor.net>,
 ;;          Matt DeBoard
