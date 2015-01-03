@@ -245,14 +245,14 @@ for the Elixir programming language."
       (keyword-operator . ,(rx symbol-start
                                (or "not" "and" "or" "when" "in")
                                symbol-end))
-      ;; Module and submodule names start with upper case letter or `_'. This
-      ;; can then be followed by any combination of alphanumeric chars + `_'.
+      ;; Module and submodule names start with upper case letter. This
+      ;; can then be followed by any combination of alphanumeric chars.
       ;; In turn, this can be followed by a `.' which begins the notation of
       ;; a submodule, which follows the same naming pattern of the module.
       ;; Finally, like other identifiers, it can be terminated with either `?'
       ;; or `!'.
       (module-names . ,(rx symbol-start
-                           (one-or-more (any "A-Z" "_"))
+                           (one-or-more (any "A-Z"))
                            (zero-or-more (any "A-Z" "a-z" "_" "0-9"))
                            (zero-or-more
                             (and "."

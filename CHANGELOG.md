@@ -2,6 +2,10 @@
 
 ## v2.3.0-dev (unreleased)
 
+### Bugfixes
+
+  * [Syntax Highlighting] Modules don't start with underscore. This fix corrects the fontification of private function.
+
 ## v2.2.0 2014/12/31
 
 ### Enhancements
