@@ -603,6 +603,9 @@ Argument END End of the region."
   (add-to-list 'auto-mode-alist '("\\.ex\\'" . elixir-mode))
   (add-to-list 'auto-mode-alist '("\\.exs\\'" . elixir-mode)))
 
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 2)
+
 (provide 'elixir-mode)
 
 ;;; elixir-mode.el ends here
