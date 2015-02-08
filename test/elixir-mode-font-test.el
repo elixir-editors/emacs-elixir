@@ -21,12 +21,17 @@ buffer."
 (ert-deftest elixir-mode-syntax-table/fontify-regex ()
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
-   "match = ~r/foo/"
+   "match = ~r/foo/
+\"\"\"foo\"bar\"baz\"\"\""
+   (switch-to-buffer (current-buffer)) 
    (should (eq (elixir-test-face-at 1) 'font-lock-variable-name-face))
    (should (eq (elixir-test-face-at 9) 'font-lock-builtin-face))
    (should (eq (elixir-test-face-at 12) 'font-lock-string-face))
    ;; no face for regex delimiters
-   (should (eq (elixir-test-face-at 15) nil))))
+   (should (eq (elixir-test-face-at 15) nil))
+   ;; #167 Highlighting issues inside triple-quoted-string
+   (should (eq (elixir-test-face-at 25) 'font-lock-string-face))
+  ))
 
 (ert-deftest elixir-mode-syntax-table/fontify-modules-and-types ()
   :tags '(fontification syntax-table)
