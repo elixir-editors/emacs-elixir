@@ -180,6 +180,153 @@ for the Elixir programming language."
               t)
           (elixir-match-interpolation limit))))))
 
+;; lifted from python.el
+(eval-when-compile
+  (defconst elixir-rx-constituents
+    `((block-start . ,(rx symbol-start
+                          (or "def" "class" "if" "elif" "else" "try"
+                              "except" "finally" "for" "while" "with")
+                          symbol-end))
+      (dedenter . ,(rx symbol-start
+                       (or "elif" "else" "except" "finally")
+                       symbol-end))
+      (block-ender . ,(rx symbol-start
+                          (or
+                           "break" "continue" "pass" "raise" "return")
+                          symbol-end))
+      (decorator . ,(rx line-start (* space) ?@ (any letter ?_)
+                        (* (any word ?_))))
+      (defun . ,(rx symbol-start (or "def" "class") symbol-end))
+      (if-name-main . ,(rx line-start "if" (+ space) "__name__"
+                           (+ space) "==" (+ space)
+                           (any ?' ?\") "__main__" (any ?' ?\")
+                           (* space) ?:))
+      (symbol-name . ,(rx (any letter ?_) (* (any word ?_))))
+      (open-paren . ,(rx (or "{" "[" "(")))
+      (close-paren . ,(rx (or "}" "]" ")")))
+      (simple-operator . ,(rx (any ?+ ?- ?/ ?& ?^ ?~ ?| ?* ?< ?> ?= ?%)))
+      ;; FIXME: rx should support (not simple-operator).
+      (not-simple-operator . ,(rx
+                               (not
+                                (any ?+ ?- ?/ ?& ?^ ?~ ?| ?* ?< ?> ?= ?%))))
+      ;; FIXME: Use regexp-opt.
+      (operator . ,(rx (or "+" "-" "/" "&" "^" "~" "|" "*" "<" ">"
+                           "=" "%" "**" "//" "<<" ">>" "<=" "!="
+                           "==" ">=" "is" "not")))
+      ;; FIXME: Use regexp-opt.
+      (assignment-operator . ,(rx (or "=" "+=" "-=" "*=" "/=" "//=" "%=" "**="
+                                      ">>=" "<<=" "&=" "^=" "|=")))
+      (string-delimiter . ,(rx (and
+                                ;; Match even number of backslashes.
+                                (or (not (any ?\\ ?\' ?\")) point
+                                    ;; Quotes might be preceded by a escaped quote.
+                                    (and (or (not (any ?\\)) point) ?\\
+                                         (* ?\\ ?\\) (any ?\' ?\")))
+                                (* ?\\ ?\\)
+                                ;; Match single or triple quotes of any kind.
+                                (group (or "\"" "\"\"\"" "'" "'''"))))))
+    "Additional Python specific sexps for `elixir-rx'"))
+
+(defmacro elixir-rx (&rest regexps)
+    "Python mode specialized rx macro.
+This variant of `rx' supports common Python named REGEXPS."
+    (let ((rx-constituents (append elixir-rx-constituents rx-constituents)))
+      (cond ((null regexps)
+             (error "No regexp"))
+            ((cdr regexps)
+             (rx-to-string `(and ,@regexps) t))
+            (t
+             (rx-to-string (car regexps) t)))))
+
+(defsubst elixir-syntax-count-quotes (quote-char &optional point limit)
+  "Count number of quotes around point (max is 3).
+QUOTE-CHAR is the quote char to count.  Optional argument POINT is
+the point where scan starts (defaults to current point), and LIMIT
+is used to limit the scan."
+  (let ((i 0))
+    (while (and (< i 3)
+                (or (not limit) (< (+ point i) limit))
+                (eq (char-after (+ point i)) quote-char))
+      (setq i (1+ i)))
+    i))
+
+(defvar elixir-mode-syntax-table
+  (let ((table (make-syntax-table)))
+    ;; Give punctuation syntax to ASCII that normally has symbol
+    ;; syntax or has word syntax and isn't a letter.
+    (let ((symbol (string-to-syntax "_"))
+          (sst (standard-syntax-table)))
+      (dotimes (i 128)
+        (unless (= i ?_)
+          (if (equal symbol (aref sst i))
+              (modify-syntax-entry i "." table)))))
+    (modify-syntax-entry ?$ "." table)
+    (modify-syntax-entry ?% "." table)
+    ;; exceptions
+    (modify-syntax-entry ?# "<" table)
+    (modify-syntax-entry ?\n ">" table)
+    (modify-syntax-entry ?' "\"" table)
+    (modify-syntax-entry ?` "$" table)
+    table)
+  "Syntax table for Python files.")
+
+(defun elixir-syntax-stringify ()
+  "Put `syntax-table' property correctly on single/triple quotes."
+  (let* ((num-quotes (length (match-string-no-properties 1)))
+         (ppss (prog2
+                   (backward-char num-quotes)
+                   (syntax-ppss)
+                 (forward-char num-quotes)))
+         (string-start (and (not (nth 4 ppss)) (nth 8 ppss)))
+         (quote-starting-pos (- (point) num-quotes))
+         (quote-ending-pos (point))
+         (num-closing-quotes
+          (and string-start
+               (elixir-syntax-count-quotes
+                (char-before) string-start quote-starting-pos))))
+    (cond ((and string-start (= num-closing-quotes 0))
+           ;; This set of quotes doesn't match the string starting
+           ;; kind. Do nothing.
+           nil)
+          ((not string-start)
+           ;; This set of quotes delimit the start of a string.
+           (put-text-property quote-starting-pos (1+ quote-starting-pos)
+                              'syntax-table (string-to-syntax "|")))
+          ((= num-quotes num-closing-quotes)
+           ;; This set of quotes delimit the end of a string.
+           (put-text-property (1- quote-ending-pos) quote-ending-pos
+                              'syntax-table (string-to-syntax "|")))
+          ((> num-quotes num-closing-quotes)
+           ;; This may only happen whenever a triple quote is closing
+           ;; a single quoted string. Add string delimiter syntax to
+           ;; all three quotes.
+           (put-text-property quote-starting-pos quote-ending-pos
+                              'syntax-table (string-to-syntax "|"))))))
+
+(defconst elixir-syntax-propertize-function
+  (syntax-propertize-rules
+   ((elixir-rx string-delimiter)
+    (0 (ignore (elixir-syntax-stringify))))))
+
+(defconst elixir-syntax-propertize-function
+  (syntax-propertize-rules
+   ((elixir-rx string-delimiter)
+    (0 (ignore (elixir-syntax-stringify))))
+   ((rx (group "#{" (0+ (not (any "}"))) "}"))
+    (0 (ignore (elixir-syntax-propertize-interpolation))))))
+
+(defun elixir-match-interpolation (limit)
+  (let ((pos (next-single-char-property-change (point) 'elixir-interpolation
+                                               nil limit)))
+    (when (and pos (> pos (point)))
+      (goto-char pos)
+      (let ((value (get-text-property pos 'elixir-interpolation)))
+        (if (eq (car value) ?\")
+            (progn
+              (set-match-data (cdr value))
+              t)
+          (elixir-match-interpolation limit))))))
+
 (eval-when-compile
   (defconst elixir-rx-constituents
     `(
@@ -292,7 +439,7 @@ for the Elixir programming language."
 (defconst elixir-font-lock-keywords
   `(
     ;; String interpolation
-    (elixir-match-interpolation 0 font-lock-variable-name-face t)
+    ;; (elixir-match-interpolation 0 font-lock-variable-name-face t)
 
     ;; Module-defining & namespace builtins
     (,(elixir-rx (or builtin-declaration builtin-namespace)
@@ -573,7 +720,7 @@ Argument END End of the region."
   (set (make-local-variable 'comment-use-syntax) t)
   (set (make-local-variable 'tab-width) elixir-basic-offset)
   (set (make-local-variable 'syntax-propertize-function)
-       #'elixir-syntax-propertize-function)
+       elixir-syntax-propertize-function)
   (set (make-local-variable 'imenu-generic-expression)
        elixir-imenu-generic-expression)
   (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules
