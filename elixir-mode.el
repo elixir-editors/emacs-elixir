@@ -387,19 +387,6 @@ is used to limit the scan."
    ((rx (group "#{" (0+ (not (any "}"))) "}"))
     (0 (ignore (elixir-syntax-propertize-interpolation))))))
 
-(defun elixir-match-interpolation (limit)
-  (let ((pos (next-single-char-property-change (point) 'elixir-interpolation
-                                               nil limit)))
-    (when (and pos (> pos (point)))
-      (goto-char pos)
-      (let ((value (get-text-property pos 'elixir-interpolation)))
-        (if (eq (car value) ?\")
-            (progn
-              (set-match-data (cdr value))
-              t)
-          (elixir-match-interpolation limit))))))
-
-
 (defconst elixir-font-lock-keywords
   `(
     ;; String interpolation
