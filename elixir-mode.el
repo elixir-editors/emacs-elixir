@@ -300,8 +300,8 @@ for the Elixir programming language."
              (rx-to-string (car sexps) t))))))
 
 (defmacro elixir-rx (&rest regexps)
-    "Python mode specialized rx macro.
-This variant of `rx' supports common Python named REGEXPS."
+    "Elixir mode specialized rx macro.
+This variant of `rx' supports common Elixir named REGEXPS."
     (let ((rx-constituents (append elixir-rx-constituents rx-constituents)))
       (cond ((null regexps)
              (error "No regexp"))
@@ -340,7 +340,7 @@ is used to limit the scan."
     (modify-syntax-entry ?' "\"" table)
     (modify-syntax-entry ?` "$" table)
     table)
-  "Syntax table for Python files.")
+  "Syntax table for Elixir files.")
 
 (defun elixir-syntax-stringify ()
   "Put `syntax-table' property correctly on single/triple quotes."
