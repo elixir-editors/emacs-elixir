@@ -41,6 +41,9 @@
 (require 'elixir-smie)				; syntax and indentation support
 (require 'elixir-deprecated)	; deprecated messages
 
+(require 'elixir-intern)
+(require 'elixir-move)
+
 (defgroup elixir-mode nil
   "Provides font-locking, indentation and navigation support
 for the Elixir programming language."
@@ -48,6 +51,17 @@ for the Elixir programming language."
   :group 'applications
   :link '(url-link :tag "Github" "https://github.com/elixir-lang/emacs-elixir")
   :link '(emacs-commentary-link :tag "Commentary" "elixir-mode"))
+
+(defcustom elixir-verbose-p nil
+  "If functions should report results.
+
+Default is nil. "
+
+  :type 'boolean
+  :group 'elixir-mode)
+
+(defvar elixir-string-delim-re "\\(\"\"\"\\|'''\\|\"\\|'\\)"
+  "When looking at beginning of string. ")
 
 (defvar elixir-mqode--website-url
   "http://elixir-lang.org")
@@ -161,9 +175,11 @@ for the Elixir programming language."
 (defun elixir-syntax-propertize-function (start end)
   (let ((case-fold-search nil))
     (goto-char start)
-    (remove-text-properties start end '(elixir-interpolation))
+    ;;  (remove-text-properties start end '(elixir-interpolation))
     (funcall
      (syntax-propertize-rules
+      ((elixir-rx string-delimiter)
+       (0 (ignore (elixir-syntax-stringify))))
       ((rx (group "#{" (0+ (not (any "}"))) "}"))
        (0 (ignore (elixir-syntax-propertize-interpolation)))))
      start end)))
@@ -375,22 +391,17 @@ is used to limit the scan."
            (put-text-property quote-starting-pos quote-ending-pos
                               'syntax-table (string-to-syntax "|"))))))
 
-(defconst elixir-syntax-propertize-function
-  (syntax-propertize-rules
-   ((elixir-rx string-delimiter)
-    (0 (ignore (elixir-syntax-stringify))))))
-
-(defconst elixir-syntax-propertize-function
-  (syntax-propertize-rules
-   ((elixir-rx string-delimiter)
-    (0 (ignore (elixir-syntax-stringify))))
-   ((rx (group "#{" (0+ (not (any "}"))) "}"))
-    (0 (ignore (elixir-syntax-propertize-interpolation))))))
+;; (defconst elixir-syntax-propertize-function
+;;   (syntax-propertize-rules
+;;    ((elixir-rx string-delimiter)
+;;     (0 (ignore (elixir-syntax-stringify))))
+;;    ((rx (group "#{" (0+ (not (any "}"))) "}"))
+;;     (0 (ignore (elixir-syntax-propertize-interpolation))))))
 
 (defconst elixir-font-lock-keywords
   `(
     ;; String interpolation
-    ;; (elixir-match-interpolation 0 font-lock-variable-name-face t)
+    (elixir-match-interpolation 0 font-lock-variable-name-face t)
 
     ;; Module-defining & namespace builtins
     (,(elixir-rx (or builtin-declaration builtin-namespace)
@@ -433,7 +444,7 @@ is used to limit the scan."
      1 font-lock-string-face)
     (,(elixir-rx "~r"
                  (and "[" (group (one-or-more (not (any "]")))) "]"))
-     1 font-lock-string-face)
+    1 font-lock-string-face)
     (,(elixir-rx "~r"
                  (and "{" (group (one-or-more (not (any "}")))) "}"))
      1 font-lock-string-face)
@@ -671,7 +682,7 @@ Argument END End of the region."
   (set (make-local-variable 'comment-use-syntax) t)
   (set (make-local-variable 'tab-width) elixir-basic-offset)
   (set (make-local-variable 'syntax-propertize-function)
-       elixir-syntax-propertize-function)
+       #'elixir-syntax-propertize-function)
   (set (make-local-variable 'imenu-generic-expression)
        elixir-imenu-generic-expression)
   (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules
