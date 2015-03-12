@@ -27,29 +27,29 @@
 (defvar elixir-max-specpdl-size max-specpdl-size
   "Protect against eternal loop")
 
-(defun elixir--skip-to-comment-or-comma ()
+(defun elixir--skip-to-comment-or-semicolon ()
   "Returns position if comment or semicolon found. "
   (let ((orig (point)))
-    (cond ((and done (< 0 (abs (skip-chars-forward "^#," (line-end-position))))
+    (cond ((and done (< 0 (abs (skip-chars-forward "^#;" (line-end-position))))
 		(member (char-after) (list ?# ?\,)))
 	   (when (eq ?\, (char-after))
-	     (skip-chars-forward "," (line-end-position))))
-	  ((and (< 0 (abs (skip-chars-forward "^#," (line-end-position))))
+	     (skip-chars-forward ";" (line-end-position))))
+	  ((and (< 0 (abs (skip-chars-forward "^#;" (line-end-position))))
 		(member (char-after) (list ?# ?\,)))
 	   (when (eq ?\, (char-after))
-	     (skip-chars-forward "," (line-end-position))))
+	     (skip-chars-forward ";" (line-end-position))))
 	  ((not done)
 	   (end-of-line)))
     (skip-chars-backward " \t" (line-beginning-position))
     (and (< orig (point))(setq done t)
 	 done)))
 
-(defun elixir--skip-to-comma-backward (&optional limit)
-  "Fetch the beginning of statement after a comma.
+(defun elixir--skip-to-semicolon-backward (&optional limit)
+  "Fetch the beginning of statement after a semicolon.
 
 Returns position reached if point was moved. "
   (let ((orig (point)))
-    (and (< 0 (abs (skip-chars-backward "^," (or limit (line-beginning-position)))))
+    (and (< 0 (abs (skip-chars-backward "^;" (or limit (line-beginning-position)))))
 	 (skip-chars-forward " \t" (line-end-position))
 	 (setq done t)
 	 (and (< (point) orig) (point)))))
@@ -91,7 +91,7 @@ http://docs.python.org/reference/compound_stmts.html"
           (elixir-beginning-of-statement orig done limit))
          ((nth 1 pps)
           (goto-char (1- (nth 1 pps)))
-	  (elixir--skip-to-comma-backward (save-excursion (back-to-indentation)(point)))
+	  (elixir--skip-to-semicolon-backward (save-excursion (back-to-indentation)(point)))
           (setq done t)
           (elixir-beginning-of-statement orig done limit))
          ((elixir-preceding-line-backslashed-p)
@@ -108,7 +108,7 @@ http://docs.python.org/reference/compound_stmts.html"
             (elixir-beginning-of-statement orig done limit)))
 	 ;; at inline comment
          ((looking-at "[ \t]*#")
-	  (when (elixir--skip-to-comma-backward (save-excursion (back-to-indentation)(point)))
+	  (when (elixir--skip-to-semicolon-backward (save-excursion (back-to-indentation)(point)))
 	    (skip-chars-forward " \t")
 	    (unless (bobp)
 	      (elixir-beginning-of-statement orig done limit))))
@@ -122,8 +122,8 @@ http://docs.python.org/reference/compound_stmts.html"
 	 ((and (not done) (eq (char-before) ?\;))
 	  (skip-chars-backward ";")
 	  (elixir-beginning-of-statement orig done limit))
-	 ;; travel until indentation or comma
-	 ((and (not done) (elixir--skip-to-comma-backward (save-excursion (back-to-indentation)(point))))
+	 ;; travel until indentation or semicolon
+	 ((and (not done) (elixir--skip-to-semicolon-backward (save-excursion (back-to-indentation)(point))))
 	  (elixir-beginning-of-statement orig done limit))
 	 ;; at current indent
 	 ((and (not done) (not (eq 0 (skip-chars-backward " \t\r\n\f"))))
@@ -171,7 +171,7 @@ Optional argument REPEAT, the number of loops done already, is checked for elixi
           parse-sexp-ignore-comments
           forward-sexp-function
           stringchar stm pps err)
-      (unless done (elixir--skip-to-comment-or-comma))
+      (unless done (elixir--skip-to-comment-or-semicolon))
       (setq pps (parse-partial-sexp (point-min) (point)))
       ;; (origline (or origline (elixir-count-lines)))
       (cond
@@ -209,7 +209,7 @@ Optional argument REPEAT, the number of loops done already, is checked for elixi
        ;; in comment
        ((nth 4 pps)
 	(elixir--end-of-comment-intern (point))
-	(elixir--skip-to-comment-or-comma)
+	(elixir--skip-to-comment-or-semicolon)
 	(while (and (eq (char-before (point)) ?\\ )
 		    (elixir-escaped)(setq last (point)))
 	  (forward-line 1)(end-of-line))
@@ -229,15 +229,15 @@ Optional argument REPEAT, the number of loops done already, is checked for elixi
 	  (elixir-end-of-statement orig done repeat)))
        ((eq orig (point))
 	(skip-chars-forward " \t\r\n\f#'\"")
-	(elixir--skip-to-comment-or-comma)
+	(elixir--skip-to-comment-or-semicolon)
 	(elixir-end-of-statement orig done repeat))
        ((eq (current-indentation) (current-column))
-	(elixir--skip-to-comment-or-comma)
+	(elixir--skip-to-comment-or-semicolon)
 	;; (setq pps (parse-partial-sexp (point-min) (point)))
 	(unless done
 	  (elixir-end-of-statement orig done repeat)))
 
-       ((and (looking-at "[[:print:]]+$") (not done) (elixir--skip-to-comment-or-comma))
+       ((and (looking-at "[[:print:]]+$") (not done) (elixir--skip-to-comment-or-semicolon))
 	(elixir-end-of-statement orig done repeat)))
       (unless
 	  (or
