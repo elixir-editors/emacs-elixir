@@ -185,7 +185,9 @@ for the Elixir programming language."
     `(
       (atoms . ,(rx ":"
                     (or
-                     (one-or-more (any "a-z" "A-Z" "_" "\"" "'"))
+                     (and
+                      (any "a-z" "A-Z" "_" "\"" "'")
+                      (zero-or-more (any "a-z" "A-Z" "0-9" "_" "\"" "'")))
                      (and "\"" (one-or-more (not (any "\""))) "\"")
                      (and "'" (one-or-more (not (any "'"))) "'"))))
       (builtin . ,(rx symbol-start
