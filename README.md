@@ -224,7 +224,7 @@ experience, you can add the following to your `elixir-mode-hook`:
 ```
 
 Also, if you use [smartparens](https://github.com/Fuco1/smartparens) you can
-piggyback on some of it's functionality for dealing with Ruby's `do .. end`
+piggyback on some of its functionality for dealing with Ruby's `do .. end`
 blocks. A sample configuration would be:
 
 ```lisp
