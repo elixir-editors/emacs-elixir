@@ -223,6 +223,25 @@ experience, you can add the following to your `elixir-mode-hook`:
                (ruby-end-mode +1)))
 ```
 
+Also, if you use [smartparens](https://github.com/Fuco1/smartparens) you can
+piggyback on some of it's functionality for dealing with Ruby's `do .. end`
+blocks. A sample configuration would be:
+
+```lisp
+(sp-with-modes '(elixir-mode)
+  (sp-local-pair "fn" "end"
+		 :when '(("SPC" "RET"))
+		 :actions '(insert navigate))
+  (sp-local-pair "do" "end"
+		 :when '(("SPC" "RET"))
+		 :post-handlers '(sp-ruby-def-post-handler)
+		 :actions '(insert navigate))
+  (sp-local-pair "case" "end"
+		 :when '(("SPC" "RET"))
+		 :post-handlers '(sp-ruby-def-post-handler)
+		 :actions '(insert navigate)))
+```
+
 ## Elixir Tooling Integration
 
 If you looking for elixir tooling integration for emacs, check: [alchemist.el](https://github.com/tonini/alchemist.el)
