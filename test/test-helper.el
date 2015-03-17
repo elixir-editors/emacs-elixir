@@ -6,6 +6,8 @@
 ;;; Code:
 
 (require 'ert-x)
+(require 'edebug)
+(require 's)
 
 (message "Running tests on Emacs %s" emacs-version)
 
@@ -15,7 +17,8 @@
               indent-tabs-mode nil)
 
 ;; Load the elixir-mode under test
-(require 'elixir-mode)
+;; might be alchemist
+;; (require 'elixir-mode)
 
 ;; Helpers
 
@@ -62,9 +65,9 @@
            (insert indented)
            (should (equal indented ,expected-output)))))))
 
-;; (when (s-contains? "--win" (getenv "ERT_RUNNER_ARGS"))
-;;   (defun ert-runner/run-tests-batch-and-exit (selector)
-;;     (ert-run-tests-interactively selector)))
+(when (ignore-errors (s-contains? "--win" (getenv "ERT_RUNNER_ARGS")))
+  (defun ert-runner/run-tests-batch-and-exit (selector)
+    (ert-run-tests-interactively selector)))
 
 (provide 'test-helper)
 
