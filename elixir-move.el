@@ -62,10 +62,7 @@ Returns position reached if point was moved. "
   "Go to the initial line of a simple statement.
 
 For beginning of compound statement use elixir-beginning-of-block.
-For beginning of clause elixir-beginning-of-clause.
-
-Referring python program structures see for example:
-http://docs.python.org/reference/compound_stmts.html"
+For beginning of clause elixir-beginning-of-clause. "
   (interactive)
   (save-restriction
     (unless (bobp)
@@ -77,7 +74,6 @@ http://docs.python.org/reference/compound_stmts.html"
                          (parse-partial-sexp (or limit (point-min))(point))))
              (done done)
              erg)
-        ;; lp:1382788
         (unless done
           (and (< 0 (abs (skip-chars-backward " \t\r\n\f")))
                (setq pps (parse-partial-sexp (or limit (point-min))(point)))))
@@ -187,7 +183,6 @@ Avoid eternal loops due to missing string delimters etc. "
       (setq pps (parse-partial-sexp (point-min) (point)))
       ;; (origline (or origline (elixir-count-lines)))
       (cond
-       ;; wich-function-mode, lp:1235375
        ((< elixir-max-specpdl-size repeat)
         (error "elixir-end-of-statement reached loops max.
 If no error, customize `elixir-max-specpdl-size'"))

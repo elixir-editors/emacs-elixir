@@ -17,8 +17,7 @@
               indent-tabs-mode nil)
 
 ;; Load the elixir-mode under test
-;; might be alchemist
-;; (require 'elixir-mode)
+(require 'elixir-mode)
 
 ;; Helpers
 
