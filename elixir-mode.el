@@ -175,7 +175,6 @@ Default is nil. "
 (defun elixir-syntax-propertize-function (start end)
   (let ((case-fold-search nil))
     (goto-char start)
-    ;;  (remove-text-properties start end '(elixir-interpolation))
     (funcall
      (syntax-propertize-rules
       ((elixir-rx string-delimiter)
@@ -390,13 +389,6 @@ is used to limit the scan."
            ;; all three quotes.
            (put-text-property quote-starting-pos quote-ending-pos
                               'syntax-table (string-to-syntax "|"))))))
-
-;; (defconst elixir-syntax-propertize-function
-;;   (syntax-propertize-rules
-;;    ((elixir-rx string-delimiter)
-;;     (0 (ignore (elixir-syntax-stringify))))
-;;    ((rx (group "#{" (0+ (not (any "}"))) "}"))
-;;     (0 (ignore (elixir-syntax-propertize-interpolation))))))
 
 (defconst elixir-font-lock-keywords
   `(
