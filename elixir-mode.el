@@ -505,6 +505,17 @@ just return nil."
   (let* ((output (elixir-mode--execute-elixir-with-code-string-to-quoted string)))
     (elixir-quoted--initialize-buffer output)))
 
+(defun elixir-mode-fill-doc-string ()
+  (interactive)
+  (save-excursion
+    (re-search-backward "@\\(?:module\\)?doc +\"\"\"" nil t)
+    (re-search-forward "\"\"\"" nil t)
+    (set-mark (point))
+    (re-search-forward "\"\"\"" nil t)
+    (re-search-backward "^ *\"\"\"" nil t)
+    (backward-char)
+    (fill-region (point) (mark))))
+
 (defun elixir-mode-eval-on-region (beg end)
   "Evaluate the Elixir code on the marked region.
 Argument BEG Start of the region.
