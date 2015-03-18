@@ -23,7 +23,6 @@ buffer."
   (elixir-test-with-temp-buffer
       "match = ~r/foo/
 \"\"\"foo\"bar\"baz\"\"\""
-    ;; (switch-to-buffer (current-buffer))
     (should (eq (elixir-test-face-at 1) 'font-lock-variable-name-face))
     (should (eq (elixir-test-face-at 9) 'font-lock-builtin-face))
     (should (eq (elixir-test-face-at 12) 'font-lock-string-face))

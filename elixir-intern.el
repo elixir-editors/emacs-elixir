@@ -75,5 +75,27 @@ Returns position reached if point was moved. "
 	 (setq done t)
 	 (and (< (point) orig) (point)))))
 
+(defun elixir-end-of-string (&optional beginning-of-string-position)
+  "Go to end of string at point if any, if successful return position. "
+  (interactive)
+  (let ((orig (point))
+        (beginning-of-string-position (or beginning-of-string-position (and (nth 3 (parse-partial-sexp 1 (point)))(nth 8 (parse-partial-sexp 1 (point))))
+                                          (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")(match-beginning 0))))
+        erg)
+    (if beginning-of-string-position
+        (progn
+          (goto-char beginning-of-string-position)
+          (when
+              ;; work around parse-partial-sexp error
+              (and (nth 3 (parse-partial-sexp 1 (point)))(nth 8 (parse-partial-sexp 1 (point))))
+            (goto-char (nth 3 (parse-partial-sexp 1 (point)))))
+          (if (ignore-errors (setq erg (scan-sexps (point) 1)))
+              (goto-char erg)
+            (goto-char orig)))
+
+      (error (concat "elixir-end-of-string: don't see end-of-string at " (buffer-name (current-buffer)) "at pos " (point))))
+    (when (and elixir-verbose-p (interactive-p)) (message "%s" erg))
+    erg))
+
 (provide 'elixir-intern)
 ;;; elixir-intern.el ends here

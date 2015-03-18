@@ -39,44 +39,6 @@ end
 
 (defvar elixir-debug-p t)
 
-;; (ert-deftest elixir-statement-backward-test ()
-;;   (with-temp-buffer
-;;     (insert elixir-teststring-1)
-;;     (elixir-mode)
-;;     (when elixir-debug-p (switch-to-buffer (current-buffer))
-;;           (font-lock-fontify-buffer))
-;;     (elixir-statement-backward)
-;;     (should (eq (char-after) ?e))
-;;     (elixir-statement-backward)
-;;     (should (eq (char-after) ?e))
-;;     (elixir-statement-backward)
-;;     (should (eq (char-after) ?\[))
-;;     (elixir-statement-backward)
-;;     (should (eq (char-after) ?d))
-;;     (elixir-statement-backward)
-;;     (should (eq (char-after) ?e))
-;;     (elixir-statement-backward)
-;;     (should (eq (char-after) ?d))
-;;     (elixir-statement-backward)
-;;     (should (eq (char-after) ?v))
-;;     (elixir-statement-backward)
-;;     (should (eq (char-after) ?\[))
-;;     (elixir-statement-backward)
-;;     (should (eq (char-after) ?e))
-;;     (elixir-statement-backward)
-;;     (should (eq (char-after) ?d))
-;;     (elixir-statement-backward)
-;;     (should (eq (char-after) ?d))
-;;     (elixir-statement-backward)
-;;     (should (eq (char-after) ?e))
-;;     (elixir-statement-backward)
-;;     (should (eq (char-after) ?e))
-;;     (elixir-statement-backward)
-;;     (should (eq (char-after) ?M))
-
-;;     ))
-
-
 (ert-deftest elixir-beginning-of-statement-test ()
   (elixir-test-with-temp-buffer
    "\"\"\"foo\"bar\"baz\"\"\"
