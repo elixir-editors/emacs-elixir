@@ -30,14 +30,17 @@ task 'info' do
   system "#{CASK} exec #{EMACS} --version | head -1"
 end
 
-desc "Run test suite"
-task "test" do
+desc "Install package dependencies"
+task "install" do
   process_info "Install package dependencies"
   say ""
   say "#{indent(3)}Command: ", :yellow, false
   sh "cask install"
   say ""
+end
 
+desc "Run test suite"
+task "test" => [:install] do
   process_info "Run test suite"
   say ""
   system "#{CASK} exec ert-runner"
@@ -46,13 +49,7 @@ task "test" do
 end
 
 desc "Run test suite with Emacs without GUI window"
-task "test-no-gui" do
-  process_info "Install package dependencies"
-  say ""
-  say "#{indent(3)}Command: ", :yellow, false
-  sh "cask install"
-  say ""
-
+task "test-no-gui" => [:install] do
   process_info "Run test suite with --no-win"
   say ""
   system "#{CASK} exec ert-runner --no-win"
@@ -63,13 +60,7 @@ end
 
 namespace :testing do
   desc "Run indentation test suite"
-  task "indentation" do
-    process_info "Install package dependencies"
-    say ""
-    say "#{indent(3)}Command: ", :yellow, false
-    sh "cask install"
-    say ""
-
+  task "indentation" => [:install] do
     process_info "Run test suite"
     say ""
     system "#{CASK} exec ert-runner -t indentation"
@@ -78,13 +69,7 @@ namespace :testing do
   end
 
   desc "Run font highlighting test suite"
-  task "fontification" do
-    process_info "Install package dependencies"
-    say ""
-    say "#{indent(3)}Command: ", :yellow, false
-    sh "cask install"
-    say ""
-
+  task "fontification" => [:install] do
     process_info "Run test suite"
     say ""
     system "#{CASK} exec ert-runner -t fontification,syntax-table"
