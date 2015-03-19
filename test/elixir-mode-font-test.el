@@ -32,7 +32,8 @@ buffer."
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "defmodule Application.Behavior do
-  use Application.Behaviour"
+  use Application.Behaviour
+  Stand.Alone.call"
    (should (eq (elixir-test-face-at 1) 'font-lock-keyword-face))
    (should (eq (elixir-test-face-at 11) 'font-lock-type-face))
    (should (eq (elixir-test-face-at 22) 'font-lock-type-face))
@@ -41,7 +42,10 @@ buffer."
    (should (eq (elixir-test-face-at 37) 'font-lock-keyword-face))
    (should (eq (elixir-test-face-at 41) 'font-lock-type-face))
    (should (eq (elixir-test-face-at 52) 'font-lock-type-face))
-   (should (eq (elixir-test-face-at 53) 'font-lock-type-face))))
+   (should (eq (elixir-test-face-at 53) 'font-lock-type-face))
+   (should (eq (elixir-test-face-at 68) 'font-lock-type-face))
+   (should (eq (elixir-test-face-at 72) 'font-lock-type-face))
+   (should (eq (elixir-test-face-at 79) nil))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-regex-with-quote ()
   "https://github.com/elixir-lang/emacs-elixir/issues/23"

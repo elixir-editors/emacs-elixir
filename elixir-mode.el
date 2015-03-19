@@ -201,25 +201,6 @@ for the Elixir programming language."
                                       "defexception" "defstruct" "defimpl"
                                       "defcallback")
                                   symbol-end))
-      (builtin-modules . ,(rx symbol-start
-                              (or "Agent" "Application" "Atom" "Base"
-                                  "Behaviour" "Bitwise" "Builtin" "Code" "Dict"
-                                  "EEx" "Elixir" "Enum" "ExUnit" "Exception"
-                                  "File" "File.Stat" "File.Stream" "Float"
-                                  "Function" "GenEvent" "GenServer" "GenTCP"
-                                  "HashDict" "HashSet" "IO" "IO.ANSI"
-                                  "IO.Stream" "Inspect.Algebra" "Inspect.Opts"
-                                  "Integer" "Kernel" "Kernel.ParallelCompiler"
-                                  "Kernel.ParallelRequire" "Kernel.SpecialForms"
-                                  "Kernel.Typespec" "Keyword" "List" "Macro"
-                                  "Macro.Env" "Map" "Math" "Module" "Node"
-                                  "OptionParser" "OrdDict" "Path" "Port"
-                                  "Process" "Protocol" "Range" "Record" "Regex"
-                                  "Set" "Stream" "String" "StringIO"
-                                  "Supervisor" "Supervisor.Spec" "System" "Task"
-                                  "Task.Supervisor" "Tuple" "URI"
-                                  "UnboundMethod" "Version")
-                              symbol-end))
       (builtin-namespace . ,(rx symbol-start
                                 (or "import" "require" "use" "alias")
                                 symbol-end))
@@ -229,8 +210,8 @@ for the Elixir programming language."
                          anything
                          symbol-end))
       (function-declaration . ,(rx symbol-start
-                       (or "def" "defp")
-                       symbol-end))
+                                   (or "def" "defp")
+                                   symbol-end))
       ;; Match `@doc' or `@moduledoc' syntax, with or without triple quotes.
       (heredocs . ,(rx symbol-start
                        (or "@doc" "@moduledoc" "~s")
@@ -259,7 +240,7 @@ for the Elixir programming language."
                            (zero-or-more
                             (and "."
                                  (one-or-more (any "A-Z" "_"))
-                                  (zero-or-more (any "A-Z" "a-z" "_" "0-9"))))
+                                 (zero-or-more (any "A-Z" "a-z" "_" "0-9"))))
                            (optional (or "!" "?"))
                            symbol-end))
       (operators1 . ,(rx symbol-start
@@ -295,12 +276,6 @@ for the Elixir programming language."
   `(
     ;; String interpolation
     (elixir-match-interpolation 0 font-lock-variable-name-face t)
-
-    ;; Module-defining & namespace builtins
-    (,(elixir-rx (or builtin-declaration builtin-namespace)
-                 space
-                 (group module-names))
-     1 font-lock-type-face)
 
     ;; Module attributes
     (,(elixir-rx (group (or heredocs
@@ -357,6 +332,10 @@ for the Elixir programming language."
                  (and "<" (group (one-or-more (not (any ">")))) ">"))
      1 font-lock-string-face)
 
+    ;; Modules
+    (,(elixir-rx (group module-names))
+     1 font-lock-type-face)
+
     ;; Atoms and singleton-like words like true/false/nil.
     (,(elixir-rx (group atoms))
      1 elixir-atom-face)
@@ -365,8 +344,8 @@ for the Elixir programming language."
     (,(elixir-rx (group (and (one-or-more identifiers) ":")))
      1 elixir-atom-face)
 
-    ;; Built-in modules and pseudovariables
-    (,(elixir-rx (group (or builtin-modules pseudo-var)))
+    ;; Pseudovariables
+    (,(elixir-rx (group pseudo-var))
      1 font-lock-constant-face)
 
     ;; Code points
