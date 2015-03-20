@@ -28,6 +28,17 @@ buffer."
    ;; no face for regex delimiters
    (should (eq (elixir-test-face-at 15) nil))))
 
+(ert-deftest elixir-mode-syntax-table/sigils ()
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "asdfg = ~s{Capitalized noncapitalized}"
+   (should (eq (elixir-test-face-at 1) 'font-lock-variable-name-face))
+   (should (eq (elixir-test-face-at 9) 'elixir-attribute-face))
+   (should (eq (elixir-test-face-at 12) 'font-lock-string-face))
+   (should (eq (elixir-test-face-at 26) 'font-lock-string-face))
+   ;; no face for regex delimiters
+   (should (eq (elixir-test-face-at 38) nil))))
+
 (ert-deftest elixir-mode-syntax-table/fontify-modules-and-types ()
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer

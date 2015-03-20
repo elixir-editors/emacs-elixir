@@ -305,6 +305,33 @@ for the Elixir programming language."
     (,(elixir-rx (group sigils))
      1 font-lock-builtin-face)
 
+    ;; Sigil patterns. Elixir has support for eight different sigil delimiters.
+    ;; This isn't a very DRY approach here but it gets the job done.
+    (,(elixir-rx sigils
+                 (and "/" (group (one-or-more (not (any "/")))) "/"))
+     1 font-lock-string-face)
+    (,(elixir-rx sigils
+                 (and "[" (group (one-or-more (not (any "]")))) "]"))
+     1 font-lock-string-face)
+    (,(elixir-rx sigils
+                 (and "{" (group (one-or-more (not (any "}")))) "}"))
+     1 font-lock-string-face)
+    (,(elixir-rx sigils
+                 (and "(" (group (one-or-more (not (any ")")))) ")"))
+     1 font-lock-string-face)
+    (,(elixir-rx sigils
+                 (and "|" (group (one-or-more (not (any "|")))) "|"))
+     1 font-lock-string-face)
+    (,(elixir-rx sigils
+                 (and "\"" (group (one-or-more (not (any "\"")))) "\""))
+     1 font-lock-string-face)
+    (,(elixir-rx sigils
+                 (and "'" (group (one-or-more (not (any "'")))) "'"))
+     1 font-lock-string-face)
+    (,(elixir-rx sigils
+                 (and "<" (group (one-or-more (not (any ">")))) ">"))
+     1 font-lock-string-face)
+
     ;; Regex patterns. Elixir has support for eight different regex delimiters.
     ;; This isn't a very DRY approach here but it gets the job done.
     (,(elixir-rx "~r"
@@ -387,7 +414,7 @@ Argument FILE-NAME ."
 (defun elixir-quoted--initialize-buffer (quoted)
   (pop-to-buffer elixir-quoted--buffer-name)
   (setq buffer-undo-list nil) ; Get rid of undo information from
-                              ; previous expansions
+                                        ; previous expansions
   (let ((inhibit-read-only t)
         (buffer-undo-list t)) ; Ignore undo information
     (erase-buffer)
