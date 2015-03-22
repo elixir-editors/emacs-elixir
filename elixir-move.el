@@ -87,7 +87,7 @@ For beginning of clause elixir-beginning-of-clause. "
           (goto-char (nth 8 pps))
           (elixir-beginning-of-statement orig done limit))
          ((nth 1 pps)
-          (goto-char (1- (nth 1 pps)))
+          (goto-char (nth 1 pps))
           (elixir--skip-to-semicolon-backward
            (save-excursion (back-to-indentation)(point)))
           (setq done t)

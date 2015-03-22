@@ -172,29 +172,6 @@ Default is nil. "
     (put-text-property beg (1+ beg) 'elixir-interpolation
                        (cons (nth 3 context) (match-data)))))
 
-(defun elixir-syntax-propertize-function (start end)
-  (let ((case-fold-search nil))
-    (goto-char start)
-    (funcall
-     (syntax-propertize-rules
-      ((elixir-rx string-delimiter)
-       (0 (ignore (elixir-syntax-stringify))))
-      ((rx (group "#{" (0+ (not (any "}"))) "}"))
-       (0 (ignore (elixir-syntax-propertize-interpolation)))))
-     start end)))
-
-(defun elixir-match-interpolation (limit)
-  (let ((pos (next-single-char-property-change (point) 'elixir-interpolation
-                                               nil limit)))
-    (when (and pos (> pos (point)))
-      (goto-char pos)
-      (let ((value (get-text-property pos 'elixir-interpolation)))
-        (if (eq (car value) ?\")
-            (progn
-              (set-match-data (cdr value))
-              t)
-          (elixir-match-interpolation limit))))))
-
 (eval-when-compile
   (defconst elixir-rx-constituents
     `(
@@ -314,16 +291,28 @@ Default is nil. "
             (t
              (rx-to-string (car sexps) t))))))
 
-(defmacro elixir-rx (&rest regexps)
-    "Elixir mode specialized rx macro.
-This variant of `rx' supports common Elixir named REGEXPS."
-    (let ((rx-constituents (append elixir-rx-constituents rx-constituents)))
-      (cond ((null regexps)
-             (error "No regexp"))
-            ((cdr regexps)
-             (rx-to-string `(and ,@regexps) t))
-            (t
-             (rx-to-string (car regexps) t)))))
+(defun elixir-syntax-propertize-function (start end)
+  (let ((case-fold-search nil))
+    (goto-char start)
+    (funcall
+     (syntax-propertize-rules
+      ((elixir-rx string-delimiter)
+       (0 (ignore (elixir-syntax-stringify))))
+      ((rx (group "#{" (0+ (not (any "}"))) "}"))
+       (0 (ignore (elixir-syntax-propertize-interpolation)))))
+     start end)))
+
+(defun elixir-match-interpolation (limit)
+  (let ((pos (next-single-char-property-change (point) 'elixir-interpolation
+                                               nil limit)))
+    (when (and pos (> pos (point)))
+      (goto-char pos)
+      (let ((value (get-text-property pos 'elixir-interpolation)))
+        (if (eq (car value) ?\")
+            (progn
+              (set-match-data (cdr value))
+              t)
+          (elixir-match-interpolation limit))))))
 
 (defsubst elixir-syntax-count-quotes (quote-char &optional point limit)
   "Count number of quotes around point (max is 3).
