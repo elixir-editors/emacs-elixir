@@ -52,6 +52,18 @@
      (goto-char (point-min))
      ,@body))
 
+(defmacro elixir-test-with-temp-buffer-point-max (content &rest body)
+  "Evaluate BODY in a temporary buffer with CONTENT.
+
+Cursor is at end of buffer"
+  (declare (debug t)
+           (indent 1))
+  `(with-temp-buffer
+     (insert ,content)
+     (elixir-mode)
+     (font-lock-fontify-buffer)
+     ,@body))
+
 (defmacro* elixir-def-indentation-test (name args initial-contents expected-output)
   (declare (indent 2))
   `(elixir-deftest ,name ,args
