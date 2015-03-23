@@ -8,6 +8,7 @@
 (require 'ert-x)
 (require 'edebug)
 (require 's)
+(require 'cl)
 
 (message "Running tests on Emacs %s" emacs-version)
 
