@@ -43,6 +43,7 @@
 
 (require 'elixir-intern)
 (require 'elixir-move)
+(require 'elixir-move-test)
 
 (defgroup elixir-mode nil
   "Provides font-locking, indentation and navigation support

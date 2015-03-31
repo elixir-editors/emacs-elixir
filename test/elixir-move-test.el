@@ -99,6 +99,7 @@ end
   (elixir-test-with-temp-buffer
    "\"\"\"foo\"bar\"baz\"\"\"
 defmodule Hello do
+  # Some comment
   IO.puts \"Defining the function world\"
 
   def world do

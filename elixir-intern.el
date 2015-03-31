@@ -97,5 +97,12 @@ Returns position reached if point was moved. "
     (when (and elixir-verbose-p (interactive-p)) (message "%s" erg))
     erg))
 
+(defun elixir--end-of-comment-intern (pos)
+  (while (and (not (eobp))
+              (forward-comment 99999)))
+  ;; forward-comment fails sometimes
+  (and (eq pos (point)) (prog1 (forward-line 1) (back-to-indentation))
+       (while (member (char-after) (list ?# 10))(forward-line 1)(back-to-indentation))))
+
 (provide 'elixir-intern)
 ;;; elixir-intern.el ends here
