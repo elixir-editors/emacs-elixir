@@ -129,6 +129,10 @@ For beginning of clause elixir-beginning-of-clause. "
           (elixir-beginning-of-statement orig done limit))
          ;; at current indent
          ((and (not done) (not (eq 0 (skip-chars-backward " \t\r\n\f"))))
+          (elixir-beginning-of-statement orig done limit))
+         ((and (member (char-after) (list ?\" ?\'))
+               (progn (back-to-indentation) (eq ?@ (char-after))))
+          (back-to-indentation) (setq done t)
           (elixir-beginning-of-statement orig done limit)))
         ;; return nil when before comment
         (unless (and (looking-at "[ \t]*#") (looking-back "^[ \t]*"))

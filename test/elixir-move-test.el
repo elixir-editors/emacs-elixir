@@ -63,6 +63,9 @@ end
   (elixir-test-with-temp-buffer
    "\"\"\"foo\"bar\"baz\"\"\"
 defmodule Hello do
+  @moduledoc \"\"\"
+  Simple implementation  \*\*CRDT\*\* :
+  \"\"\"
   IO.puts \"Defining the function world\"
 
   def world do
@@ -88,6 +91,8 @@ end
    (should (eq (char-after) ?d))
    (elixir-statement-backward)
    (should (eq (char-after) ?I))
+   (elixir-statement-backward)
+   (should (eq (char-after) ?@))
    (elixir-statement-backward)
    (should (eq (char-after) ?d))
    (elixir-statement-backward)
