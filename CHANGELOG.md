@@ -1,3 +1,13 @@
+## v2.2.1 - 2015/05/19
+* [#186](https://github.com/elixir-lang/emacs-elixir/pull/186) - Remove undocumented failing tests.
+* [#182](https://github.com/elixir-lang/emacs-elixir/pull/182) - Remove redundant local-pair tip for smartparens users
+* [#183](https://github.com/elixir-lang/emacs-elixir/pull/183) - Fix typos in README.
+* [#176](https://github.com/elixir-lang/emacs-elixir/pull/176) - Highlight digits in atoms
+* [#173](https://github.com/elixir-lang/emacs-elixir/pull/173) - Add function to apply `fill-region` in doc strings
+* [#175](https://github.com/elixir-lang/emacs-elixir/pull/175) - Add tips for smartparens users
+* [#177](https://github.com/elixir-lang/emacs-elixir/pull/177) - Prefer Emacs over emacs.
+* [#141](https://github.com/elixir-lang/emacs-elixir/pull/141) - Add documentation line explaining how to edit Elixir templates.
+
 # Changelog
 
 ## v2.3.0-dev (unreleased)
