@@ -124,11 +124,14 @@ end"
   :tags '(fontification atom syntax-table)
   (elixir-test-with-temp-buffer
       ":oriole
-:andale"
+:andale
+:ms2pid"
     (should (eq (elixir-test-face-at 3) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 5) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 10) 'elixir-atom-face))
-    (should (eq (elixir-test-face-at 13) 'elixir-atom-face))))
+    (should (eq (elixir-test-face-at 13) 'elixir-atom-face))
+    (should (eq (elixir-test-face-at 18) 'elixir-atom-face))
+    (should (eq (elixir-test-face-at 23) 'elixir-atom-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-map-keys ()
   :tags '(fontification map syntax-table)
