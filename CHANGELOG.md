@@ -7,14 +7,7 @@
 * [#175](https://github.com/elixir-lang/emacs-elixir/pull/175) - Add tips for smartparens users
 * [#177](https://github.com/elixir-lang/emacs-elixir/pull/177) - Prefer Emacs over emacs.
 * [#141](https://github.com/elixir-lang/emacs-elixir/pull/141) - Add documentation line explaining how to edit Elixir templates.
-
-# Changelog
-
-## v2.3.0-dev (unreleased)
-
-### Bugfixes
-
-  * [Syntax Highlighting] Modules don't start with underscore. This fix corrects the fontification of private function.
+* [Syntax Highlighting] Modules don't start with underscore. This fix corrects the fontification of private function.
 
 ## v2.2.0 2014/12/31
 
