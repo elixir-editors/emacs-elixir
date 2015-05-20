@@ -88,7 +88,7 @@ defmodule FooBar do
 end")
 
 (elixir-def-indentation-test indent-do-blocks-after-linebreak-three
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 defmodule FooBar do
 def foo do
@@ -125,7 +125,7 @@ defmodule FooBar do
 end")
 
 (elixir-def-indentation-test indent-do-blocks-with-space-after-inline
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "defmodule Foo do
 def foobar do
 if true, do: IO.puts \"yay\"
