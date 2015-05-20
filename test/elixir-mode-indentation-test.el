@@ -951,6 +951,20 @@ children = [
   worker(Task, [KVServer, :accept, [4040]])
 ]")
 
+(elixir-def-indentation-test indent-after-reserved-word/1
+                             (:expected-result :failed :tags '(indentation))
+;; Will pass when #170 is resolved.
+"
+def foo(test) do
+  test_case = test.case
+  run(test_case)
+end"
+"
+def foo(test) do
+  test_case = test.case
+  run(test_case)
+end")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
