@@ -953,6 +953,7 @@ children = [
 
 (elixir-def-indentation-test indent-after-reserved-word/1
                              (:expected-result :failed :tags '(indentation))
+;; Will pass when #170 is resolved.
 "
 def foo(test) do
   test_case = test.case
