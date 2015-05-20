@@ -28,11 +28,23 @@ buffer."
    ;; no face for regex delimiters
    (should (eq (elixir-test-face-at 15) nil))))
 
+(ert-deftest elixir-mode-syntax-table/sigils ()
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "asdfg = ~s{Capitalized noncapitalized}"
+   (should (eq (elixir-test-face-at 1) 'font-lock-variable-name-face))
+   (should (eq (elixir-test-face-at 9) 'elixir-attribute-face))
+   (should (eq (elixir-test-face-at 12) 'font-lock-string-face))
+   (should (eq (elixir-test-face-at 26) 'font-lock-string-face))
+   ;; no face for regex delimiters
+   (should (eq (elixir-test-face-at 38) nil))))
+
 (ert-deftest elixir-mode-syntax-table/fontify-modules-and-types ()
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "defmodule Application.Behavior do
-  use Application.Behaviour"
+  use Application.Behaviour
+  Stand.Alone.call"
    (should (eq (elixir-test-face-at 1) 'font-lock-keyword-face))
    (should (eq (elixir-test-face-at 11) 'font-lock-type-face))
    (should (eq (elixir-test-face-at 22) 'font-lock-type-face))
@@ -41,7 +53,11 @@ buffer."
    (should (eq (elixir-test-face-at 37) 'font-lock-keyword-face))
    (should (eq (elixir-test-face-at 41) 'font-lock-type-face))
    (should (eq (elixir-test-face-at 52) 'font-lock-type-face))
-   (should (eq (elixir-test-face-at 53) 'font-lock-type-face))))
+   (should (eq (elixir-test-face-at 53) 'font-lock-type-face))
+   (should (eq (elixir-test-face-at 68) 'font-lock-type-face))
+   (should (eq (elixir-test-face-at 72) 'font-lock-type-face))
+   ;; no face for function call
+   (should (eq (elixir-test-face-at 79) nil))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-regex-with-quote ()
   "https://github.com/elixir-lang/emacs-elixir/issues/23"
@@ -125,13 +141,15 @@ end"
   (elixir-test-with-temp-buffer
       ":oriole
 :andale
-:ms2pid"
+:ms2pid
+:CapitalizedAtom"
     (should (eq (elixir-test-face-at 3) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 5) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 10) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 13) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 18) 'elixir-atom-face))
-    (should (eq (elixir-test-face-at 23) 'elixir-atom-face))))
+    (should (eq (elixir-test-face-at 23) 'elixir-atom-face))
+    (should (eq (elixir-test-face-at 26) 'elixir-atom-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-map-keys ()
   :tags '(fontification map syntax-table)
