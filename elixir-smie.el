@@ -272,6 +272,13 @@
      (cond
       ((smie-rule-sibling-p) nil)
       ((smie-rule-hanging-p) (smie-rule-parent elixir-smie-indent-basic))
+      ((and (not (smie-rule-sibling-p))
+            (not (smie-rule-hanging-p))
+            (smie-rule-parent-p "do:"))
+       ;; Dedent the line after an OP if it's after a "do:" token, which implies
+       ;; a one-line function.
+       (smie-rule-parent
+        (- (+ elixir-smie-indent-basic elixir-smie-indent-basic))))
       (t (smie-rule-parent))))
     (`(:before . "MATCH-STATEMENT-DELIMITER")
      (cond
