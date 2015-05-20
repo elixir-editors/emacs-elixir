@@ -10,7 +10,7 @@
 ;;; Code:
 
 (elixir-def-indentation-test indent-use-dot-module-newline
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "defmodule Foo do
 use GenServer.Behaviour
 
@@ -27,7 +27,7 @@ end"
 end")
 
 (elixir-def-indentation-test indent-use-dot-module
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 defmodule Foo do
 use GenServer.Behaviour
@@ -44,7 +44,7 @@ defmodule Foo do
 end")
 
 (elixir-def-indentation-test indent-do-blocks
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 defmodule Foo do
 def foobar do
@@ -61,7 +61,7 @@ defmodule Foo do
 end")
 
 (elixir-def-indentation-test indent-do-blocks-after-linebreak-two
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 defmodule FooBar do
 def foo do
@@ -142,7 +142,7 @@ end"
 end")
 
 (elixir-def-indentation-test indent-after-empty-line
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 def foo do
 a = 2
@@ -161,7 +161,7 @@ def foo do
 end")
 
 (elixir-def-indentation-test indent-function-calls-without-parens
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 test \"foo\" do
 assert true, \"should be true\"
@@ -176,7 +176,7 @@ end
 ")
 
 (elixir-def-indentation-test indent-records-correctly
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 defmodule MyModule do
 require Record
@@ -195,7 +195,7 @@ end
 ")
 
 (elixir-def-indentation-test indent-continuation-lines
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 def foo do
 has_something(x) &&
@@ -212,7 +212,7 @@ end
 ")
 
 (elixir-def-indentation-test indent-continuation-lines-with-comments/1
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 has_something(x) &&  # foo
 has_something(y) ||
@@ -225,7 +225,7 @@ has_something(x) &&  # foo
 ")
 
 (elixir-def-indentation-test indent-continuation-lines-with-comments/2
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 has_something(x) &&
 has_something(y) || # foo
@@ -238,7 +238,7 @@ has_something(x) &&
 ")
 
 (elixir-def-indentation-test indent-continuation-lines-with-comments/3
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 def str(s, sub, start_pos, end_pos) when is_binary(s) and is_binary(sub) do # and start_pos <= end_pos do
                                                                              len = end_pos-start_pos
@@ -251,7 +251,7 @@ end
 ")
 
 (elixir-def-indentation-test indent-continuation-lines-assignment
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 some_var =
 some_expr
@@ -261,7 +261,7 @@ some_var =
 ")
 
 (elixir-def-indentation-test indent-continuation-lines-assignment/2
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 next_fun =
         case raw do
@@ -277,7 +277,7 @@ next_fun =
 ")
 
 (elixir-def-indentation-test indent-continuation-lines-assignment/3
-			     (:expected-result :failed :tags '(indentation))
+                             (:expected-result :failed :tags '(indentation))
   "
 start_fun =
     fn ->
@@ -300,7 +300,7 @@ start_fun =
 
 
 (elixir-def-indentation-test indent-last-commented-line
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 defmodule Foo do
 def bar do
@@ -321,7 +321,7 @@ end
 ")
 
 (elixir-def-indentation-test indent-if
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 if condition do
 yes
@@ -332,7 +332,7 @@ if condition do
 end")
 
 (elixir-def-indentation-test indent-if-else
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 if condition do
 yes
@@ -347,7 +347,7 @@ else
 end")
 
 (elixir-def-indentation-test indent-try
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 try do
 foo
@@ -360,7 +360,7 @@ try do
 end")
 
 (elixir-def-indentation-test indent-try/after
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 try do
 foo
@@ -379,7 +379,7 @@ after
 end")
 
 (elixir-def-indentation-test indent-try/catch/after
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 try do
 foo
@@ -410,7 +410,7 @@ end
 ")
 
 (elixir-def-indentation-test indent-try/rescue/1
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 try do
 raise 'some error'
@@ -427,7 +427,7 @@ end
 ")
 
 (elixir-def-indentation-test indent-try/rescue/2
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 try do
 raise 'some error'
@@ -446,7 +446,7 @@ end
 ")
 
 (elixir-def-indentation-test indent-block-inside-fn-match
-			     (:tags '(indentation))
+                             (:tags '(indentation))
 "
 defp into(stream, device, raw) do
  fn
@@ -471,7 +471,7 @@ defp into(stream, device, raw) do
 end")
 
 (elixir-def-indentation-test indent-fn-in-assignment
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 f = fn x, y ->
 x + y
@@ -482,7 +482,7 @@ f = fn x, y ->
 end")
 
 (elixir-def-indentation-test indent-fn-as-arguments
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 Enum.map 1..10, fn x ->
 x + 1
@@ -493,7 +493,7 @@ Enum.map 1..10, fn x ->
 end")
 
 (elixir-def-indentation-test indent-list-argument-continuation-lines-nicely
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 to_process = [27, 33, 35, 11, 36, 29, 18, 37, 21, 31, 19, 10, 14, 30,
 15, 17, 23, 28, 25, 34, 22, 20, 13, 16, 32, 12, 26, 24]
@@ -504,7 +504,7 @@ to_process = [27, 33, 35, 11, 36, 29, 18, 37, 21, 31, 19, 10, 14, 30,
 ")
 
 (elixir-def-indentation-test indent-nested-fn
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "defmodule FooModule do
 def foo do
 x = fn(a, b) -> a + b end
@@ -517,7 +517,7 @@ end"
 end")
 
 (elixir-def-indentation-test indent-list-of-floats-aligns
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 [1.2,
 3.4]"
@@ -526,7 +526,7 @@ end")
  3.4]")
 
 (elixir-def-indentation-test indent-after-operator
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 defmodule Banana do
 def start do
@@ -561,7 +561,7 @@ end
 ")
 
 (elixir-def-indentation-test nested-modules
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "defmodule Mod1 do
   defmodule Mod1a do
     def start do
@@ -578,7 +578,7 @@ end"
 end")
 
 (elixir-def-indentation-test cond-comment
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 def foo() do
 cond do
@@ -601,7 +601,7 @@ end
 ")
 
 (elixir-def-indentation-test indent-heredoc
-			     (:expected-result :failed :tags '(indentation))
+                             (:expected-result :failed :tags '(indentation))
   "
 defmodule Foo do
 @doc \"\"\"
@@ -626,7 +626,7 @@ end
 ")
 
 (elixir-def-indentation-test indent-pipes
-			     (:tags '(indentation))
+                             (:tags '(indentation))
     "
 def foo(x) do
   a = x
@@ -639,7 +639,7 @@ def foo(x) do
 end")
 
 (elixir-def-indentation-test indent-inside-parens
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 x = do_something(
 :foo,
@@ -652,7 +652,7 @@ x = do_something(
 )")
 
 (elixir-def-indentation-test indent-inside-parens/2
-			     (:tags '(indentation))
+                             (:tags '(indentation))
 "
 x = do_something(:foo,
                     :bar)"
@@ -661,7 +661,7 @@ x = do_something(:foo,
                  :bar)")
 
 (elixir-def-indentation-test indent-inside-parens/3
-			     (:tags '(indentation))
+                             (:tags '(indentation))
 "
 x = do_something(:foo, fn (arg) ->
                          do_another(arg)
@@ -672,7 +672,7 @@ x = do_something(:foo, fn (arg) ->
 end)")
 
 (elixir-def-indentation-test indent-inside-parens/4
-			     (:tags '(indentation))
+                             (:tags '(indentation))
 "
 defmodule Something do
 def something do
@@ -691,7 +691,7 @@ defmodule Something do
 end")
 
 (elixir-def-indentation-test indent-inside-parens/5
-			     (:tags '(indentation))
+                             (:tags '(indentation))
 "
 defmodule IndentPlayground do
 def my_func(arr) do
@@ -712,7 +712,7 @@ defmodule IndentPlayground do
 end")
 
 (elixir-def-indentation-test indent-lone-keyword
-			     (:tags '(indentation))
+                 (:tags '(indentation))
   "
 def foo do #comment
   :bar
@@ -723,7 +723,7 @@ def foo do #comment
 end")
 
 (elixir-def-indentation-test indent-single-line-match
-			     (:tags '(indentation))
+                 (:tags '(indentation))
    "
 case x do
 a -> b
@@ -737,7 +737,7 @@ end
 ")
 
 (elixir-def-indentation-test indent-multiline-match
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 def foo do
   case is_string(x) do
@@ -763,7 +763,7 @@ end"
   )
 
 (elixir-def-indentation-test indent-multiline-match/2
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   "
 def foo do
   case is_string(x) do
@@ -791,7 +791,7 @@ end"
   )
 
 (elixir-def-indentation-test indent-mixed-match
-			     (:tags '(indentation))
+                             (:tags '(indentation))
    "
 case x do
 a -> b
@@ -809,7 +809,7 @@ end
 ")
 
 (elixir-def-indentation-test indent-after-require-Record
-			     (:tags '(indentation))
+                             (:tags '(indentation))
   ;; Mind the significant whitespace after `Record' in each case. There should
   ;; be two spaces after `Record', otherwise this test is meaningless.
   "
@@ -830,7 +830,7 @@ defmodule RSS do
 end")
 
 (elixir-def-indentation-test indent-fn-in-multiline-assignment
-			     (:expected-result :failed :tags '(indentation))
+                             (:expected-result :failed :tags '(indentation))
 "
 variable =
 fn ->
@@ -852,7 +852,7 @@ variable =
   end")
 
 (elixir-def-indentation-test indent-after-def-do-online
-			     (:tags '(indentation))
+                             (:tags '(indentation))
 "
 defmodule Greeter do
  def hello, do: IO.puts \"hello\"
@@ -874,7 +874,7 @@ defmodule Greeter do
 end")
 
 (elixir-def-indentation-test indent-binary-sequence
-			     (:tags '(indentation))
+                             (:tags '(indentation))
 "
 defmodule ExampleTest do
      test \"the truth\" do
@@ -892,7 +892,7 @@ defmodule ExampleTest do
 end")
 
 (elixir-def-indentation-test indent-binary-sequence-inside-match-block/2
-			     (:tags '(indentation))
+                             (:tags '(indentation))
 "
 case asd do
 <<c1::5, c2::5, c3::5, c4::5, c5::5, c6::5, c7::2>> ->
@@ -938,7 +938,7 @@ case asd do
 end")
 
 (elixir-def-indentation-test indent-inside-square-brackets
-			     (:tags '(indentation))
+                             (:tags '(indentation))
 "
 children = [
         supervisor(Task.Supervisor, [[name: KVServer.TaskSupervisor]]),
