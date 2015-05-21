@@ -965,7 +965,6 @@ def foo(test) do
   run(test_case)
 end")
 
-;; Will pass when #180 is resolved.
 (elixir-def-indentation-test indent-after-bitstring/1
                              (:tags '(indentation))
 "
@@ -979,6 +978,29 @@ defmodule X do
   def a, do: <<1 :: size(8)>>
   def b, do: <<2 :: size(8)>>
   def c, do: <<3 :: size(8)>>
+end")
+
+(elixir-def-indentation-test indent-after-fn/1
+                             (:tags '(indentation))
+"
+defmodule X do
+  def func do
+    Enum.filter([1,2,3],
+      fn(1) -> true
+             (2) -> false
+  (_) -> true
+      end)
+  end
+end"
+"
+defmodule X do
+  def func do
+    Enum.filter([1,2,3],
+      fn(1) -> true
+        (2) -> false
+        (_) -> true
+      end)
+  end
 end")
 
 ;; We don't want automatic whitespace cleanup here because of the significant

@@ -291,7 +291,10 @@
      (smie-rule-parent))
     ;; Closing paren on the other line
     (`(:before . "(")
-     (smie-rule-parent))
+     (cond
+      ((smie-rule-parent-p "fn")
+       (smie-rule-parent elixir-smie-indent-basic))
+      (t (smie-rule-parent))))
     (`(:before . "[")
      (cond
       ((smie-rule-hanging-p)
