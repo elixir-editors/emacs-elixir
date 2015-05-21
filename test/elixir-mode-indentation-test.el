@@ -965,6 +965,22 @@ def foo(test) do
   run(test_case)
 end")
 
+;; Will pass when #180 is resolved.
+(elixir-def-indentation-test indent-after-bitstring/1
+                             (:tags '(indentation))
+"
+defmodule X do
+  def a, do: <<1 :: size(8)>>
+      def b, do: <<2 :: size(8)>>
+          def c, do: <<3 :: size(8)>>
+end"
+"
+defmodule X do
+  def a, do: <<1 :: size(8)>>
+  def b, do: <<2 :: size(8)>>
+  def c, do: <<3 :: size(8)>>
+end")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
