@@ -284,7 +284,10 @@
      (cond
       ((and (not (smie-rule-sibling-p))
             (smie-rule-hanging-p))
-       (smie-rule-parent elixir-smie-indent-basic))))
+       (smie-rule-parent elixir-smie-indent-basic))
+      ((smie-rule-parent-p "MATCH-STATEMENT-DELIMITER")
+       (smie-rule-parent))
+      (t (smie-rule-parent elixir-smie-indent-basic))))
     (`(:before . "fn")
      (smie-rule-parent))
     (`(:before . "end")
