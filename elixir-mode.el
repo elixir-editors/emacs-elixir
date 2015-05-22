@@ -235,6 +235,7 @@ for the Elixir programming language."
       ;; Finally, like other identifiers, it can be terminated with either `?'
       ;; or `!'.
       (module-names . ,(rx symbol-start
+                           (optional "%")
                            (one-or-more (any "A-Z"))
                            (zero-or-more (any "A-Z" "a-z" "_" "0-9"))
                            (zero-or-more
