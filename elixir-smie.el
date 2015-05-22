@@ -194,7 +194,7 @@
           (forward-char)
           (self-call))
          ((looking-at elixir-smie--spaces-til-eol-regexp)
-          (move-beginning-of-line 2)
+          (forward-char)
           (self-call))
          ;; And if we're NOT on a blank line, move to the end of the line, and see
          ;; if we're looking back at a block operator.
