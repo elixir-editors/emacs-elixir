@@ -313,7 +313,8 @@
     (`(:after . "[")
      (cond
       ((smie-rule-hanging-p)
-       (smie-rule-parent elixir-smie-indent-basic))))
+       (smie-rule-parent elixir-smie-indent-basic))
+      (t elixir-smie-indent-basic)))
     (`(:before . "->")
      (cond
       ((smie-rule-hanging-p)
