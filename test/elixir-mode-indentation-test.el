@@ -1032,6 +1032,28 @@ a = a
 
 23 / 3")
 
+
+(elixir-def-indentation-test indent-list-content
+                             (:tags '(indentation))
+"
+defmodule Foo do
+  def bar do
+    [
+ :foo,
+         :bar
+    ]
+  end
+end"
+"
+defmodule Foo do
+  def bar do
+    [
+      :foo,
+      :bar
+    ]
+  end
+end")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
