@@ -1033,7 +1033,7 @@ a = a
 23 / 3")
 
 
-(elixir-def-indentation-test indent-list-content
+(elixir-def-indentation-test indent-list-elements
                              (:tags '(indentation))
 "
 defmodule Foo do
