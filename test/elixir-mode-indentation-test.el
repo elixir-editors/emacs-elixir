@@ -1003,6 +1003,35 @@ defmodule X do
   end
 end")
 
+(elixir-def-indentation-test indent-outside-block
+                             (:tags '(indentation))
+"
+  1 + 1  # => 2
+
+sum = fn(a, b) ->
+a + b
+     end
+
+sum.(1231, 3)
+
+     a = 23
+   a = a
+
+23 / 3"
+"
+1 + 1  # => 2
+
+sum = fn(a, b) ->
+  a + b
+end
+
+sum.(1231, 3)
+
+a = 23
+a = a
+
+23 / 3")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
