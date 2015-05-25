@@ -1054,6 +1054,48 @@ defmodule Foo do
   end
 end")
 
+(elixir-def-indentation-test indent-tuple-elements
+                             (:tags '(indentation))
+"
+defmodule Foo do
+  def bar do
+    {
+ :foo,
+         :bar
+    }
+  end
+end"
+"
+defmodule Foo do
+  def bar do
+    {
+      :foo,
+      :bar
+    }
+  end
+end")
+
+(elixir-def-indentation-test indent-maps-and-structs-elements
+                             (:tags '(indentation))
+"
+{
+:foo,
+         :bar
+}
+
+%GenEvent.Stream{
+             manager: manager,
+timeout: Keyword.get(options, :timeout, :infinity)}"
+"
+{
+  :foo,
+  :bar
+}
+
+%GenEvent.Stream{
+  manager: manager,
+  timeout: Keyword.get(options, :timeout, :infinity)}")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
