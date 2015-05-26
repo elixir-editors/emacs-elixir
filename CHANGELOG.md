@@ -1,3 +1,9 @@
+## v2.2.3 - 2015/05/26
+* [#202](https://github.com/elixir-lang/emacs-elixir/pull/202) - correct indentation after oneline def/if definition
+* [#200](https://github.com/elixir-lang/emacs-elixir/pull/200) - correct elements indentation for structs, maps and tuples
+* [#198](https://github.com/elixir-lang/emacs-elixir/pull/198) - indenting elements of a list correctly
+* [#196](https://github.com/elixir-lang/emacs-elixir/pull/196) - correct indentation outside of blocks
+
 ## v2.2.2 - 2015/05/22
 * [#193](https://github.com/elixir-lang/emacs-elixir/pull/193) - fix wrong indentation on empty line between existing code
 * [#195](https://github.com/elixir-lang/emacs-elixir/pull/195) - highlighting of capitalized modules when used as structs
