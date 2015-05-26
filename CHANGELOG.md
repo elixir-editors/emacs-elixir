@@ -1,4 +1,5 @@
 ## v2.2.4 - 2015/05/26
+* [#203](https://github.com/elixir-lang/emacs-elixir/pull/203) - Implement triple-quoted strings.
 
 ## v2.2.3 - 2015/05/26
 * [#202](https://github.com/elixir-lang/emacs-elixir/pull/202) - correct indentation after oneline def/if definition
