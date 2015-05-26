@@ -324,16 +324,6 @@ is used to limit the scan."
        (0 (ignore (elixir-syntax-propertize-interpolation)))))
      start end)))
 
-;; (defun elixir-syntax-propertize-function (start end)
-;;   (let ((case-fold-search nil))
-;;     (goto-char start)
-;;     (remove-text-properties start end '(elixir-interpolation))
-;;     (funcall
-;;      (syntax-propertize-rules
-;;       ((rx (group "#{" (0+ (not (any "}"))) "}"))
-;;        (0 (ignore (elixir-syntax-propertize-interpolation)))))
-;;      start end)))
-
 (defun elixir-match-interpolation (limit)
   (let ((pos (next-single-char-property-change (point) 'elixir-interpolation
                                                nil limit)))
