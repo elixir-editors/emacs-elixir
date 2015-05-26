@@ -150,6 +150,9 @@
 (defvar elixir-smie--block-operator-regexp
   (rx "->" (0+ nonl)))
 
+(defvar elixir-smie--online-def-operator-regexp
+  (rx "do:" (0+ nonl)))
+
 (defvar elixir-smie--spaces-til-eol-regexp
   (rx (and (1+ space) eol))
   "Regex representing one or more whitespace characters concluding with eol.")
@@ -241,6 +244,9 @@
       (if (elixir-smie--semi-ends-match)
           "MATCH-STATEMENT-DELIMITER"
         ";"))
+     ((looking-back elixir-smie--online-def-operator-regexp (- (point) 3) t)
+      (goto-char (match-beginning 0))
+      ";")
      ((looking-back elixir-smie--block-operator-regexp (- (point) 3) t)
       (goto-char (match-beginning 0))
       "->")
@@ -298,6 +304,10 @@
        (smie-rule-parent))))
     (`(:before . "fn")
      (smie-rule-parent))
+    (`(:before . "do:")
+     (cond
+      ((smie-rule-parent-p "def" "if")
+       (smie-rule-parent))))
     (`(:before . "end")
      (smie-rule-parent))
     ;; Closing paren on the other line
@@ -351,8 +361,7 @@
        (cond
         ((smie-rule-parent-p "after" "catch" "do" "rescue" "try")
          elixir-smie-indent-basic)
-        (t
-         (smie-rule-parent elixir-smie-indent-basic))))))
+        (t (smie-rule-parent elixir-smie-indent-basic))))))
     (`(:before . ";")
      (cond
       ((smie-rule-parent-p "after" "catch" "def" "defmodule" "defp" "do" "else"
