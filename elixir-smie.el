@@ -150,7 +150,7 @@
 (defvar elixir-smie--block-operator-regexp
   (rx "->" (0+ nonl)))
 
-(defvar elixir-smie--online-def-operator-regexp
+(defvar elixir-smie--oneline-def-operator-regexp
   (rx "do:" (0+ nonl)))
 
 (defvar elixir-smie--spaces-til-eol-regexp
@@ -244,7 +244,7 @@
       (if (elixir-smie--semi-ends-match)
           "MATCH-STATEMENT-DELIMITER"
         ";"))
-     ((looking-back elixir-smie--online-def-operator-regexp (- (point) 3) t)
+     ((looking-back elixir-smie--oneline-def-operator-regexp (- (point) 3) t)
       (goto-char (match-beginning 0))
       ";")
      ((looking-back elixir-smie--block-operator-regexp (- (point) 3) t)
