@@ -156,14 +156,14 @@ for the Elixir programming language."
   (defconst elixir-rx-constituents
     `(
       (string-delimiter . ,(rx (and
-				;; Match even number of backslashes.
-				(or (not (any ?\\ ?\' ?\")) point
-				    ;; Quotes might be preceded by a escaped quote.
-				    (and (or (not (any ?\\)) point) ?\\
-					 (* ?\\ ?\\) (any ?\' ?\")))
-				(* ?\\ ?\\)
-				;; Match single or triple quotes of any kind.
-				(group (or "\"" "\"\"\"" "'" "'''")))))      
+                                ;; Match even number of backslashes.
+                                (or (not (any ?\\ ?\' ?\")) point
+                                    ;; Quotes might be preceded by escaped quote
+                                    (and (or (not (any ?\\)) point) ?\\
+                                         (* ?\\ ?\\) (any ?\' ?\")))
+                                (* ?\\ ?\\)
+                                ;; Match single or triple quotes of any kind.
+                                (group (or "\"" "\"\"\"" "'" "'''")))))
       (atoms . ,(rx ":"
                     (or
                      (and
@@ -346,7 +346,7 @@ is used to limit the scan."
               t)
           (elixir-match-interpolation limit))))))
 
- 
+
 (defconst elixir-font-lock-keywords
   `(
     ;; String interpolation
