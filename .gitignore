@@ -2,3 +2,9 @@
 ._*
 /.cask/
 /dist/
+*.txt
+run-travis-ci.sh
+*.org
+test/variable-name-face.exs
+RCS/
+*.elc

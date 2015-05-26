@@ -6,6 +6,9 @@
 ;;; Code:
 
 (require 'ert-x)
+(require 'edebug)
+(require 's)
+(require 'cl)
 
 (message "Running tests on Emacs %s" emacs-version)
 
@@ -49,6 +52,18 @@
      (goto-char (point-min))
      ,@body))
 
+(defmacro elixir-test-with-temp-buffer-point-max (content &rest body)
+  "Evaluate BODY in a temporary buffer with CONTENT.
+
+Cursor is at end of buffer"
+  (declare (debug t)
+           (indent 1))
+  `(with-temp-buffer
+     (insert ,content)
+     (elixir-mode)
+     (font-lock-fontify-buffer)
+     ,@body))
+
 (defmacro* elixir-def-indentation-test (name args initial-contents expected-output)
   (declare (indent 2))
   `(elixir-deftest ,name ,args
@@ -62,7 +77,7 @@
            (insert indented)
            (should (equal indented ,expected-output)))))))
 
-(when (s-contains? "--win" (getenv "ERT_RUNNER_ARGS"))
+(when (ignore-errors (s-contains? "--win" (getenv "ERT_RUNNER_ARGS")))
   (defun ert-runner/run-tests-batch-and-exit (selector)
     (ert-run-tests-interactively selector)))
 

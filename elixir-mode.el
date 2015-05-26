@@ -41,6 +41,10 @@
 (require 'elixir-smie)				; syntax and indentation support
 (require 'elixir-deprecated)	; deprecated messages
 
+(require 'elixir-intern)
+(require 'elixir-move)
+(require 'elixir-move-test)
+
 (defgroup elixir-mode nil
   "Provides font-locking, indentation and navigation support
 for the Elixir programming language."
@@ -48,6 +52,17 @@ for the Elixir programming language."
   :group 'applications
   :link '(url-link :tag "Github" "https://github.com/elixir-lang/emacs-elixir")
   :link '(emacs-commentary-link :tag "Commentary" "elixir-mode"))
+
+(defcustom elixir-verbose-p nil
+  "If functions should report results.
+
+Default is nil. "
+
+  :type 'boolean
+  :group 'elixir-mode)
+
+(defvar elixir-string-delim-re "\\(\"\"\"\\|'''\\|\"\\|'\\)"
+  "When looking at beginning of string. ")
 
 (defvar elixir-mqode--website-url
   "http://elixir-lang.org")
@@ -158,28 +173,6 @@ for the Elixir programming language."
     (put-text-property beg (1+ beg) 'elixir-interpolation
                        (cons (nth 3 context) (match-data)))))
 
-(defun elixir-syntax-propertize-function (start end)
-  (let ((case-fold-search nil))
-    (goto-char start)
-    (remove-text-properties start end '(elixir-interpolation))
-    (funcall
-     (syntax-propertize-rules
-      ((rx (group "#{" (0+ (not (any "}"))) "}"))
-       (0 (ignore (elixir-syntax-propertize-interpolation)))))
-     start end)))
-
-(defun elixir-match-interpolation (limit)
-  (let ((pos (next-single-char-property-change (point) 'elixir-interpolation
-                                               nil limit)))
-    (when (and pos (> pos (point)))
-      (goto-char pos)
-      (let ((value (get-text-property pos 'elixir-interpolation)))
-        (if (eq (car value) ?\")
-            (progn
-              (set-match-data (cdr value))
-              t)
-          (elixir-match-interpolation limit))))))
-
 (eval-when-compile
   (defconst elixir-rx-constituents
     `(
@@ -262,7 +255,17 @@ for the Elixir programming language."
       (punctuation . ,(rx symbol-start
                           (or "\\" "<<" ">>" "=>" "(" ")" ":" ";" "" "[" "]")
                           symbol-end))
-      (sigils . ,(rx "~" (or "B" "C" "R" "S" "b" "c" "r" "s" "w")))))
+      (sigils . ,(rx "~" (or "B" "C" "R" "S" "b" "c" "r" "s" "w")))
+      ;; lifted from python.el
+      (string-delimiter . ,(rx (and
+                                ;; Match even number of backslashes.
+                                (or (not (any ?\\ ?\' ?\")) point
+                                    ;; Quotes might be preceded by a escaped quote.
+                                    (and (or (not (any ?\\)) point) ?\\
+                                         (* ?\\ ?\\) (any ?\' ?\")))
+                                (* ?\\ ?\\)
+                                ;; Match single or triple quotes of any kind.
+                                (group (or "\"" "\"\"\"" "'" "'''")))))))
 
   (defmacro elixir-rx (&rest sexps)
     (let ((rx-constituents (append elixir-rx-constituents rx-constituents)))
@@ -272,6 +275,94 @@ for the Elixir programming language."
              (rx-to-string `(and ,@sexps) t))
             (t
              (rx-to-string (car sexps) t))))))
+
+(defun elixir-syntax-propertize-function (start end)
+  (let ((case-fold-search nil))
+    (goto-char start)
+    (funcall
+     (syntax-propertize-rules
+      ((elixir-rx string-delimiter)
+       (0 (ignore (elixir-syntax-stringify))))
+      ((rx (group "#{" (0+ (not (any "}"))) "}"))
+       (0 (ignore (elixir-syntax-propertize-interpolation)))))
+     start end)))
+
+(defun elixir-match-interpolation (limit)
+  (let ((pos (next-single-char-property-change (point) 'elixir-interpolation
+                                               nil limit)))
+    (when (and pos (> pos (point)))
+      (goto-char pos)
+      (let ((value (get-text-property pos 'elixir-interpolation)))
+        (if (eq (car value) ?\")
+            (progn
+              (set-match-data (cdr value))
+              t)
+          (elixir-match-interpolation limit))))))
+
+(defsubst elixir-syntax-count-quotes (quote-char &optional point limit)
+  "Count number of quotes around point (max is 3).
+QUOTE-CHAR is the quote char to count.  Optional argument POINT is
+the point where scan starts (defaults to current point), and LIMIT
+is used to limit the scan."
+  (let ((i 0))
+    (while (and (< i 3)
+                (or (not limit) (< (+ point i) limit))
+                (eq (char-after (+ point i)) quote-char))
+      (setq i (1+ i)))
+    i))
+
+(defvar elixir-mode-syntax-table
+  (let ((table (make-syntax-table)))
+    ;; Give punctuation syntax to ASCII that normally has symbol
+    ;; syntax or has word syntax and isn't a letter.
+    (let ((symbol (string-to-syntax "_"))
+          (sst (standard-syntax-table)))
+      (dotimes (i 128)
+        (unless (= i ?_)
+          (if (equal symbol (aref sst i))
+              (modify-syntax-entry i "." table)))))
+    (modify-syntax-entry ?$ "." table)
+    (modify-syntax-entry ?% "." table)
+    ;; exceptions
+    (modify-syntax-entry ?# "<" table)
+    (modify-syntax-entry ?\n ">" table)
+    (modify-syntax-entry ?' "\"" table)
+    (modify-syntax-entry ?` "$" table)
+    table)
+  "Syntax table for Elixir files.")
+
+(defun elixir-syntax-stringify ()
+  "Put `syntax-table' property correctly on single/triple quotes."
+  (let* ((num-quotes (length (match-string-no-properties 1)))
+         (ppss (prog2
+                   (backward-char num-quotes)
+                   (syntax-ppss)
+                 (forward-char num-quotes)))
+         (string-start (and (not (nth 4 ppss)) (nth 8 ppss)))
+         (quote-starting-pos (- (point) num-quotes))
+         (quote-ending-pos (point))
+         (num-closing-quotes
+          (and string-start
+               (elixir-syntax-count-quotes
+                (char-before) string-start quote-starting-pos))))
+    (cond ((and string-start (= num-closing-quotes 0))
+           ;; This set of quotes doesn't match the string starting
+           ;; kind. Do nothing.
+           nil)
+          ((not string-start)
+           ;; This set of quotes delimit the start of a string.
+           (put-text-property quote-starting-pos (1+ quote-starting-pos)
+                              'syntax-table (string-to-syntax "|")))
+          ((= num-quotes num-closing-quotes)
+           ;; This set of quotes delimit the end of a string.
+           (put-text-property (1- quote-ending-pos) quote-ending-pos
+                              'syntax-table (string-to-syntax "|")))
+          ((> num-quotes num-closing-quotes)
+           ;; This may only happen whenever a triple quote is closing
+           ;; a single quoted string. Add string delimiter syntax to
+           ;; all three quotes.
+           (put-text-property quote-starting-pos quote-ending-pos
+                              'syntax-table (string-to-syntax "|"))))))
 
 (defconst elixir-font-lock-keywords
   `(
@@ -340,7 +431,7 @@ for the Elixir programming language."
      1 font-lock-string-face)
     (,(elixir-rx "~r"
                  (and "[" (group (one-or-more (not (any "]")))) "]"))
-     1 font-lock-string-face)
+    1 font-lock-string-face)
     (,(elixir-rx "~r"
                  (and "{" (group (one-or-more (not (any "}")))) "}"))
      1 font-lock-string-face)
