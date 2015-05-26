@@ -1,3 +1,5 @@
+## v2.2.4 - 2015/05/26
+
 ## v2.2.3 - 2015/05/26
 * [#202](https://github.com/elixir-lang/emacs-elixir/pull/202) - correct indentation after oneline def/if definition
 * [#200](https://github.com/elixir-lang/emacs-elixir/pull/200) - correct elements indentation for structs, maps and tuples
