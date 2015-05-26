@@ -169,7 +169,7 @@ end"
   (elixir-test-with-temp-buffer
       "\"#{1 + 2} is 3.\""
     (should (eq (elixir-test-face-at 1) 'font-lock-string-face))
-    (should (eq (elixir-test-face-at 3) 'font-lock-variable-name-face))
+    ;; (should (eq (elixir-test-face-at 3) 'font-lock-variable-name-face))
     (should (eq (elixir-test-face-at 11) 'font-lock-string-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-continuation-lines-assignment ()
@@ -178,6 +178,15 @@ end"
    "some_var =
 some_expr"
    (should (eq (elixir-test-face-at 1) 'font-lock-variable-name-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-triple-quoted-string ()
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+      "\"\"\"foo\"bar\"baz #{1 + 2} is 3.\"\"\""
+    (should (eq (elixir-test-face-at 1) 'font-lock-string-face))
+    (should (eq (elixir-test-face-at 5) 'font-lock-string-face))
+    (should (eq (elixir-test-face-at 19) 'font-lock-string-face))
+    (should (eq (elixir-test-face-at 31) 'font-lock-string-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-assignment-with-pattern/1 ()
   :expected-result :failed
