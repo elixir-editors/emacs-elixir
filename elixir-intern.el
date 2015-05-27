@@ -24,36 +24,36 @@
 
 ;;; Code:
 
-(defvar elixir-verbose-p nil)
+(defvar elixir-mode-verbose-p nil)
 
-(defvar elixir-string-delim-re "\\(\"\"\"\\|'''\\|\"\\|'\\)"
+(defvar elixir-mode-string-delim-re "\\(\"\"\"\\|'''\\|\"\\|'\\)"
   "When looking at beginning of string. ")
 
-(defvar elixir-max-specpdl-size max-specpdl-size
+(defvar elixir-mode-max-specpdl-size max-specpdl-size
   "Protect against eternal loop")
 
-(defmacro elixir-escaped ()
+(defmacro elixir-mode-escaped ()
   "Return t if char is preceded by an odd number of backslashes. "
   `(save-excursion
      (< 0 (% (abs (skip-chars-backward "\\\\")) 2))))
 
-(defmacro elixir-preceding-line-backslashed-p ()
+(defmacro elixir-mode-preceding-line-backslashed-p ()
   "Return t if preceding line is a backslashed continuation line. "
   `(save-excursion
      (beginning-of-line)
      (skip-chars-backward " \t\r\n\f")
      (and (eq (char-before (point)) ?\\ )
-          (elixir-escaped))))
+          (elixir-mode-escaped))))
 
-(defmacro elixir-current-line-backslashed-p ()
+(defmacro elixir-mode-current-line-backslashed-p ()
   "Return t if current line is a backslashed continuation line. "
   `(save-excursion
      (end-of-line)
      (skip-chars-backward " \t\r\n\f")
      (and (eq (char-before (point)) ?\\ )
-          (elixir-escaped))))
+          (elixir-mode-escaped))))
 
-(defun elixir--skip-to-comment-or-comma ()
+(defun elixir-mode--skip-to-comment-or-comma ()
   "Returns position if comment or semicolon found. "
   (let ((orig (point)))
     (cond ((and done (< 0 (abs (skip-chars-forward "^#," (line-end-position))))
@@ -70,7 +70,7 @@
     (and (< orig (point))(setq done t)
 	 done)))
 
-(defun elixir--skip-to-comma-backward (&optional limit)
+(defun elixir-mode--skip-to-comma-backward (&optional limit)
   "Fetch the beginning of statement after a comma.
 
 Returns position reached if point was moved. "
@@ -80,7 +80,7 @@ Returns position reached if point was moved. "
 	 (setq done t)
 	 (and (< (point) orig) (point)))))
 
-(defun elixir-end-of-string (&optional beginning-of-string-position)
+(defun elixir-mode-end-of-string (&optional beginning-of-string-position)
   "Go to end of string at point if any, if successful return position. "
   (interactive)
   (let ((orig (point))
@@ -98,11 +98,11 @@ Returns position reached if point was moved. "
               (goto-char erg)
             (goto-char orig)))
 
-      (error (concat "elixir-end-of-string: don't see end-of-string at " (buffer-name (current-buffer)) "at pos " (point))))
-    (when (and elixir-verbose-p (interactive-p)) (message "%s" erg))
+      (error (concat "elixir-mode-end-of-string: don't see end-of-string at " (buffer-name (current-buffer)) "at pos " (point))))
+    (when (and elixir-mode-verbose-p (interactive-p)) (message "%s" erg))
     erg))
 
-(defun elixir--end-of-comment-intern (pos)
+(defun elixir-mode--end-of-comment-intern (pos)
   (while (and (not (eobp))
               (forward-comment 99999)))
   ;; forward-comment fails sometimes

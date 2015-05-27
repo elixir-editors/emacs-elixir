@@ -5,7 +5,7 @@
 
 ;;; Code:
 
-(defvar elixir-teststring-1 "
+(defvar elixir-mode-teststring-1 "
 defmodule MyApp.Mixfile do
   def project do
     [app: :my_app,
@@ -37,30 +37,30 @@ defmodule MyApp.Mixfile do
 end
 ")
 
-(defvar elixir-debug-p t)
+(defvar elixir-mode-debug-p t)
 
-(ert-deftest elixir-statement-backward-test ()
+(ert-deftest elixir-mode-statement-backward-test ()
   :tags '(navigation)
   (with-temp-buffer
-    (insert elixir-teststring-1)
+    (insert elixir-mode-teststring-1)
     (elixir-mode)
-    (when elixir-debug-p (switch-to-buffer (current-buffer))
+    (when elixir-mode-debug-p (switch-to-buffer (current-buffer))
           (font-lock-fontify-buffer))
-    (elixir-statement-backward)
+    (elixir-mode-statement-backward)
     (should (eq (char-after) ?e))
-    (elixir-statement-backward)
+    (elixir-mode-statement-backward)
     (should (eq (char-after) ?e))
-    (elixir-statement-backward)
+    (elixir-mode-statement-backward)
     (should (eq (char-after) ?\[))
-    (elixir-statement-backward)
+    (elixir-mode-statement-backward)
     (should (eq (char-after) ?d))
-    (elixir-statement-backward)
+    (elixir-mode-statement-backward)
     (should (eq (char-after) ?e))
-    (elixir-statement-backward)
+    (elixir-mode-statement-backward)
     (should (eq (char-after) ?\[))
     ))
 
-(ert-deftest elixir-beginning-of-statement-test ()
+(ert-deftest elixir-mode-beginning-of-statement-test ()
   :tags '(navigation)
   (elixir-test-with-temp-buffer
    "\"\"\"foo\"bar\"baz\"\"\"
@@ -79,30 +79,30 @@ end
 "
    (elixir-mode)
    (goto-char (point-max))
-   (when elixir-debug-p (switch-to-buffer (current-buffer))
+   (when elixir-mode-debug-p (switch-to-buffer (current-buffer))
          (font-lock-fontify-buffer))
-   (elixir-statement-backward)
+   (elixir-mode-statement-backward)
    (should (eq (char-after) ?e))
-   (elixir-statement-backward)
+   (elixir-mode-statement-backward)
    (should (eq (char-after) ?I))
-   (elixir-statement-backward)
+   (elixir-mode-statement-backward)
    (should (eq (char-after) ?e))
-   (elixir-statement-backward)
+   (elixir-mode-statement-backward)
    (should (eq (char-after) ?I))
-   (elixir-statement-backward)
+   (elixir-mode-statement-backward)
    (should (eq (char-after) ?d))
-   (elixir-statement-backward)
+   (elixir-mode-statement-backward)
    (should (eq (char-after) ?I))
-   (elixir-statement-backward)
+   (elixir-mode-statement-backward)
    (should (eq (char-after) ?@))
-   (elixir-statement-backward)
+   (elixir-mode-statement-backward)
    (should (eq (char-after) ?d))
-   (elixir-statement-backward)
+   (elixir-mode-statement-backward)
    (should (eq (char-after) ?\"))
-   (should-not (elixir-statement-backward))
+   (should-not (elixir-mode-statement-backward))
 ))
 
-(ert-deftest elixir-end-of-statement-test ()
+(ert-deftest elixir-mode-end-of-statement-test ()
   :tags '(navigation)
   (elixir-test-with-temp-buffer
    "\"\"\"foo\"bar\"baz\"\"\"
@@ -118,25 +118,25 @@ defmodule Hello do
 end
 "
    (elixir-mode)
-   (when elixir-debug-p (switch-to-buffer (current-buffer))
+   (when elixir-mode-debug-p (switch-to-buffer (current-buffer))
          (font-lock-fontify-buffer))
-   (elixir-statement-forward)
+   (elixir-mode-statement-forward)
    (should (eq (char-before) ?\"))
-   (elixir-statement-forward)
+   (elixir-mode-statement-forward)
    (should (eq (char-before) ?o))
-   (elixir-statement-forward)
+   (elixir-mode-statement-forward)
    (should (eq (char-before) ?\"))
-   (elixir-statement-forward)
+   (elixir-mode-statement-forward)
    (should (eq (char-before) ?o))
-   (elixir-statement-forward)
+   (elixir-mode-statement-forward)
    (should (eq (char-before) ?\"))
-   (elixir-statement-forward)
+   (elixir-mode-statement-forward)
    (should (eq (char-before) ?d))
-   (elixir-statement-forward)
+   (elixir-mode-statement-forward)
    (should (eq (char-before) ?\"))
-   (elixir-statement-forward)
+   (elixir-mode-statement-forward)
    (should (eq (char-before) ?d))
-   (should-not (elixir-statement-forward))
+   (should-not (elixir-mode-statement-forward))
    ))
 
 (provide 'elixir-move-test)
