@@ -38,8 +38,11 @@
 (require 'comint)             ; for interactive REPL
 (require 'easymenu)           ; for menubar features
 
-(require 'elixir-smie)				; syntax and indentation support
+(require 'elixir-smie) ; syntax and indentation support
 (require 'elixir-deprecated)	; deprecated messages
+
+(require 'elixir-intern)
+(require 'elixir-move)
 
 (defgroup elixir-mode nil
   "Provides font-locking, indentation and navigation support
