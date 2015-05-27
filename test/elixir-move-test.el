@@ -40,6 +40,7 @@ end
 (defvar elixir-debug-p t)
 
 (ert-deftest elixir-statement-backward-test ()
+  :tags '(navigation)
   (with-temp-buffer
     (insert elixir-teststring-1)
     (elixir-mode)
@@ -60,6 +61,7 @@ end
     ))
 
 (ert-deftest elixir-beginning-of-statement-test ()
+  :tags '(navigation)
   (elixir-test-with-temp-buffer
    "\"\"\"foo\"bar\"baz\"\"\"
 defmodule Hello do
@@ -101,6 +103,7 @@ end
 ))
 
 (ert-deftest elixir-end-of-statement-test ()
+  :tags '(navigation)
   (elixir-test-with-temp-buffer
    "\"\"\"foo\"bar\"baz\"\"\"
 defmodule Hello do

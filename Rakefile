@@ -76,6 +76,16 @@ namespace :testing do
 
     exit_when_failed!("Test suite failed!\n")
   end
+
+  desc "Run font navigation test suite"
+  task "navigation" => [:install] do
+    process_info "Run test suite"
+    say ""
+    system "#{CASK} exec ert-runner -t navigation"
+
+    exit_when_failed!("Test suite failed!\n")
+  end
+
 end
 
 def git_changes(version, version_tag)

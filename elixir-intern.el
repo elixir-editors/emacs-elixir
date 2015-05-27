@@ -1,4 +1,4 @@
-;;; elixir-intern.el --- Helpers functions
+;;; elixir-intern.el --- Helper functions
 
 ;; Copyright (C) 2015  Andreas Roehler
 
