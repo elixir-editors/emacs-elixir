@@ -2,3 +2,6 @@
 ._*
 /.cask/
 /dist/
+commit.txt
+RCS/
+test/RCS/
