@@ -39,6 +39,78 @@ end
 
 (defvar elixir-debug-p t)
 
+
+(ert-deftest elixir-toplevel-backward-test ()
+  :tags '(navigation)
+  (elixir-test-with-temp-buffer
+     "\"\"\"foo\"bar\"baz\"\"\"
+defmodule Hello do
+  @moduledoc \"\"\"
+  Simple implementation  \*\*CRDT\*\* :
+  \"\"\"
+  IO.puts \"Defining the function world\"
+
+  def world do
+    IO.puts \"Hello World\"
+  end
+
+  IO.puts \"Function world defined\"
+end
+"
+   (elixir-mode)
+   (goto-char (point-min))
+   (search-forward "Hello" nil t) 
+    (elixir-top-level-backward)
+    (should (eq (char-after) ?d))
+    (should (looking-at "defmodule")))) 
+
+
+(ert-deftest elixir-toplevel-forward-test ()
+  :tags '(navigation)
+  (elixir-test-with-temp-buffer
+     "\"\"\"foo\"bar\"baz\"\"\"
+defmodule Hello do
+  @moduledoc \"\"\"
+  Simple implementation  \*\*CRDT\*\* :
+  \"\"\"
+  IO.puts \"Defining the function world\"
+
+  def world do
+    IO.puts \"Hello World\"
+  end
+
+  IO.puts \"Function world defined\"
+end
+"
+   (elixir-mode)
+   (goto-char (point-min))
+   (search-forward "Hello" nil t) 
+    (elixir-top-level-forward)
+    (should (eq (char-before) ?d))
+    (should (looking-back "end"))))
+
+(ert-deftest elixir-toplevel-forward-bol-test ()
+  :tags '(navigation)
+  (elixir-test-with-temp-buffer
+     "\"\"\"foo\"bar\"baz\"\"\"
+defmodule Hello do
+  @moduledoc \"\"\"
+  Simple implementation  \*\*CRDT\*\* :
+  \"\"\"
+  IO.puts \"Defining the function world\"
+
+  def world do
+    IO.puts \"Hello World\"
+  end
+
+  IO.puts \"Function world defined\"
+end
+"
+   (goto-char (point-min))
+   (search-forward "Hello" nil t) 
+    (elixir-top-level-forward-bol)
+    (should (eolp))))
+
 (ert-deftest elixir-statement-backward-test ()
   :tags '(navigation)
   (with-temp-buffer

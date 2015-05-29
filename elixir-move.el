@@ -266,16 +266,92 @@ If no error, customize `elixir-max-specpdl-size'"))
     (when (and elixir-verbose-p (interactive-p)) (message "%s" erg))
     erg))
 
-(defun elixir-goto-statement-below ()
-  "Goto beginning of next statement. "
+(defun elixir-down-statement ()
+  "Go to the beginning of next statement downwards in buffer.
+
+Return position if statement found, nil otherwise. "
+  (interactive)
+  (let* ((orig (point))
+         (erg
+          (cond ((elixir--end-of-statement-p)
+                 (and (elixir-end-of-statement) (elixir-beginning-of-statement)))
+                ((ignore-errors (< orig (progn (elixir-end-of-statement) (elixir-beginning-of-statement))))
+                 (point))
+                (t (goto-char orig) (and (elixir-end-of-statement) (elixir-end-of-statement)(elixir-beginning-of-statement))))))
+    (when (and elixir-verbose-p (interactive-p)) (message "%s" erg))
+    erg))
+
+;; Generated code might expect both symbols
+(defalias 'elixir-beginning-of-top-level-bol
+  'elixir-beginning-of-top-level)
+(defalias 'elixir-top-level-backward 'elixir-beginning-of-top-level)
+(defun elixir-beginning-of-top-level ()
+  "Go up to beginning of statments until level of indentation is null.
+
+Returns position if successful, nil otherwise "
+  (interactive)
+  (let (erg)
+    (unless (bobp)
+      (while (and (not (bobp)) (setq erg (elixir-beginning-of-statement))
+                  (or (< 0 (current-indentation))(looking-at "\\_<end\\_>"))))
+      (when (and elixir-verbose-p (interactive-p)) (message "%s" erg))
+      erg)))
+
+(defun elixir--end-of-top-level-intern ()
+  (unless (elixir--beginning-of-statement-p)
+    (elixir-beginning-of-statement))
+  (unless (eq 0 (current-column))
+    (elixir-beginning-of-top-level))
+  (unless (< orig (point))
+    (while (and
+	    (not (eobp))
+	    (save-excursion
+	      (elixir-end-of-statement)
+	      (setq last (point)))
+	    (elixir-down-statement)(< 0 (current-indentation)))))
+  (if (looking-at (elixir-rx builtin-declaration))
+      (elixir-end-of-top-level)
+    (elixir-end-of-statement)))
+
+(defalias 'elixir-top-level-forward 'elixir-end-of-top-level)
+(defun elixir-end-of-top-level ()
+  "Go to end of a top-level form.
+
+Returns position if successful, nil otherwise
+
+Referring python program structures see for example:
+http://docs.python.org/reference/compound_stmts.html"
   (interactive)
   (let ((orig (point))
-        (erg (elixir-end-of-statement)))
-    (elixir-beginning-of-statement)
-    (when (< (point) orig)
-      (goto-char erg)
-      (elixir-end-of-statement)
-      (elixir-beginning-of-statement))))
+        erg last)
+    (unless (eobp)
+      (and (elixir--end-of-top-level-intern)
+	   (< orig (point))
+	   (setq erg (point))))
+    (when (and elixir-verbose-p (interactive-p)) (message "%s" erg))
+    erg))
+
+(defalias 'elixir-top-level-forward-bol 'elixir-end-of-top-level-bol)
+(defun elixir-end-of-top-level-bol ()
+  "Go to beginning of line after end of a top-level form.
+
+Returns position if successful, nil otherwise
+
+Referring python program structures see for example:
+http://docs.python.org/reference/compound_stmts.html"
+  (interactive)
+  (let ((orig (point))
+        erg last)
+    (unless (eobp)
+      (when (elixir--end-of-top-level-intern)
+	(if (eobp)
+	    (newline)
+	  (forward-line 1)
+	  (beginning-of-line)))
+      (when (< orig (point))
+	(setq erg (point))))
+    (when (and elixir-verbose-p (interactive-p)) (message "%s" erg))
+    erg))
 
 (provide 'elixir-move)
 ;;; elixir-move.el ends here
