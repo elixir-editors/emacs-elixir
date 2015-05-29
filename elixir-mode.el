@@ -68,14 +68,14 @@ for the Elixir programming language."
   "Keymap used in `elixir-mode'.")
 
 (defvar elixir-imenu-generic-expression
-  '(("Modules" "^\\s-*defmodule[ \n\t]+\\([A-Z][A-Za-z0-9._]+\\)\\s-+do.*$" 1)
-    ("Public Functions" "^\\s-*def[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*[ \t\n]+do.*" 1)
-    ("Private Functions" "^\\s-*defp[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*[ \t\n]+do.*" 1)
-    ("Public Macros" "^\\s-*defmacro[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*[ \t\n]+do.*" 1)
-    ("Private Macros" "^\\s-*defmacrop[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*[ \t\n]+do.*" 1)
-    ("Delegates" "^\\s-*defdelegate[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*[ \t\n]+do.*" 1)
-    ("Overridables" "^\\s-*defoverridable[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*[ \t\n]+do.*" 1)
-    ("Tests" "^\\s-*test[ \t\n]+\"?\\(:?[a-z0-9_@+() \t-]+\\)\"?[ \t\n]+do.*" 1))
+  '(("Modules" "^\\s-*defmodule[ \n\t]+\\([A-Z][A-Za-z0-9._]+\\)\\s-+.*$" 1)
+    ("Public Functions" "^\\s-*def[ \n\t]+\\([a-z0-9_!\\?]+\\)\\(([^)]*)\\)*.*" 1)
+    ("Private Functions" "^\\s-*defp[ \n\t]+\\([a-z0-9_!\\?]+\\)\\(([^)]*)\\)*.*" 1)
+    ("Public Macros" "^\\s-*defmacro[ \n\t]+\\([a-z0-9_!\\?]+\\)\\(([^)]*)\\)*.*" 1)
+    ("Private Macros" "^\\s-*defmacrop[ \n\t]+\\([a-z0-9_!\\?]+\\)\\(([^)]*)\\)*.*" 1)
+    ("Delegates" "^\\s-*defdelegate[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*.*" 1)
+    ("Overridables" "^\\s-*defoverridable[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*.*" 1)
+    ("Tests" "^\\s-*test[ \t\n]+\"?\\(:?[a-z0-9_@+() \t-]+\\)\"?[ \t\n]+.*" 1))
   "Imenu pattern for `elixir-mode'.")
 
 (defgroup elixir nil
