@@ -107,6 +107,24 @@ for the Elixir programming language."
   :type 'string
   :group 'elixir)
 
+(defcustom elixir-verbose-p nil
+  "If functions should report results.
+
+Default is nil. "
+
+  :type 'boolean
+  :tag "elixir-verbose-p"
+  :group 'elixir)
+
+(defcustom elixir-debug-p nil
+  "When non-nil, keep resp. store information useful for debugging.
+
+Temporary files are not deleted. Other functions might implement
+some logging etc. "
+  :type 'boolean
+  :tag "elixir-debug-p"
+  :group 'elixir)
+
 (defvar elixir-mode--eval-filename "elixir-mode-tmp-eval-file.exs")
 
 (defvar elixir-quoted--buffer-name "*elixir-quoted*")
@@ -302,7 +320,6 @@ is used to limit the scan."
            (put-text-property quote-starting-pos quote-ending-pos
                               'syntax-table (string-to-syntax "|"))))))
 
-
 (defun elixir-syntax-propertize-interpolation ()
   (let* ((beg (match-beginning 0))
          (context (save-excursion (save-match-data (syntax-ppss beg)))))
@@ -338,7 +355,6 @@ is used to limit the scan."
               (set-match-data (cdr value))
               t)
           (elixir-match-interpolation limit))))))
-
 
 (defconst elixir-font-lock-keywords
   `(

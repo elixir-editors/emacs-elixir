@@ -115,5 +115,28 @@ Returns position reached if point was moved. "
          (setq done t)
          (and (< (point) orig) (point)))))
 
+(defun elixir--beginning-of-statement-p ()
+  "Returns position, if cursor is at the beginning of a `statement', nil otherwise. "
+  (let ((orig (point))
+        erg)
+    (save-excursion
+      (unless (and (eolp) (not (empty-line-p)))
+        (elixir-end-of-statement))
+      (elixir-beginning-of-statement)
+      (when (eq orig (point))
+        (setq erg orig))
+      erg)))
+
+(defun elixir--end-of-statement-p ()
+  "Returns position, if cursor is at the end of a statement, nil otherwise. "
+  (let ((orig (point))
+	erg)
+    (save-excursion
+      (elixir-beginning-of-statement)
+      (elixir-end-of-statement)
+      (when (eq orig (point))
+	(setq erg orig))
+      erg)))
+
 (provide 'elixir-intern)
 ;;; elixir-intern.el ends here
