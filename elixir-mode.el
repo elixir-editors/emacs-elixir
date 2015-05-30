@@ -326,13 +326,6 @@ is used to limit the scan."
     (put-text-property beg (1+ beg) 'elixir-interpolation
                        (cons (nth 3 context) (match-data)))))
 
-(defconst elixir-syntax-propertize-function
-  (syntax-propertize-rules
-   ((elixir-rx string-delimiter)
-    (0 (ignore (elixir-syntax-stringify))))
-   ((rx (group "#{" (0+ (not (any "}"))) "}"))
-    (0 (ignore (elixir-syntax-propertize-interpolation))))))
-
 (defun elixir-syntax-propertize-function (start end)
   (let ((case-fold-search nil))
     (goto-char start)
