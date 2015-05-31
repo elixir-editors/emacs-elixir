@@ -330,6 +330,10 @@
       ((smie-rule-hanging-p)
        (smie-rule-parent elixir-smie-indent-basic))
       (t elixir-smie-indent-basic)))
+    (`(:before . "if")
+     (cond
+      ((smie-rule-parent-p ";")
+       (smie-rule-parent))))
     (`(:before . "->")
      (cond
       ((smie-rule-hanging-p)
@@ -364,9 +368,13 @@
         (t (smie-rule-parent elixir-smie-indent-basic))))))
     (`(:before . ";")
      (cond
+      ((and (smie-rule-parent-p "if")
+            (smie-rule-hanging-p))
+       (smie-rule-parent))
       ((smie-rule-parent-p "after" "catch" "def" "defmodule" "defp" "do" "else"
                            "fn" "if" "rescue" "try" "unless")
-       (smie-rule-parent elixir-smie-indent-basic))))
+       (smie-rule-parent elixir-smie-indent-basic))
+     ))
     (`(:after . ";")
      (cond
       ((smie-rule-parent-p "def")
