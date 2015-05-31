@@ -368,6 +368,16 @@
         (t (smie-rule-parent elixir-smie-indent-basic))))))
     (`(:before . ";")
      (cond
+      ;; There is a case after an one line definition of functions/macros
+      ;; when an `if' keyword token is involved, where the next block `end'
+      ;; token will have a `if' as parent and it's hanging.
+      ;;
+      ;; Example:
+      ;;
+      ;; defmacro my_if(expr, do: if_block), do: if(expr, do: if_block, else: nil)
+      ;; defmacro my_if(expr, do: if_block, else: else_block) do
+      ;;   ...
+      ;; end <- parent is `if`
       ((and (smie-rule-parent-p "if")
             (smie-rule-hanging-p))
        (smie-rule-parent))
