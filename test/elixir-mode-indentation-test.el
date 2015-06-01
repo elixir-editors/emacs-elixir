@@ -873,6 +873,34 @@ defmodule Greeter do
   end
 end")
 
+(elixir-def-indentation-test indent-after-def-do-online/2
+                             (:tags '(indentation))
+
+"defmodule ControlFlow do
+  defmacro my_if(expr, do: if_block), do: if(expr, do: if_block, else: nil)
+                                          defmacro my_if(expr, do: if_block, else: else_block) do
+                                            quote do
+                                              case unquote(expr) do
+                                                result when result in [false, nil] -> unquote(else_block)
+                                                _ -> unquote(if_block)
+                                              end
+                                            end
+                                            end
+end"
+
+"defmodule ControlFlow do
+  defmacro my_if(expr, do: if_block), do: if(expr, do: if_block, else: nil)
+  defmacro my_if(expr, do: if_block, else: else_block) do
+    quote do
+      case unquote(expr) do
+        result when result in [false, nil] -> unquote(else_block)
+        _ -> unquote(if_block)
+      end
+    end
+  end
+end")
+
+
 (elixir-def-indentation-test indent-binary-sequence
                              (:tags '(indentation))
 "
