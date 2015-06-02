@@ -643,17 +643,119 @@ Argument END End of the region."
   (let ((current-line (thing-at-point 'line)))
     (elixir-mode--string-to-quoted current-line)))
 
-(easy-menu-define elixir-mode-menu elixir-mode-map
-  "Elixir mode menu."
-  '("Elixir"
-    ["Indent line" smie-indent-line]
-    ["Compile file" elixir-mode-compile-file]
-    ["IEX" elixir-mode-iex]
-    "---"
-    ["elixir-mode on GitHub" elixir-mode-open-modegithub]
-    ["Elixir homepage" elixir-mode-open-elixirhome]
-    ["About" elixir-mode-version]
-    ))
+(when (ignore-errors (require 'easymenu))
+  (easy-menu-define elixir-menu elixir-mode-map "Elixir Mode menu"
+    `("Elixir"
+      ("Interpeter"
+       ["Elixir mode iex" elixir-mode-iex
+	:help " `elixir-mode-iex'
+Elixir mode interactive REPL.
+Optional argument ARGS-P ."]
+       )
+
+      ("Navigate"
+       ("Statement"
+	["Elixir statement backward" elixir-statement-backward
+	 :help " `elixir-statement-backward'
+Go to the initial line of a simple statement.
+
+For beginning of compound statement use elixir-beginning-of-block.
+For beginning of clause elixir-beginning-of-clause."]
+
+	["Elixir statement forward" elixir-statement-forward
+	 :help " `elixir-statement-forward'
+Go to the last char of current statement.
+
+Optional argument REPEAT, the number of loops done already,
+is checked for elixir-max-specpdl-size error.
+Avoid eternal loops due to missing string delimters etc."]
+
+	["Elixir statement down" elixir-statement-down
+	 :help " `elixir-statement-down'"]
+	)
+
+       ("Top"
+	["Elixir top level backward" elixir-top-level-backward
+	 :help " `elixir-top-level-backward'
+Go up to beginning of statments until level of indentation is null.
+
+Returns position if successful, nil otherwise"]
+
+	["Elixir top level forward" elixir-top-level-forward
+	 :help " `elixir-top-level-forward'
+Go to end of a top-level form.
+
+Returns position if successful, nil otherwise"]
+
+	["Elixir top level forward bol" elixir-top-level-forward-bol
+	 :help " `elixir-top-level-forward-bol'
+Go to beginning of line after end of a top-level form.
+
+Returns position if successful, nil otherwise
+
+Referring python program structures see for example:
+http://docs.python.org/reference/compound_stmts.html"]
+	))
+      ("Edit"
+       ["Smie indent line" smie-indent-line
+	:help " `smie-indent-line'
+Indent current line using the SMIE indentation engine." ]
+       ["Elixir mode fill doc string" elixir-mode-fill-doc-string
+	:help " `elixir-mode-fill-doc-string'"]
+       )
+      ("Eval"
+       ["Elixir mode eval on current buffer" elixir-mode-eval-on-current-buffer
+	:help " `elixir-mode-eval-on-current-buffer'
+Evaluate the Elixir code on the current buffer."]
+       ["Elixir mode eval on current line" elixir-mode-eval-on-current-line
+	:help " `elixir-mode-eval-on-current-line'
+Evaluate the Elixir code on the current line."]
+       ["Elixir mode eval on region" elixir-mode-eval-on-region
+	:help " `elixir-mode-eval-on-region'
+Evaluate the Elixir code on the marked region.
+Argument BEG Start of the region.
+Argument END End of the region."]
+       )
+
+      ("Other"
+       ["Elixir mode compile file" elixir-mode-compile-file
+	:help " `elixir-mode-compile-file'
+Elixir mode compile and save current file."]
+       ["Elixir mode open docs master" elixir-mode-open-docs-master
+	:help " `elixir-mode-open-docs-master'
+Elixir mode go to master documentation."]
+       ["Elixir mode open docs stable" elixir-mode-open-docs-stable
+	:help " `elixir-mode-open-docs-stable'
+Elixir mode go to stable documentation."]
+       ["Elixir mode open elixir home" elixir-mode-open-elixir-home
+	:help " `elixir-mode-open-elixir-home'
+Elixir mode go to language home."]
+       ["Elixir mode open modegithub" elixir-mode-open-modegithub
+	:help " `elixir-mode-open-modegithub'
+Elixir mode open GitHub page."]
+       ["Elixir mode string to quoted on current line" elixir-mode-string-to-quoted-on-current-line
+	:help " `elixir-mode-string-to-quoted-on-current-line'
+Get the representation of the expression on the current line."]
+       ["Elixir mode string to quoted on region" elixir-mode-string-to-quoted-on-region
+	:help " `elixir-mode-string-to-quoted-on-region'
+Get the representation of the expression on the marked region.
+Argument BEG Start of the region.
+Argument END End of the region."]
+       ["Elixir mode version" elixir-mode-version
+	:help " `elixir-mode-version'
+Get the Elixir-Mode version as string.
+
+If called interactively or if SHOW-VERSION is non-nil, show the
+version in the echo area and the messages buffer."]
+
+       ["Elixir quoted minor mode" elixir-quoted-minor-mode
+	:help " `elixir-quoted-minor-mode'
+Minor mode for displaying elixir quoted expressions"]
+
+       ["Elixir cos mode" elixir-cos-mode
+	:help " `elixir-cos-mode'
+Elixir mode toggle compile on save."]
+       ))))
 
 ;;;###autoload
 (define-derived-mode elixir-mode prog-mode "Elixir"
