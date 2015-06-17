@@ -1124,6 +1124,23 @@ timeout: Keyword.get(options, :timeout, :infinity)}"
   manager: manager,
   timeout: Keyword.get(options, :timeout, :infinity)}")
 
+(elixir-def-indentation-test indent-parenthesis-inside-block
+                             (:tags '(indentation))
+"
+defmodule Foo do
+def bar do
+()
+  end
+end
+"
+"
+defmodule Foo do
+  def bar do
+    ()
+  end
+end
+")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
