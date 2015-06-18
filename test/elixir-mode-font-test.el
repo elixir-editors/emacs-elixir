@@ -21,10 +21,12 @@ buffer."
 (ert-deftest elixir-mode-syntax-table/fontify-regex ()
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
-   "match = ~r/foo/"
+   "match = ~r/foo/
+match=~r/foo/"
    (should (eq (elixir-test-face-at 1) 'font-lock-variable-name-face))
    (should (eq (elixir-test-face-at 9) 'font-lock-builtin-face))
    (should (eq (elixir-test-face-at 12) 'font-lock-string-face))
+   (should (eq (elixir-test-face-at 18) 'font-lock-variable-name-face))
    ;; no face for regex delimiters
    (should (eq (elixir-test-face-at 15) nil))))
 
@@ -187,6 +189,13 @@ some_expr"
     (should (eq (elixir-test-face-at 5) 'font-lock-string-face))
     (should (eq (elixir-test-face-at 19) 'font-lock-string-face))
     (should (eq (elixir-test-face-at 31) 'font-lock-string-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-atom-in-pattern-match ()
+  :tags '(fontification atom syntax-table)
+  (elixir-test-with-temp-buffer
+   ":any = into_to_type(type)
+:another=into_to_type(type)"
+   (should (eq (elixir-test-face-at 3) 'elixir-atom-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-assignment-with-pattern/1 ()
   :expected-result :failed

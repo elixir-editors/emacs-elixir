@@ -358,14 +358,6 @@ is used to limit the scan."
                  (group identifiers))
      2 font-lock-function-name-face)
 
-    ;; Variable definitions
-    (,(elixir-rx (group identifiers)
-                 (one-or-more space)
-                 "="
-                 (or (one-or-more space)
-                     (one-or-more "\n")))
-     1 font-lock-variable-name-face)
-
     ;; Sigils
     (,(elixir-rx (group sigils))
      1 font-lock-builtin-face)
@@ -429,8 +421,18 @@ is used to limit the scan."
      1 font-lock-type-face)
 
     ;; Atoms and singleton-like words like true/false/nil.
-    (,(elixir-rx (group atoms))
+    (,(elixir-rx (group atoms)
+                 (zero-or-more space)
+                 (optional "="))
      1 elixir-atom-face)
+
+    ;; Variable definitions
+    (,(elixir-rx (group identifiers)
+                 (zero-or-more space)
+                 "="
+                 (or (zero-or-more space)
+                     (one-or-more "\n")))
+     1 font-lock-variable-name-face)
 
     ;; Map keys
     (,(elixir-rx (group (and (one-or-more identifiers) ":")))
