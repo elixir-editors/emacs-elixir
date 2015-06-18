@@ -407,6 +407,53 @@
               (smie-rule-hanging-p)))
        (smie-rule-parent elixir-smie-indent-basic))))))
 
+(defun elixir-smie--heredoc-at-current-point-p ()
+  "Return non-nil if cursor is at a string."
+  (save-excursion
+    (or (and (nth 3 (save-excursion
+                      (let ((pos (point)))
+                        (parse-partial-sexp 1 pos))))
+             (nth 8 (save-excursion
+                      (let ((pos (point)))
+                        (parse-partial-sexp 1 pos)))))
+        (and (looking-at "\"\"\"")
+           (match-beginning 0)))))
+
+(defun elixir-smie--previous-line-empty-p ()
+  "Return non-nil if the previous line is blank."
+  (save-excursion
+    (forward-line -1)
+    (and (eolp) (bolp))))
+
+(defun elixir-smie--previous-line-indentation ()
+  "Return the indentation of the previous line."
+  (save-excursion
+    (forward-line -1)
+    (current-indentation)))
+
+;; Add the custom function to handle indentation inside heredoc to the
+;; smie-indent-functions list. The indentation function will only be
+;; process inside an elixir-mode.
+(defun elixir-smie--indent-inside-heredoc ()
+  "Handle indentation inside Elixir heredocs.
+
+Rules:
+  1. If the previous line is empty, indent as the basic indentation
+     at the beginning of the heredoc.
+  2. If the previous line is not empty, indent as the previous line.
+"
+  (if (eq major-mode 'elixir-mode)
+      (if (elixir-smie--heredoc-at-current-point-p)
+          (let ((indent
+                 (save-excursion
+                   (when (re-search-backward "^\\(\s+\\).+\"\"\"" nil t)
+                     (string-width (match-string 1))))))
+            (if (elixir-smie--previous-line-empty-p)
+                (goto-char indent)
+              (goto-char (elixir-smie--previous-line-indentation)))))))
+
+(add-to-list 'smie-indent-functions 'elixir-smie--indent-inside-heredoc)
+
 (provide 'elixir-smie)
 
 ;;; elixir-smie.el ends here
