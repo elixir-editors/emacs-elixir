@@ -601,7 +601,7 @@ end
 ")
 
 (elixir-def-indentation-test indent-heredoc
-                             (:expected-result :failed :tags '(indentation))
+                             (:tags '(indentation))
   "
 defmodule Foo do
 @doc \"\"\"
@@ -621,6 +621,47 @@ defmodule Foo do
   \"\"\"
   def convert do
     x = 15
+  end
+end
+")
+
+(elixir-def-indentation-test indent-heredoc/2
+                             (:tags '(indentation))
+  "
+defmodule Foo do
+@doc \"\"\"
+this is a heredoc string
+
+\"\"\"
+def convert do
+x = 15
+end
+
+defmodule Bar do
+@moduledoc \"\"\"
+this is a heredoc string
+
+last line
+\"\"\"
+end
+end
+"
+  "
+defmodule Foo do
+  @doc \"\"\"
+  this is a heredoc string
+
+  \"\"\"
+  def convert do
+    x = 15
+  end
+
+  defmodule Bar do
+    @moduledoc \"\"\"
+    this is a heredoc string
+
+    last line
+    \"\"\"
   end
 end
 ")
