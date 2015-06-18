@@ -1,3 +1,10 @@
+## v2.2.5 - 2015/06/18
+* [#222](https://github.com/elixir-lang/emacs-elixir/pull/222) - correct indentation inside heredoc strings
+* [#221](https://github.com/elixir-lang/emacs-elixir/pull/221) - highlight atoms correctly in a pattern match
+* [#220](https://github.com/elixir-lang/emacs-elixir/pull/220) - Correct indentation of parenthesized expression inside blocks
+* [#214](https://github.com/elixir-lang/emacs-elixir/pull/214) - correct indentation after one line definition with if keyword
+* [#213](https://github.com/elixir-lang/emacs-elixir/pull/213) - remove do keyword to handle also oneline definitions
+
 ## v2.2.4 - 2015/05/26
 * [#203](https://github.com/elixir-lang/emacs-elixir/pull/203) - Implement triple-quoted strings.
 

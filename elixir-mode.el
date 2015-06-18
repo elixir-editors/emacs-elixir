@@ -10,7 +10,7 @@
 ;; URL: https://github.com/elixir-lang/emacs-elixir
 ;; Created: Mon Nov 7 2011
 ;; Keywords: languages elixir
-;; Version: 2.2.4
+;; Version: 2.2.5
 
 ;; This file is not a part of GNU Emacs.
 
