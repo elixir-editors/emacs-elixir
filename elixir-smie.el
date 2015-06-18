@@ -315,6 +315,15 @@
      (cond
       ((smie-rule-parent-p "fn")
        (smie-rule-parent elixir-smie-indent-basic))
+      ;; Indent parenthesis correctly inside a block
+      ;;
+      ;; Example:
+      ;;
+      ;; def bar do
+      ;;   ()
+      ;; .....
+      ((smie-rule-parent-p "do")
+       (smie-rule-parent elixir-smie-indent-basic))
       (t (smie-rule-parent))))
     (`(:before . "[")
      (cond
