@@ -20,6 +20,7 @@ Provides font-locking, indentation and navigation support for the
 - [Elixir Tooling Integration](#elixir-tooling-integration)
 - [History](#history)
 - [Contributing](#contributing)
+- [License](#license)
 
 ## Installation
 
@@ -168,5 +169,12 @@ This mode is based on the
 ## Contributing
 
 Please read [CONTRIBUTING.md](https://github.com/elixir-lang/emacs-elixir/blob/master/CONTRIBUTING.md) for guidelines on how to contribute to this project.
+
+## License
+
+Copyright © 2011-2015 Samuel Tonini, Matt DeBoard, Andreas Fuchs, secondplanet and
+[contributors](https://github.com/tonini/alchemist.el/contributors).
+
+Distributed under the GNU General Public License, version 3
 
 [badge-license]: https://img.shields.io/badge/license-GPL_3-green.svg
