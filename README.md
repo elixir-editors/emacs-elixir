@@ -15,7 +15,6 @@ Provides font-locking, indentation and navigation support for the
 - [Usage](#usage)
   - [Interactive Commands](#interactive-commands)
   - [Configuration](#configuration)
-  - [Hooks](#hooks)
   - [Keymapping](#keymapping)
 - [Notes](#notes)
 - [Elixir Tooling Integration](#elixir-tooling-integration)
@@ -89,46 +88,6 @@ You can install `Elixir-Mode` manually by placing `Elixir-Mode` on your `load-pa
         <td>Switches to elixir-mode.</td>
     </tr>
     <tr>
-        <td><code>elixir-mode-compile-file</code></td>
-        <td>Compile Elixir files. Works fine on <code>*.exs</code> files, too, if needed.</td>
-     <tr>
-        <td><code>elixir-cos-mode</code></td>
-        <td>Applies compile-on-save minor mode.</td>
-    </tr>
-    <tr>
-        <td><code>elixir-mode-iex</code></td>
-        <td>
-            Launch <code>iex</code> inside Emacs. Use <code>C-u</code>
-            <a href="http://www.gnu.org/software/emacs/manual/html_node/elisp/Prefix-Command-Arguments.html">univesal-argument</a>
-            to run <code>iex</code> with some additional arguments.
-        </td>
-    </tr>
-    <tr>
-        <td><code>elixir-mode-eval-on-region</code></td>
-        <td>Evaluates the Elixir code on the marked region.
-            This is bound to <code>C-c ,r</code> while in <code>elixir-mode</code>.</td>
-    </tr>
-    <tr>
-        <td><code>elixir-mode-eval-on-current-line</code></td>
-        <td>Evaluates the Elixir code on the current line.
-            This is bound to <code>C-c ,c</code> while in <code>elixir-mode</code>.</td>
-    </tr>
-    <tr>
-        <td><code>elixir-mode-eval-on-current-buffer</code></td>
-        <td>Evaluates the Elixir code in the current buffer.
-            This is bound to <code>C-c ,b</code> while in <code>elixir-mode</code>.</td>
-    </tr>
-    <tr>
-        <td><code>elixir-mode-string-to-quoted-on-region</code></td>
-        <td>Get the representation of the expression on the marked region.
-            This is bound to <code>C-c ,a</code> while in <code>elixir-mode</code>.</td>
-    </tr>
-    <tr>
-        <td><code>elixir-mode-string-to-quoted-on-current-line</code></td>
-        <td>Get the representation of the expression on the current line.
-            This is bound to <code>C-c ,l</code> while in <code>elixir-mode</code>.</td>
-    </tr>
-    <tr>
         <td><code>elixir-mode-opengithub</code></td>
         <td>Open the GitHub page for Elixir.</td>
     </tr>
@@ -162,50 +121,6 @@ functionality easily.
 (add-to-list 'auto-mode-alist '("\\.elixir2\\'" . elixir-mode))
 ```
 
-Custom variables for elixir-mode.
-
-<table>
-    <tr>
-        <th>Variable</th>
-        <th>Default</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><code>elixir-compiler-command (string)</code></td>
-        <td><code>"elixirc"</code></td>
-        <td>Command to compile Elixir code.</td>
-    </tr>
-    <tr>
-        <td><code>elixir-iex-command (string)</code></td>
-        <td><code>"iex"</code></td>
-        <td>Command to start an interactive REPL in <code>IEX</code>.</td>
-    </tr>
-    <tr>
-        <td><code>elixir-mode-cygwin-paths (boolean)</code></td>
-        <td><code>t</code></td>
-        <td>Should Cygwin paths be used on Windows?</td>
-    </tr>
-    <tr>
-        <td><code>elixir-mode-cygwin-prefix (string)</code></td>
-        <td><code>"/cygdrive/C"</code></td>
-        <td>The prefix for Cygwin-style paths.</td>
-    </tr>
-</table>
-
-### Hooks
-
-Hooks can be used to add functionality to elixir-mode. This example
-adds compile on save.
-
-```lisp
-(defun elixir-mode-compile-on-save ()
-  "Elixir mode compile files on save."
-	(and (file-exists (buffer-file-name))
-	     (file-exists (elixir-mode-compiled-file-name))
-			 (elixir-cos-mode t)))
-(add-hook 'elixir-mode-hook 'elixir-mode-compile-on-save)
-```
-
 ### Keymapping
 
 Keymaps can be added to the `elixir-mode-map` variable.
@@ -231,12 +146,12 @@ blocks. A sample configuration would be:
 ```lisp
 (sp-with-modes '(elixir-mode)
   (sp-local-pair "fn" "end"
-		 :when '(("SPC" "RET"))
-		 :actions '(insert navigate))
+         :when '(("SPC" "RET"))
+         :actions '(insert navigate))
   (sp-local-pair "do" "end"
-		 :when '(("SPC" "RET"))
-		 :post-handlers '(sp-ruby-def-post-handler)
-		 :actions '(insert navigate)))
+         :when '(("SPC" "RET"))
+         :post-handlers '(sp-ruby-def-post-handler)
+         :actions '(insert navigate)))
 ```
 
 ## Elixir Tooling Integration

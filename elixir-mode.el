@@ -11,6 +11,7 @@
 ;; Created: Mon Nov 7 2011
 ;; Keywords: languages elixir
 ;; Version: 2.2.5
+;; Package-Requires: ((emacs "24") (pkg-info "0.4"))
 
 ;; This file is not a part of GNU Emacs.
 
@@ -35,32 +36,23 @@
 
 ;;; Code:
 
-(require 'comint)             ; for interactive REPL
 (require 'easymenu)           ; for menubar features
+(require 'elixir-smie)        ; syntax and indentation support
 
-(require 'elixir-smie)				; syntax and indentation support
-(require 'elixir-deprecated)	; deprecated messages
-
-(defgroup elixir-mode nil
-  "Provides font-locking, indentation and navigation support
-for the Elixir programming language."
-  :prefix "elixir-mode-"
-  :group 'applications
+(defgroup elixir nil
+  "Major mode for editing Elixir code."
+  :prefix "elixir-"
+  :group 'languages
   :link '(url-link :tag "Github" "https://github.com/elixir-lang/emacs-elixir")
   :link '(emacs-commentary-link :tag "Commentary" "elixir-mode"))
 
-(defvar elixir-mqode--website-url
-  "http://elixir-lang.org")
+(defvar elixir-mode-website-url "http://elixir-lang.org"
+  "Official url of Elixir programming website.")
 
 (defvar elixir-mode-hook nil)
 
 (defvar elixir-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c ,r") 'elixir-mode-eval-on-region)
-    (define-key map (kbd "C-c ,c") 'elixir-mode-eval-on-current-line)
-    (define-key map (kbd "C-c ,b") 'elixir-mode-eval-on-current-buffer)
-    (define-key map (kbd "C-c ,a") 'elixir-mode-string-to-quoted-on-region)
-    (define-key map (kbd "C-c ,l") 'elixir-mode-string-to-quoted-on-current-line)
     map)
   "Keymap used in `elixir-mode'.")
 
@@ -74,39 +66,6 @@ for the Elixir programming language."
     ("Overridables" "^\\s-*defoverridable[ \n\t]+\\([a-z0-9_]+\\)\\(([^)]*)\\)*.*" 1)
     ("Tests" "^\\s-*test[ \t\n]+\"?\\(:?[a-z0-9_@+() \t-]+\\)\"?[ \t\n]+.*" 1))
   "Imenu pattern for `elixir-mode'.")
-
-(defgroup elixir nil
-  "Elixir major mode."
-  :group 'languages)
-
-(defcustom elixir-compiler-command "elixirc"
-  "Elixir mode command to compile code.  Must be in your path."
-  :type 'string
-  :group 'elixir)
-
-(defcustom elixir-mode-command "elixir"
-  "The command for elixir."
-  :type 'string
-  :group 'elixir)
-
-(defcustom elixir-iex-command "iex"
-  "Elixir mode command for interactive REPL.  Must be in your path."
-  :type 'string
-  :group 'elixir)
-
-(defcustom elixir-mode-cygwin-paths t
-  "Elixir mode use Cygwin style paths on Windows operating systems."
-  :type 'boolean
-  :group 'elixir)
-
-(defcustom elixir-mode-cygwin-prefix "/cygdrive/C"
-  "Elixir mode Cygwin prefix."
-  :type 'string
-  :group 'elixir)
-
-(defvar elixir-mode--eval-filename "elixir-mode-tmp-eval-file.exs")
-
-(defvar elixir-quoted--buffer-name "*elixir-quoted*")
 
 (defvar elixir-basic-offset 2)
 (defvar elixir-key-label-offset 0)
@@ -446,64 +405,6 @@ is used to limit the scan."
     (,(elixir-rx (group code-point))
      1 elixir-negation-face)))
 
-(defun elixir-mode-cygwin-path (expanded-file-name)
-  "Elixir mode get Cygwin absolute path name.
-Argument EXPANDED-FILE-NAME ."
-  (replace-regexp-in-string "^[a-zA-Z]:" elixir-mode-cygwin-prefix expanded-file-name t))
-
-(defun elixir-mode-universal-path (file-name)
-  "Elixir mode multi-OS path handler.
-Argument FILE-NAME ."
-  (let ((full-file-name (expand-file-name file-name)))
-    (if (and (equal system-type 'windows-nt)
-             elixir-mode-cygwin-paths)
-        (elixir-mode-cygwin-path full-file-name)
-      full-file-name)))
-
-(defun elixir-mode-command-compile (file-name)
-  "Elixir mode command to compile a file.
-Argument FILE-NAME ."
-  (let ((full-file-name (elixir-mode-universal-path file-name)))
-    (mapconcat 'identity (append (list elixir-compiler-command) (list full-file-name)) " ")))
-
-(defun elixir-mode-compiled-file-name (&optional filename)
-  "Elixir mode compiled FILENAME."
-  (concat (file-name-sans-extension (or filename (buffer-file-name))) ".beam"))
-
-(defun elixir-mode-compile-file ()
-  "Elixir mode compile and save current file."
-  (interactive)
-  (elixir-deprecated-use-alchemist "elixir-mode-compile-file")
-  (let ((compiler-output (shell-command-to-string (elixir-mode-command-compile (buffer-file-name)))))
-    (when (string= compiler-output "")
-      (message "Compiled and saved as %s" (elixir-mode-compiled-file-name)))))
-
-(defun elixir-quoted--initialize-buffer (quoted)
-  (pop-to-buffer elixir-quoted--buffer-name)
-  (setq buffer-undo-list nil) ; Get rid of undo information from previous expansions
-  (let ((inhibit-read-only t)
-        (buffer-undo-list t)) ; Ignore undo information
-    (erase-buffer)
-    (insert quoted)
-    (goto-char (point-min))
-    (elixir-mode)
-    (elixir-quoted-minor-mode 1)))
-
-;;;###autoload
-(defun elixir-mode-iex (&optional args-p)
-  "Elixir mode interactive REPL.
-Optional argument ARGS-P ."
-  (interactive "P")
-  (let ((switches (if (equal args-p nil)
-                      '()
-                    (split-string (read-string "Additional args: ")))))
-    (unless (comint-check-proc "*IEX*")
-      (set-buffer
-       (apply 'make-comint "IEX"
-              elixir-iex-command nil switches))))
-  (pop-to-buffer "*IEX*")
-  (elixir-deprecated-use-alchemist "elixir-mode-iex"))
-
 ;;;###autoload
 (defun elixir-mode-open-modegithub ()
   "Elixir mode open GitHub page."
@@ -514,19 +415,19 @@ Optional argument ARGS-P ."
 (defun elixir-mode-open-elixir-home ()
   "Elixir mode go to language home."
   (interactive)
-  (browse-url elixir-mode--website-url))
+  (browse-url elixir-mode-website-url))
 
 ;;;###autoload
 (defun elixir-mode-open-docs-master ()
   "Elixir mode go to master documentation."
   (interactive)
-  (browse-url (concat elixir-mode--website-url "/docs/master/elixir")))
+  (browse-url (concat elixir-mode-website-url "/docs/master/elixir")))
 
 ;;;###autoload
 (defun elixir-mode-open-docs-stable ()
   "Elixir mode go to stable documentation."
   (interactive)
-  (browse-url (concat elixir-mode--website-url "/docs/stable/elixir")))
+  (browse-url (concat elixir-mode-website-url "/docs/stable/elixir")))
 
 ;;;###autoload
 (defun elixir-mode-version (&optional show-version)
@@ -547,38 +448,6 @@ just return nil."
       (message "Elixir-Mode version: %s" version))
     version))
 
-(defun elixir-mode--code-eval-string-command (file)
-  (format "%s -e 'IO.puts inspect(elem(Code.eval_string(File.read!(\"%s\")), 0))'"
-          elixir-mode-command
-          file))
-
-(defun elixir-mode--code-string-to-quoted-command (file)
-  (format "%s -e 'IO.puts inspect(elem(Code.string_to_quoted(File.read!(\"%s\")), 1), pretty: true)'"
-          elixir-mode-command
-          file))
-
-(defun elixir-mode--execute-elixir-with-code-eval-string (string)
-  (with-temp-file elixir-mode--eval-filename
-    (insert string))
-  (let ((output (shell-command-to-string (elixir-mode--code-eval-string-command elixir-mode--eval-filename))))
-    (delete-file elixir-mode--eval-filename)
-    output))
-
-(defun elixir-mode--execute-elixir-with-code-string-to-quoted (string)
-  (with-temp-file elixir-mode--eval-filename
-    (insert string))
-  (let ((output (shell-command-to-string (elixir-mode--code-string-to-quoted-command elixir-mode--eval-filename))))
-    (delete-file elixir-mode--eval-filename)
-    output))
-
-(defun elixir-mode--eval-string (string)
-  (let ((output (elixir-mode--execute-elixir-with-code-eval-string string)))
-    (message output)))
-
-(defun elixir-mode--string-to-quoted (string)
-  (let* ((output (elixir-mode--execute-elixir-with-code-string-to-quoted string)))
-    (elixir-quoted--initialize-buffer output)))
-
 (defun elixir-mode-fill-doc-string ()
   (interactive)
   (save-excursion
@@ -590,60 +459,14 @@ just return nil."
     (backward-char)
     (fill-region (point) (mark))))
 
-(defun elixir-mode-eval-on-region (beg end)
-  "Evaluate the Elixir code on the marked region.
-Argument BEG Start of the region.
-Argument END End of the region."
-  (interactive (list (point) (mark)))
-  (elixir-deprecated-use-alchemist "elixir-mode-eval-on-region")
-  (unless (and beg end)
-    (error "The mark is not set now, so there is no region"))
-  (let* ((region (buffer-substring-no-properties beg end)))
-    (elixir-mode--eval-string region)))
-
-(defun elixir-mode-eval-on-current-line ()
-  "Evaluate the Elixir code on the current line."
-  (interactive)
-  (elixir-deprecated-use-alchemist "elixir-mode-eval-on-current-line")
-  (let ((current-line (thing-at-point 'line)))
-    (elixir-mode--eval-string current-line)))
-
-(defun elixir-mode-eval-on-current-buffer ()
-  "Evaluate the Elixir code on the current buffer."
-  (interactive)
-  (elixir-deprecated-use-alchemist "elixir-mode-eval-on-current-buffer")
-  (let ((current-buffer (buffer-substring-no-properties (point-max) (point-min))))
-    (elixir-mode--eval-string current-buffer)))
-
-(defun elixir-mode-string-to-quoted-on-region (beg end)
-  "Get the representation of the expression on the marked region.
-Argument BEG Start of the region.
-Argument END End of the region."
-  (interactive (list (point) (mark)))
-  (elixir-deprecated-use-alchemist "elixir-mode-string-to-quoted-on-region")
-  (unless (and beg end)
-    (error "The mark is not set now, so there is no region"))
-  (let ((region (buffer-substring-no-properties beg end)))
-    (elixir-mode--string-to-quoted region)))
-
-(defun elixir-mode-string-to-quoted-on-current-line ()
-  "Get the representation of the expression on the current line."
-  (interactive)
-  (elixir-deprecated-use-alchemist "elixir-mode-string-to-quoted-on-current-line")
-  (let ((current-line (thing-at-point 'line)))
-    (elixir-mode--string-to-quoted current-line)))
-
 (easy-menu-define elixir-mode-menu elixir-mode-map
   "Elixir mode menu."
   '("Elixir"
     ["Indent line" smie-indent-line]
-    ["Compile file" elixir-mode-compile-file]
-    ["IEX" elixir-mode-iex]
     "---"
     ["elixir-mode on GitHub" elixir-mode-open-modegithub]
     ["Elixir homepage" elixir-mode-open-elixirhome]
-    ["About" elixir-mode-version]
-    ))
+    ["About" elixir-mode-version]))
 
 ;;;###autoload
 (define-derived-mode elixir-mode prog-mode "Elixir"
@@ -664,21 +487,6 @@ Argument END End of the region."
   (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token))
-
-(define-minor-mode elixir-cos-mode
-  "Elixir mode toggle compile on save."
-  :group 'elixir-cos :lighter " CoS"
-  (cond
-   (elixir-cos-mode
-    (add-hook 'after-save-hook 'elixir-mode-compile-file nil t))
-   (t
-    (remove-hook 'after-save-hook 'elixir-mode-compile-file t))))
-
-(define-minor-mode elixir-quoted-minor-mode
-  "Minor mode for displaying elixir quoted expressions"
-  :group 'elixir-quoted :lighter " quoted"
-  :keymap '(("q" . quit-window))
-  (setq buffer-read-only t))
 
 ;; Invoke elixir-mode when appropriate
 
