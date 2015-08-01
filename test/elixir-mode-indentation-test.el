@@ -9,6 +9,8 @@
 
 ;;; Code:
 
+(require 'test-helper)
+
 (elixir-def-indentation-test indent-use-dot-module-newline
                              (:tags '(indentation))
   "defmodule Foo do
