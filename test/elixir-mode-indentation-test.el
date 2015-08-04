@@ -1184,6 +1184,52 @@ defmodule Foo do
 end
 ")
 
+(elixir-def-indentation-test complex-case-with-matches (:tags '(indentation))
+"
+case parse do
+{ [ help: true ], _, _ }
+                  -> :help
+{ _, [ user, project, count ], _ } ->
+{ user, project, count }
+              { _, [ user, project ], _ } -> { user, project, @default_count }
+{ _, [ _, project ], _ } -> { _, project, @default_count }
+_ -> :help
+end"
+"
+case parse do
+  { [ help: true ], _, _ }
+    -> :help
+  { _, [ user, project, count ], _ } ->
+    { user, project, count }
+  { _, [ user, project ], _ } -> { user, project, @default_count }
+  { _, [ _, project ], _ } -> { _, project, @default_count }
+  _ -> :help
+end")
+
+
+(elixir-def-indentation-test complex-case-with-matches/2 (:tags '(indentation))
+"
+case parse do
+{ [ help: true ], _, _ }
+           -> :help
+{ _, [ user, project, count ], _ }
+    -> { user, project, count }
+  { _, [ user, project ], _ }
+  -> { user, project, @default_count }
+  _ -> :help
+end"
+"
+case parse do
+  { [ help: true ], _, _ }
+    -> :help
+  { _, [ user, project, count ], _ }
+    -> { user, project, count }
+  { _, [ user, project ], _ }
+    -> { user, project, @default_count }
+  _ -> :help
+end")
+
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my

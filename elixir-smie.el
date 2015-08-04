@@ -173,6 +173,19 @@
   (not (or (memq (char-before) '(?\{ ?\[))
            (looking-back elixir-smie--operator-regexp (- (point) 3) t))))
 
+(defun elixir-smie-last-line-end-with-block-operator-p ()
+  "Return non-nil if the previous line ends with a `->' operator."
+  (save-excursion
+    (forward-line -1)
+    (move-end-of-line 1)
+    (looking-back elixir-smie--block-operator-regexp (- (point) 3) t)))
+
+(defun elixir-smie-last-line-start-with-block-operator-p ()
+  (save-excursion
+    (forward-line -1)
+    (beginning-of-line)
+    (looking-at "^\s+->.+$")))
+
 (defun elixir-smie--semi-ends-match ()
   "Return non-nil if the current line concludes a match block."
   (when (not (eobp))
@@ -292,7 +305,8 @@
       (t (smie-rule-parent))))
     (`(:before . "MATCH-STATEMENT-DELIMITER")
      (cond
-      ((smie-rule-parent-p "MATCH-STATEMENT-DELIMITER")
+      ((and (smie-rule-parent-p "do")
+            (smie-rule-hanging-p))
        (smie-rule-parent))
       ((and (not (smie-rule-sibling-p))
             (nth 2 smie--parent)
@@ -302,12 +316,29 @@
             (not (nth 2 smie--parent))
             (smie-rule-hanging-p))
        (smie-rule-parent))))
+    (`(:after . "MATCH-STATEMENT-DELIMITER")
+     (cond
+      ((and (smie-rule-parent-p "MATCH-STATEMENT-DELIMITER")
+            (smie-rule-hanging-p)
+            (smie-rule-sibling-p))
+       (if (elixir-smie-last-line-end-with-block-operator-p)
+           (smie-rule-parent)
+         0))
+      (t
+       (smie-rule-parent))))
     (`(:before . "fn")
      (smie-rule-parent))
     (`(:before . "do:")
      (cond
       ((smie-rule-parent-p "def" "if")
        (smie-rule-parent))))
+    (`(:before . "do")
+     (cond
+      ((and (smie-rule-parent-p "case")
+            (smie-rule-hanging-p))
+       (smie-rule-parent 2))
+      (t
+       elixir-smie-indent-basic)))
     (`(:before . "end")
      (smie-rule-parent))
     ;; Closing paren on the other line
@@ -323,12 +354,30 @@
       ;;   ()
       ;; .....
       ((smie-rule-parent-p "do")
-       (smie-rule-parent elixir-smie-indent-basic))
+       (smie-rule-parent))
       (t (smie-rule-parent))))
     (`(:before . "[")
      (cond
       ((smie-rule-hanging-p)
        (smie-rule-parent))))
+    (`(:before . "{")
+     (cond
+      ;; Example
+      ;;
+      ;; case parse do
+      ;;   { [ help: true ], _, _ }
+      ;;     -> :help
+      ;;   { _, [ user, project, count ], _ }
+      ((and (not (smie-rule-hanging-p))
+            (smie-rule-parent-p "do"))
+       (smie-rule-parent))
+      ((and (smie-rule-parent-p "MATCH-STATEMENT-DELIMITER")
+            (not (smie-rule-hanging-p)))
+       (if (elixir-smie-last-line-end-with-block-operator-p)
+           (smie-rule-parent elixir-smie-indent-basic)
+         (if (elixir-smie-last-line-start-with-block-operator-p)
+             (smie-rule-parent -2)
+           (smie-rule-parent))))))
     (`(:after . "{")
      (cond
       ((smie-rule-hanging-p)
@@ -346,7 +395,21 @@
     (`(:before . "->")
      (cond
       ((smie-rule-hanging-p)
-       (smie-rule-parent elixir-smie-indent-basic))))
+       (smie-rule-parent elixir-smie-indent-basic))
+      ;; Example
+      ;;
+      ;; case parse do
+      ;;   { [ help: true ], _, _ }
+      ;;     -> :help
+      ;;   ...
+      ((and (not (smie-rule-hanging-p))
+            (smie-rule-parent-p "do"))
+          elixir-smie-indent-basic)
+      ((and (not (smie-rule-hanging-p))
+            (smie-rule-parent-p "MATCH-STATEMENT-DELIMITER"))
+       (smie-rule-parent)
+       )
+      ))
     (`(:after . "->")
      (cond
       ;; This first condition is kind of complicated so I'll try to make this
@@ -372,8 +435,11 @@
       ;; Otherwise, if just indent by two.
       ((smie-rule-hanging-p)
        (cond
-        ((smie-rule-parent-p "after" "catch" "do" "rescue" "try")
-         elixir-smie-indent-basic)
+        ((smie-rule-parent-p "catch" "rescue")
+         (smie-rule-parent (+ elixir-smie-indent-basic
+                              elixir-smie-indent-basic)))
+        ((smie-rule-parent-p "after" "do" "try")
+           (smie-rule-parent elixir-smie-indent-basic))
         (t (smie-rule-parent elixir-smie-indent-basic))))))
     (`(:before . ";")
      (cond
@@ -390,9 +456,23 @@
       ((and (smie-rule-parent-p "if")
             (smie-rule-hanging-p))
        (smie-rule-parent))
+      ((and (smie-rule-parent-p "else")
+            (smie-rule-hanging-p))
+       (smie-rule-parent elixir-smie-indent-basic))
       ((smie-rule-parent-p "after" "catch" "def" "defmodule" "defp" "do" "else"
                            "fn" "if" "rescue" "try" "unless")
-       (smie-rule-parent elixir-smie-indent-basic))
+       (smie-rule-parent))
+      ;; Example
+      ;;
+      ;; case parse do
+      ;;   { [ help: true ], _, _ }
+      ;;     -> :help
+      ;;   { _, [ user, project, count ], _ }
+      ;;     -> { user, project, count }
+      ;;   ...
+      ((and (smie-rule-parent-p "->")
+            (smie-rule-hanging-p))
+       (smie-rule-parent))
      ))
     (`(:after . ";")
      (cond
@@ -400,6 +480,8 @@
        (smie-rule-parent))
       ((smie-rule-parent-p "if")
        (smie-rule-parent))
+      ((smie-rule-parent-p "after")
+       (smie-rule-parent elixir-smie-indent-basic))
       ((and (smie-rule-parent-p "(")
             (boundp 'smie--parent)
             (save-excursion
