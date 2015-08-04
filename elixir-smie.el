@@ -377,7 +377,10 @@
            (smie-rule-parent elixir-smie-indent-basic)
          (if (elixir-smie-last-line-start-with-block-operator-p)
              (smie-rule-parent -2)
-           (smie-rule-parent))))))
+           (smie-rule-parent))))
+      ((and (smie-rule-parent-p "OP")
+            (smie-rule-hanging-p))
+       (smie-rule-parent))))
     (`(:after . "{")
      (cond
       ((smie-rule-hanging-p)

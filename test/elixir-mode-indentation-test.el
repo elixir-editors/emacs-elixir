@@ -1184,7 +1184,8 @@ defmodule Foo do
 end
 ")
 
-(elixir-def-indentation-test complex-case-with-matches (:tags '(indentation))
+(elixir-def-indentation-test complex-case-with-matches
+                             (:tags '(indentation))
 "
 case parse do
 { [ help: true ], _, _ }
@@ -1207,7 +1208,8 @@ case parse do
 end")
 
 
-(elixir-def-indentation-test complex-case-with-matches/2 (:tags '(indentation))
+(elixir-def-indentation-test complex-case-with-matches/2
+                             (:tags '(indentation))
 "
 case parse do
 { [ help: true ], _, _ }
@@ -1229,6 +1231,24 @@ case parse do
   _ -> :help
 end")
 
+(elixir-def-indentation-test close-map-curly-brackt
+                             (:tags '(indentation))
+"
+config = %{
+  async_cases: [],
+exclude: opts[:exclude],
+include: opts[:include],
+           timeout: opts[:timeout],
+  trace: opts[:trace]
+        }"
+"
+config = %{
+  async_cases: [],
+  exclude: opts[:exclude],
+  include: opts[:include],
+  timeout: opts[:timeout],
+  trace: opts[:trace]
+}")
 
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
