@@ -49,7 +49,8 @@ match=~r/foo/"
    "defmodule Application.Behavior do
   use Application.Behaviour
   Stand.Alone.call
-  %RuntimeError{message: msg}"
+  %RuntimeError{message: msg}
+  &Enum"
    (should (eq (elixir-test-face-at 1) 'font-lock-keyword-face))
    (should (eq (elixir-test-face-at 11) 'font-lock-type-face))
    (should (eq (elixir-test-face-at 22) 'font-lock-type-face))
@@ -61,6 +62,8 @@ match=~r/foo/"
    (should (eq (elixir-test-face-at 53) 'font-lock-type-face))
    (should (eq (elixir-test-face-at 68) 'font-lock-type-face))
    (should (eq (elixir-test-face-at 72) 'font-lock-type-face))
+   (should (eq (elixir-test-face-at 114) 'font-lock-type-face))
+   (should (eq (elixir-test-face-at 117) 'font-lock-type-face))
    ;; no face for function call
    (should (eq (elixir-test-face-at 79) nil))
    (should (eq (elixir-test-face-at 84) 'font-lock-type-face))
