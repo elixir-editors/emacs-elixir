@@ -1,3 +1,11 @@
+## v2.2.6 - 2015/08/05
+* [#234](https://github.com/elixir-lang/emacs-elixir/pull/234) - don't highlights LHS as a variable in `==` case fixes #225
+* [#233](https://github.com/elixir-lang/emacs-elixir/pull/233) - module syntax highlighting also works correctly with &
+* [#232](https://github.com/elixir-lang/emacs-elixir/pull/232) - correct indentation for closing Map curly bracket fixes #223
+* [#231](https://github.com/elixir-lang/emacs-elixir/pull/231) - correct indentation for block with multiple matches
+* [#230](https://github.com/elixir-lang/emacs-elixir/pull/230) - update travis setup
+* [#228](https://github.com/elixir-lang/emacs-elixir/pull/228) - clear elixir-mode from deprecated functions
+
 ## v2.2.5 - 2015/06/18
 * [#222](https://github.com/elixir-lang/emacs-elixir/pull/222) - correct indentation inside heredoc strings
 * [#221](https://github.com/elixir-lang/emacs-elixir/pull/221) - highlight atoms correctly in a pattern match
