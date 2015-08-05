@@ -173,6 +173,12 @@
   (not (or (memq (char-before) '(?\{ ?\[))
            (looking-back elixir-smie--operator-regexp (- (point) 3) t))))
 
+(defun elixir-smie-current-line-contains-built-in-keyword-p ()
+  "Return non-nil if the current line contains built in keywords with a `.'"
+  (save-excursion
+    (beginning-of-line)
+    (looking-at ".+\\.\\(case\\|try\\|if\\|rescue\\)")))
+
 (defun elixir-smie-last-line-end-with-block-operator-p ()
   "Return non-nil if the previous line ends with a `->' operator."
   (save-excursion
@@ -446,6 +452,20 @@
         (t (smie-rule-parent elixir-smie-indent-basic))))))
     (`(:before . ";")
      (cond
+      ;; Handle cases where built in keywords are used
+      ;; as function names.
+      ;;
+      ;; Example:
+      ;;
+      ;; def foo(test) do
+      ;;   test_case = test.case
+      ;;   run(test_case)
+      ;; end
+      ((and (smie-rule-parent-p "case" "try" "rescue")
+            (smie-rule-hanging-p)
+            (elixir-smie-current-line-contains-built-in-keyword-p))
+       (+ (- (cdr (smie-rule-parent))) (+ elixir-smie-indent-basic
+                                          elixir-smie-indent-basic)))
       ;; There is a case after an one line definition of functions/macros
       ;; when an `if' keyword token is involved, where the next block `end'
       ;; token will have a `if' as parent and it's hanging.
@@ -481,6 +501,10 @@
      (cond
       ((smie-rule-parent-p "def")
        (smie-rule-parent))
+      ((and (smie-rule-parent-p "if")
+            (elixir-smie-current-line-contains-built-in-keyword-p))
+       (+ (- (cdr (smie-rule-parent))) (+ elixir-smie-indent-basic
+                                          elixir-smie-indent-basic)))
       ((smie-rule-parent-p "if")
        (smie-rule-parent))
       ((smie-rule-parent-p "after")
