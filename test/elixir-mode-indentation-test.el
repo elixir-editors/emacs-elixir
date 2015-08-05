@@ -1022,18 +1022,73 @@ children = [
   worker(Task, [KVServer, :accept, [4040]])
 ]")
 
-(elixir-def-indentation-test indent-after-reserved-word/1
-                             (:expected-result :failed :tags '(indentation))
-;; Will pass when #170 is resolved.
+(elixir-def-indentation-test indent-after-reserved-word/case
+                             (:tags '(indentation))
 "
+defmodule Application.Behavior do
 def foo(test) do
   test_case = test.case
   run(test_case)
+end
 end"
 "
+defmodule Application.Behavior do
+  def foo(test) do
+    test_case = test.case
+    run(test_case)
+  end
+end")
+
+(elixir-def-indentation-test indent-after-reserved-word/try
+                             (:tags '(indentation))
+"
+defmodule Application.Behavior do
 def foo(test) do
-  test_case = test.case
-  run(test_case)
+  test_case = test.try
+run(test_case)
+    end
+end"
+"
+defmodule Application.Behavior do
+  def foo(test) do
+    test_case = test.try
+    run(test_case)
+  end
+end")
+
+(elixir-def-indentation-test indent-after-reserved-word/rescue
+                             (:tags '(indentation))
+"
+defmodule Application.Behavior do
+def foo(test) do
+test_case = test.rescue
+           run(test_case)
+    end
+end"
+"
+defmodule Application.Behavior do
+  def foo(test) do
+    test_case = test.rescue
+    run(test_case)
+  end
+end")
+
+
+(elixir-def-indentation-test indent-after-reserved-word/if
+                             (:tags '(indentation))
+"
+defmodule Application.Behavior do
+def foo(test) do
+test_case = test.if
+           run(test_case)
+    end
+end"
+"
+defmodule Application.Behavior do
+  def foo(test) do
+    test_case = test.if
+    run(test_case)
+  end
 end")
 
 (elixir-def-indentation-test indent-after-bitstring/1
