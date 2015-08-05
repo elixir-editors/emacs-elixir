@@ -184,24 +184,10 @@
                                  (zero-or-more (any "A-Z" "a-z" "_" "0-9"))))
                            (optional (or "!" "?"))
                            symbol-end))
-      (operators1 . ,(rx symbol-start
-                         (or "<" ">" "+" "-" "*" "/" "!" "^" "&")
-                         symbol-end))
-      (operators2 . ,(rx symbol-start
-                         (or
-                          "==" "!=" "<=" ">=" "&&" "||" "<>" "++" "--" "|>" "=~"
-                          "->" "<-" "|" "." "=")
-                         symbol-end))
-      (operators3 . ,(rx symbol-start
-                         (or "<<<" ">>>" "|||" "&&&" "^^^" "~~~" "===" "!==")
-                         symbol-end))
       (pseudo-var . ,(rx symbol-start
                          (or "_" "__MODULE__" "__DIR__" "__ENV__" "__CALLER__"
                              "__block__" "__aliases__")
                          symbol-end))
-      (punctuation . ,(rx symbol-start
-                          (or "\\" "<<" ">>" "=>" "(" ")" ":" ";" "" "[" "]")
-                          symbol-end))
       (sigils . ,(rx "~" (or "B" "C" "R" "S" "b" "c" "r" "s" "w")))))
 
   (defmacro elixir-rx (&rest sexps)
