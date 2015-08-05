@@ -388,8 +388,8 @@ is used to limit the scan."
     ;; Variable definitions
     (,(elixir-rx (group identifiers)
                  (zero-or-more space)
-                 "="
-                 (or (zero-or-more space)
+                 (repeat 1 "=")
+                 (or (or sigils identifiers space)
                      (one-or-more "\n")))
      1 font-lock-variable-name-face)
 
