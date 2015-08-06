@@ -20,11 +20,7 @@
 ;; Helpers
 
 (defmacro* elixir-deftest (name args &body body)
-   (declare (indent 2)
-            (&define :name test name sexp
-                     [&optional [":documentation" stringp]]
-                     [&optional [":expected-result" sexp]]
-                     def-body))
+  (declare (indent 2))
   `(ert-deftest ,(intern (format "elixir-ert-%s" name)) ()
      ""
      ,@args
