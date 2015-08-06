@@ -314,6 +314,23 @@
       ((and (smie-rule-parent-p "do")
             (smie-rule-hanging-p))
        (smie-rule-parent))
+      ;; There is a case when between two line inside a def block
+      ;; when jumping to the next line and indent, where the cursor
+      ;; jumps too much in front.
+      ;;
+      ;; Example:
+      ;; def generate_pkg(path, opts) do
+      ;;   name = Path.basename(Path.expand(path))
+      ;;
+      ;;   File.mkdir_p!(path)
+      ;;                              <-
+      ;;   File.cd! path, fn ->
+      ;;     _generate_pkg(name, opts)
+      ;;   end
+      ;; end
+      ((and (smie-rule-parent-p "do")
+            (not (smie-rule-hanging-p)))
+       0)
       ((and (not (smie-rule-sibling-p))
             (nth 2 smie--parent)
             (smie-rule-hanging-p))
@@ -343,6 +360,23 @@
       ((and (smie-rule-parent-p "case")
             (smie-rule-hanging-p))
        (smie-rule-parent 2))
+      ;; There is a case when between two line inside a def block
+      ;; when jumping to the next line and indent, where the cursor
+      ;; jumps too much in front.
+      ;;
+      ;; Example:
+      ;; def generate_pkg(path, opts) do
+      ;;   name = Path.basename(Path.expand(path))
+      ;;
+      ;;   File.mkdir_p!(path)
+      ;;                              <-
+      ;;   File.cd! path, fn ->
+      ;;     _generate_pkg(name, opts)
+      ;;   end
+      ;; end
+      ((and (smie-rule-parent-p "def")
+            (smie-rule-hanging-p))
+       (smie-rule-parent elixir-smie-indent-basic))
       (t
        elixir-smie-indent-basic)))
     (`(:before . "end")
