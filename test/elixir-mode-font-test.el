@@ -43,6 +43,22 @@ match=~r/foo/"
    ;; no face for regex delimiters
    (should (eq (elixir-test-face-at 38) nil))))
 
+(ert-deftest elixir-mode-syntax-table/fontify-special-macros ()
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "__MODULE__
+__DIR__
+__aliases__
+%__MODULE__
+&__MODULE__
+&abc__DIR__"
+   (should (eq (elixir-test-face-at 4) 'font-lock-constant-face))
+   (should (eq (elixir-test-face-at 14) 'font-lock-constant-face))
+   (should (eq (elixir-test-face-at 24) 'font-lock-constant-face))
+   (should (eq (elixir-test-face-at 34) 'font-lock-constant-face))
+   (should (eq (elixir-test-face-at 44) 'font-lock-constant-face))
+   (should-not (eq (elixir-test-face-at 60) 'font-lock-constant-face))))
+
 (ert-deftest elixir-mode-syntax-table/fontify-modules-and-types ()
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
