@@ -185,6 +185,7 @@
                            (optional (or "!" "?"))
                            symbol-end))
       (pseudo-var . ,(rx symbol-start
+                         (optional (or "%" "&"))
                          (or "_" "__MODULE__" "__DIR__" "__ENV__" "__CALLER__"
                              "__block__" "__aliases__")
                          symbol-end))
