@@ -106,6 +106,9 @@
        (statements (statement)
                    (statement ";" statements))
        (statement ("def" non-block-expr "do" statements "end")
+                  ("defp" non-block-expr "do" statements "end")
+                  ("defmacro" non-block-expr "do" statements "end")
+                  ("defmacrop" non-block-expr "do" statements "end")
                   (non-block-expr "fn" match-statements "end")
                   (non-block-expr "do" statements "end")
                   ("if" non-block-expr "do" statements "else" statements "end")
@@ -191,6 +194,11 @@
     (forward-line -1)
     (beginning-of-line)
     (looking-at "^\s+->.+$")))
+
+(defun elixir-smie-line-starts-with-do-colon-p ()
+  (save-excursion
+    (beginning-of-line)
+    (looking-at "^\s+do:")))
 
 (defun elixir-smie--semi-ends-match ()
   "Return non-nil if the current line concludes a match block."
@@ -353,8 +361,11 @@
      (smie-rule-parent))
     (`(:before . "do:")
      (cond
-      ((smie-rule-parent-p "def" "if")
-       (smie-rule-parent))))
+      ((smie-rule-parent-p "def" "if" "defp" "defmacro" "defmacrop")
+       (smie-rule-parent))
+      ((and (smie-rule-parent-p ";")
+            (not (smie-rule-hanging-p)))
+       (smie-rule-parent elixir-smie-indent-basic))))
     (`(:before . "do")
      (cond
       ((and (smie-rule-parent-p "case")
@@ -444,7 +455,7 @@
       (t elixir-smie-indent-basic)))
     (`(:before . "if")
      (cond
-      ((smie-rule-parent-p ";")
+      (t
        (smie-rule-parent))))
     (`(:before . "->")
      (cond
@@ -528,7 +539,7 @@
             (smie-rule-hanging-p))
        (smie-rule-parent elixir-smie-indent-basic))
       ((smie-rule-parent-p "after" "catch" "def" "defmodule" "defp" "do" "else"
-                           "fn" "if" "rescue" "try" "unless")
+                           "fn" "if" "rescue" "try" "unless" "defmacro" "defmacrop")
        (smie-rule-parent))
       ;; Example
       ;;
@@ -541,7 +552,14 @@
       ((and (smie-rule-parent-p "->")
             (smie-rule-hanging-p))
        (smie-rule-parent))
-     ))
+      ;; Example
+      ;;
+      ;; defp skip,
+      ;;   do: true <- indent two spaces
+      ((and (smie-rule-parent-p ";")
+            (smie-rule-hanging-p)
+            (elixir-smie-line-starts-with-do-colon-p))
+       (smie-rule-parent (- elixir-smie-indent-basic)))))
     (`(:after . ";")
      (cond
       ((smie-rule-parent-p "def")

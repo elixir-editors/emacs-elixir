@@ -944,6 +944,30 @@ end"
 end")
 
 
+(elixir-def-indentation-test indent-after-not-finished-one-line-def
+                             (:tags '(indentation))
+"
+defmodule Hello do
+      defp skip,
+do: true
+def on?, do: true
+defmacro switch,
+do: on!
+defp self, do: value
+defmacrop whatever, do: do_it!
+end"
+
+"
+defmodule Hello do
+  defp skip,
+    do: true
+  def on?, do: true
+  defmacro switch,
+    do: on!
+  defp self, do: value
+  defmacrop whatever, do: do_it!
+end")
+
 (elixir-def-indentation-test indent-binary-sequence
                              (:tags '(indentation))
 "
