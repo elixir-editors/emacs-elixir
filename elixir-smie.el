@@ -410,7 +410,18 @@
       ;;   { _, [ user, project, count ], _ }
       ((and (not (smie-rule-hanging-p))
             (smie-rule-parent-p "do"))
-       (smie-rule-parent))
+       ;; If the last line ends with a block operator `->'
+       ;; indent two spaces more
+       ;;
+       ;; Example
+       ;;
+       ;; case File.read("/usr/share/dict/words") do
+       ;;   {:ok, contents} ->
+       ;;     {:something, contents} <- Indent here two spaces
+       ;;   ...
+       (if (elixir-smie-last-line-end-with-block-operator-p)
+           (smie-rule-parent elixir-smie-indent-basic)
+         (smie-rule-parent)))
       ((and (smie-rule-parent-p "MATCH-STATEMENT-DELIMITER")
             (not (smie-rule-hanging-p)))
        (if (elixir-smie-last-line-end-with-block-operator-p)
