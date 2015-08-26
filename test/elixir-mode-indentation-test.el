@@ -1286,6 +1286,29 @@ case parse do
   _ -> :help
 end")
 
+(elixir-def-indentation-test complex-case-with-matches/3
+                             (:tags '(indentation))
+"
+defmodule MyModule do
+case File.read(\"/usr/share/dict/words\") do
+{:ok, contents} ->
+    {:something, contents}
+      {:error, reason} ->
+{:error, reason}
+  end
+end
+"
+"
+defmodule MyModule do
+  case File.read(\"/usr/share/dict/words\") do
+    {:ok, contents} ->
+      {:something, contents}
+    {:error, reason} ->
+      {:error, reason}
+  end
+end
+")
+
 (elixir-def-indentation-test close-map-curly-brackt
                              (:tags '(indentation))
 "
