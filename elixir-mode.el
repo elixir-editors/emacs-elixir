@@ -123,6 +123,7 @@
                                 (* ?\\ ?\\)
                                 ;; Match single or triple quotes of any kind.
                                 (group (or "\"" "\"\"\"" "'" "'''")))))
+      (true-false-nil . ,(rx (or "true" "false" "nil")))
       (atoms . ,(rx ":"
                     (or
                      (and
@@ -366,6 +367,12 @@ is used to limit the scan."
     (,(elixir-rx (group module-names))
      1 font-lock-type-face)
 
+    ;; True, false, nil
+    (,(elixir-rx (group true-false-nil)
+                 (zero-or-more space)
+                 (optional "="))
+     1 elixir-atom-face)
+    
     ;; Atoms and singleton-like words like true/false/nil.
     (,(elixir-rx (group atoms)
                  (zero-or-more space)
