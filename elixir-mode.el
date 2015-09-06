@@ -367,7 +367,9 @@ is used to limit the scan."
      1 font-lock-type-face)
 
     ;; Atoms and singleton-like words like true/false/nil.
-    (,(elixir-rx (group (or atoms "true" "false" "nil"))
+    (,(elixir-rx symbol-start
+                 (group (or atoms "true" "false" "nil"))
+                 symbol-end
                  (zero-or-more space)
                  (optional "="))
      1 elixir-atom-face)

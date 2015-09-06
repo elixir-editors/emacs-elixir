@@ -248,7 +248,7 @@ some_expr"
    (should (eq (elixir-test-face-at 2) 'font-lock-variable-name-face))
    (should (eq (elixir-test-face-at 4) 'font-lock-variable-name-face))))
 
-(ert-deftest elixir-mode-syntax-table/fontify-assignment-with-special-atom ()
+(ert-deftest elixir-mode-syntax-table/fontify-assignment-with-singleton ()
   "https://github.com/elixir-lang/emacs-elixir/issues/245"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
