@@ -173,6 +173,7 @@ end"
 true
 false
 nil
+true_false_nil
 "
     (should (eq (elixir-test-face-at 3) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 5) 'elixir-atom-face))
@@ -183,7 +184,8 @@ nil
     (should (eq (elixir-test-face-at 26) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 43) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 48) 'elixir-atom-face))
-    (should (eq (elixir-test-face-at 54) 'elixir-atom-face))))
+    (should (eq (elixir-test-face-at 54) 'elixir-atom-face))
+    (should-not (eq (elixir-test-face-at 57) 'elixir-atom-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-map-keys ()
   :tags '(fontification map syntax-table)
@@ -245,6 +247,15 @@ some_expr"
    "[h|t] = some_expr"
    (should (eq (elixir-test-face-at 2) 'font-lock-variable-name-face))
    (should (eq (elixir-test-face-at 4) 'font-lock-variable-name-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-assignment-with-singleton ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/245"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "true_false_nil = 1"
+   (should (eq (elixir-test-face-at 1) 'font-lock-variable-name-face))
+   (should (eq (elixir-test-face-at 6) 'font-lock-variable-name-face))
+   (should (eq (elixir-test-face-at 12) 'font-lock-variable-name-face))))
 
 (provide 'elixir-mode-font-test)
 
