@@ -1333,6 +1333,37 @@ defmodule MyModule do
 end
 ")
 
+(elixir-def-indentation-test complex-case-with-matches/4
+                             (:tags '(indentation))
+"
+case :foo do
+1 ->
+ try true do
+        :foo
+end
+2 ->
+false
+end
+
+fn x ->
+if true do
+end
+   end"
+"
+case :foo do
+  1 ->
+    try true do
+      :foo
+    end
+  2 ->
+    false
+end
+
+fn x ->
+  if true do
+  end
+end")
+
 (elixir-def-indentation-test close-map-curly-brackt
                              (:tags '(indentation))
 "
