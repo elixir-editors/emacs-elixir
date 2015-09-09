@@ -455,6 +455,17 @@
       (t elixir-smie-indent-basic)))
     (`(:before . "if")
      (cond
+      ;; Indent when if is inside a `->' block
+      ;;
+      ;; Example:
+      ;;
+      ;; whatever ->
+      ;;   if true do <-
+      ;;     :foo
+      ;;   end
+      ;;   ....
+      ((elixir-smie-last-line-end-with-block-operator-p)
+       (smie-rule-parent elixir-smie-indent-basic))
       (t
        (smie-rule-parent))))
     (`(:before . "->")
