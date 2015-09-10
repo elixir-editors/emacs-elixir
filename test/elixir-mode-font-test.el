@@ -174,6 +174,9 @@ true
 false
 nil
 true_false_nil
+:insert!
+:insert@
+:insert?
 "
     (should (eq (elixir-test-face-at 3) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 5) 'elixir-atom-face))
@@ -185,7 +188,10 @@ true_false_nil
     (should (eq (elixir-test-face-at 43) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 48) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 54) 'elixir-atom-face))
-    (should-not (eq (elixir-test-face-at 57) 'elixir-atom-face))))
+    (should-not (eq (elixir-test-face-at 57) 'elixir-atom-face))
+    (should (eq (elixir-test-face-at 74) 'elixir-atom-face))
+    (should (eq (elixir-test-face-at 82) 'elixir-atom-face))
+    (should (eq (elixir-test-face-at 97) 'elixir-atom-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-map-keys ()
   :tags '(fontification map syntax-table)
