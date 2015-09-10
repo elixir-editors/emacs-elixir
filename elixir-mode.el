@@ -130,18 +130,21 @@
                       (zero-or-more (any "a-z" "A-Z" "0-9" "_" "\"" "'")))
                      (and "\"" (one-or-more (not (any "\""))) "\"")
                      (and "'" (one-or-more (not (any "'"))) "'"))))
-      (builtin . ,(rx symbol-start
+      (builtin . ,(rx (or line-start (not (any ".")))
+                      symbol-start
                       (or "case" "cond" "for" "if" "unless" "try" "receive"
                           "raise" "quote" "unquote" "unquote_splicing" "throw"
                           "super")
                       symbol-end))
-      (builtin-declaration . ,(rx symbol-start
+      (builtin-declaration . ,(rx (or line-start (not (any ".")))
+                                  symbol-start
                                   (or "def" "defp" "defmodule" "defprotocol"
                                       "defmacro" "defmacrop" "defdelegate"
                                       "defexception" "defstruct" "defimpl"
                                       "defcallback")
                                   symbol-end))
-      (builtin-namespace . ,(rx symbol-start
+      (builtin-namespace . ,(rx (or line-start (not (any ".")))
+                                symbol-start
                                 (or "import" "require" "use" "alias")
                                 symbol-end))
       ;; Set aside code point syntax for `elixir-negation-face'.
@@ -149,7 +152,8 @@
                          "?"
                          anything
                          symbol-end))
-      (function-declaration . ,(rx symbol-start
+      (function-declaration . ,(rx (or line-start (not (any ".")))
+                                   symbol-start
                                    (or "def" "defp")
                                    symbol-end))
       ;; Match `@doc' or `@moduledoc' syntax, with or without triple quotes.
@@ -162,10 +166,12 @@
       (identifiers . ,(rx (one-or-more (any "A-Z" "a-z" "_"))
                           (zero-or-more (any "A-Z" "a-z" "0-9" "_"))
                           (optional (or "?" "!"))))
-      (keyword . ,(rx symbol-start
+      (keyword . ,(rx (or line-start (not (any ".")))
+                      symbol-start
                       (or "fn" "do" "end" "after" "else" "rescue" "catch")
                       symbol-end))
-      (keyword-operator . ,(rx symbol-start
+      (keyword-operator . ,(rx (or line-start (not (any ".")))
+                               symbol-start
                                (or "not" "and" "or" "when" "in")
                                symbol-end))
       ;; Module and submodule names start with upper case letter. This
