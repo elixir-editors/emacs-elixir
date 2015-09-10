@@ -257,6 +257,31 @@ some_expr"
    (should (eq (elixir-test-face-at 6) 'font-lock-variable-name-face))
    (should (eq (elixir-test-face-at 12) 'font-lock-variable-name-face))))
 
+(ert-deftest elixir-mode-syntax-table/fontify-keyword-after-dot ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/250"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "Mix.raise
+raise
+Mix.def foo
+Mix.import
+import
+Mix.after
+after
+Mix.when
+when"
+   (should-not (eq (elixir-test-face-at 5) 'font-lock-keyword-face))
+   (should (eq (elixir-test-face-at 11) 'font-lock-keyword-face))
+   (should-not (eq (elixir-test-face-at 21) 'font-lock-keyword-face))
+   (should-not (eq (elixir-test-face-at 25) 'font-lock-function-name-face))
+   (should-not (eq (elixir-test-face-at 33) 'font-lock-keyword-face))
+   (should (eq (elixir-test-face-at 40) 'font-lock-keyword-face))
+
+   (should-not (eq (elixir-test-face-at 51) 'font-lock-keyword-face))
+   (should (eq (elixir-test-face-at 57) 'font-lock-keyword-face))
+   (should-not (eq (elixir-test-face-at 67) 'font-lock-keyword-face))
+   (should (eq (elixir-test-face-at 72) 'font-lock-keyword-face))))
+
 (provide 'elixir-mode-font-test)
 
 ;;; elixir-mode-font-test.el ends here
