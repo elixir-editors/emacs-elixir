@@ -635,6 +635,12 @@ Rules:
                 (goto-char indent)
               (goto-char (elixir-smie--previous-line-indentation)))))))
 
+(defun elixir-smie-empty-string-p (string)
+  "Return non-nil if STRING is null, blank or whitespace only."
+  (or (null string)
+      (string= string "")
+      (if (string-match-p "^\s+$" string) t)))
+
 (add-to-list 'smie-indent-functions 'elixir-smie--indent-inside-heredoc)
 
 (provide 'elixir-smie)
