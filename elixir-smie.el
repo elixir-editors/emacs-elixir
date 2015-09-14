@@ -260,7 +260,10 @@
    ((looking-at elixir-smie--operator-regexp)
     (goto-char (match-end 0))
     "OP")
-   (t (smie-default-forward-token))))
+   (t
+    (let ((token (smie-default-forward-token)))
+      (unless (elixir-smie-empty-string-p token)
+        token)))))
 
 (defun elixir-smie-backward-token ()
   (let ((pos (point)))
