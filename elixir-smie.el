@@ -260,7 +260,10 @@
    ((looking-at elixir-smie--operator-regexp)
     (goto-char (match-end 0))
     "OP")
-   (t (smie-default-forward-token))))
+   (t
+    (let ((token (smie-default-forward-token)))
+      (unless (elixir-smie-empty-string-p token)
+        token)))))
 
 (defun elixir-smie-backward-token ()
   (let ((pos (point)))
@@ -634,6 +637,12 @@ Rules:
             (if (elixir-smie--previous-line-empty-p)
                 (goto-char indent)
               (goto-char (elixir-smie--previous-line-indentation)))))))
+
+(defun elixir-smie-empty-string-p (string)
+  "Return non-nil if STRING is null, blank or whitespace only."
+  (or (null string)
+      (string= string "")
+      (if (string-match-p "^\s+$" string) t)))
 
 (add-to-list 'smie-indent-functions 'elixir-smie--indent-inside-heredoc)
 

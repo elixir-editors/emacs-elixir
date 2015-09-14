@@ -173,6 +173,18 @@ end")
                  (goto-line 4)
                  (elixir-smie-current-line-contains-built-in-keyword-p)))))
 
+(ert-deftest test-if-string-is-empty ()
+  (should (equal (elixir-smie-empty-string-p nil)
+                 t))
+  (should (equal (elixir-smie-empty-string-p "")
+                 t))
+  (should (equal (elixir-smie-empty-string-p " ")
+                 t))
+  (should (equal (elixir-smie-empty-string-p "story")
+                 nil))
+  (should (equal (elixir-smie-empty-string-p "    ")
+                 t)))
+
 (provide 'elixir-mode-helper-test)
 
 ;;; elixir-mode-helper-test.el ends here
