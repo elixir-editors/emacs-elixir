@@ -1383,6 +1383,37 @@ config = %{
   trace: opts[:trace]
 }")
 
+(elixir-def-indentation-test receive-after-block
+                             (:tags '(indentation))
+"
+receive do
+{:hello} -> :ok
+    other ->
+other
+    after
+2000 ->
+IO.puts 'hello'
+IO.puts 'status 2000 ends'
+{ :ok } ->
+IO.puts 'ok'
+_ -> whatever
+end
+"
+"
+receive do
+  {:hello} -> :ok
+  other ->
+    other
+after
+  2000 ->
+    IO.puts 'hello'
+    IO.puts 'status 2000 ends'
+  { :ok } ->
+    IO.puts 'ok'
+  _ -> whatever
+end
+")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my

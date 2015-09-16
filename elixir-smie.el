@@ -358,6 +358,9 @@
        (if (elixir-smie-last-line-end-with-block-operator-p)
            (smie-rule-parent)
          0))
+      ((and (smie-rule-parent-p "after")
+            (smie-rule-hanging-p))
+       (smie-rule-parent elixir-smie-indent-basic))
       (t
        (smie-rule-parent))))
     (`(:before . "fn")
@@ -473,8 +476,19 @@
        (smie-rule-parent))))
     (`(:before . "->")
      (cond
-      ((smie-rule-hanging-p)
-       (smie-rule-parent elixir-smie-indent-basic))
+      ;; Example
+      ;;
+      ;; receive do
+      ;; after
+      ;;   2000 ->
+      ;;     IO.puts 'hello'
+      ;;     IO.puts 'status 2000 ends' <- Indent second line
+      ;;   { :ok } ->
+      ;;     ....
+      ((and (smie-rule-parent-p "after")
+            (not (smie-rule-sibling-p)))
+       (smie-rule-parent (+ elixir-smie-indent-basic
+                            elixir-smie-indent-basic)))
       ;; Example
       ;;
       ;; case parse do
@@ -486,9 +500,8 @@
           elixir-smie-indent-basic)
       ((and (not (smie-rule-hanging-p))
             (smie-rule-parent-p "MATCH-STATEMENT-DELIMITER"))
-       (smie-rule-parent)
-       )
-      ))
+       (smie-rule-parent))
+      (t (smie-rule-parent elixir-smie-indent-basic))))
     (`(:after . "->")
      (cond
       ;; This first condition is kind of complicated so I'll try to make this
@@ -517,8 +530,19 @@
         ((smie-rule-parent-p "catch" "rescue")
          (smie-rule-parent (+ elixir-smie-indent-basic
                               elixir-smie-indent-basic)))
-        ((smie-rule-parent-p "after" "do" "try")
-           (smie-rule-parent elixir-smie-indent-basic))
+        ((smie-rule-parent-p "do" "try")
+         (smie-rule-parent elixir-smie-indent-basic))
+        ;; Example
+        ;;
+        ;; receive do
+        ;; after
+        ;;   2000 ->
+        ;;     IO.puts 'hello' <- Indent two spaces
+        ((and (smie-rule-parent-p "after")
+              (smie-rule-hanging-p)
+              (not (smie-rule-sibling-p)))
+         (smie-rule-parent (+ elixir-smie-indent-basic
+                              elixir-smie-indent-basic)))
         (t (smie-rule-parent elixir-smie-indent-basic))))))
     (`(:before . ";")
      (cond
