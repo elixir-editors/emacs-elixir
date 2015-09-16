@@ -121,9 +121,9 @@
                   ("try" "do" statements "catch" match-statements "end")
                   ("try" "do" statements "rescue" match-statements "end")
                   ("try" "do" statements "end")
-                  ("case" non-block-expr "do" match-statements "end"))
+                  ("case" non-block-expr "do" match-statements "end")
+                  ("for" non-block-expr "COMMA" "do:" non-block-expr))
        (non-block-expr (non-block-expr "OP" non-block-expr)
-                       (non-block-expr "COMMA" non-block-expr)
                        ("(" non-block-expr ")")
                        ("{" non-block-expr "}")
                        ("[" non-block-expr "]")
@@ -365,13 +365,25 @@
        (smie-rule-parent))))
     (`(:before . "fn")
      (smie-rule-parent))
+    (`(:before . "for")
+     (smie-rule-parent))
     (`(:before . "do:")
      (cond
       ((smie-rule-parent-p "def" "if" "defp" "defmacro" "defmacrop")
        (smie-rule-parent))
       ((and (smie-rule-parent-p ";")
             (not (smie-rule-hanging-p)))
-       (smie-rule-parent elixir-smie-indent-basic))))
+       (smie-rule-parent elixir-smie-indent-basic))
+      ;; Example
+      ;;
+      ;; hi = for i <- list, do: i
+      ;; # weird spacing now <- Indent
+      ;;
+      ;; for i <- list, do: i
+      ;; IO.puts 'WORKED' <- Indent
+      ((and (smie-rule-parent-p "for")
+            (not (smie-rule-hanging-p)))
+       (smie-rule-parent))))
     (`(:before . "do")
      (cond
       ((and (smie-rule-parent-p "case")
