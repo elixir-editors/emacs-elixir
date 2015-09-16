@@ -1383,6 +1383,7 @@ config = %{
   trace: opts[:trace]
 }")
 
+
 (elixir-def-indentation-test receive-after-block
                              (:tags '(indentation))
 "
@@ -1412,6 +1413,37 @@ after
     IO.puts 'ok'
   _ -> whatever
 end
+")
+
+(elixir-def-indentation-test indent-after-for-online-definition
+                             (:tags '(indentation))
+"
+defmodule Hello do
+  def hi do
+    hi = for i <- list, do: i
+             # weird spacing now
+
+         for i <- list, do: i
+IO.puts 'WORKED'
+  end
+end
+
+hi = for i <- list, do: i
+         # weird spacing now
+"
+"
+defmodule Hello do
+  def hi do
+    hi = for i <- list, do: i
+    # weird spacing now
+
+    for i <- list, do: i
+    IO.puts 'WORKED'
+  end
+end
+
+hi = for i <- list, do: i
+# weird spacing now
 ")
 
 ;; We don't want automatic whitespace cleanup here because of the significant
