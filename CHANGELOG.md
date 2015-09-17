@@ -1,3 +1,17 @@
+## v2.2.7 - 2015/09/17
+* [#260](https://github.com/elixir-lang/emacs-elixir/pull/260) - Correct indentation after "for" comprehension
+* [#259](https://github.com/elixir-lang/emacs-elixir/pull/259) - Indent receive/after matches correct
+* [#258](https://github.com/elixir-lang/emacs-elixir/pull/258) - Emacs hangs if `elixir-smie-forward-token` returns an empty string
+* [#253](https://github.com/elixir-lang/emacs-elixir/pull/253) - Fix Highlight atom issue(atom contains '!', '?', '@')
+* [#252](https://github.com/elixir-lang/emacs-elixir/pull/252) - Fix after dot highlighting
+* [#249](https://github.com/elixir-lang/emacs-elixir/pull/249) - Add correct indent for "if" inside a "->" block
+* [#246](https://github.com/elixir-lang/emacs-elixir/pull/246) - Fix highlighting true, false, nil
+* [#244](https://github.com/elixir-lang/emacs-elixir/pull/244) - True,false, nil are highlighted as atoms
+* [#241](https://github.com/elixir-lang/emacs-elixir/pull/241) - correct indent for oneline `do:` when moved to next line
+* [#240](https://github.com/elixir-lang/emacs-elixir/pull/240) - Correct indent in case expression when returning a tuple
+* [#236](https://github.com/elixir-lang/emacs-elixir/pull/236) - fontify special macros with prefix like '%' and '&'
+* [#235](https://github.com/elixir-lang/emacs-elixir/pull/235) - correct indentation for identifiers which contains built in words after a dot
+
 ## v2.2.6 - 2015/08/05
 * [#234](https://github.com/elixir-lang/emacs-elixir/pull/234) - don't highlights LHS as a variable in `==` case fixes #225
 * [#233](https://github.com/elixir-lang/emacs-elixir/pull/233) - module syntax highlighting also works correctly with &
