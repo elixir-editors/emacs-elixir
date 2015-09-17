@@ -36,8 +36,9 @@
 
 ;;; Code:
 
-(require 'easymenu)           ; for menubar features
-(require 'elixir-smie)        ; syntax and indentation support
+(require 'easymenu)           ; Elixir Mode menu definition
+(require 'elixir-smie)        ; Syntax and indentation support
+(require 'pkg-info)           ; Display Elixir Mode package version
 
 (defgroup elixir nil
   "Major mode for editing Elixir code."

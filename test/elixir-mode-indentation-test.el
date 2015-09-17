@@ -809,14 +809,13 @@ end"
                              (:tags '(indentation))
   "
 def foo do
-  case is_string(x) do
+case is_string(x) do
     true ->
-      x2 = \" one\"
+x2 = \" one\"
       x <> x2
-
-    false ->
-      x2 = \" two\"
-      x <> x2
+false ->
+         x2 = \" two\"
+  x <> x2
   end
 end"
   "
@@ -825,7 +824,6 @@ def foo do
     true ->
       x2 = \" one\"
       x <> x2
-
     false ->
       x2 = \" two\"
       x <> x2

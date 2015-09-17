@@ -5,7 +5,8 @@
 
 ;;; Code:
 
-(require 'ert-x)
+(require 'ert-x)          ; `ert-with-test-buffer'
+(require 'cl-lib)         ; `cl-defmacro'
 
 (message "Running tests on Emacs %s" emacs-version)
 
@@ -19,7 +20,7 @@
 
 ;; Helpers
 
-(defmacro* elixir-deftest (name args &body body)
+(cl-defmacro elixir-deftest (name args &body body)
   (declare (indent 2))
   `(ert-deftest ,(intern (format "elixir-ert-%s" name)) ()
      ""
@@ -27,7 +28,7 @@
      (let ((elixir-smie-verbose-p t))
        ,@body)))
 
-(defmacro* elixir-ert-with-test-buffer ((&rest args) initial-contents &body body)
+(cl-defmacro elixir-ert-with-test-buffer ((&rest args) initial-contents &body body)
   (declare (indent 2))
   `(ert-with-test-buffer (,@args)
      (elixir-mode)
@@ -45,7 +46,7 @@
      (goto-char (point-min))
      ,@body))
 
-(defmacro* elixir-def-indentation-test (name args initial-contents expected-output)
+(cl-defmacro elixir-def-indentation-test (name args initial-contents expected-output)
   (declare (indent 2))
   `(elixir-deftest ,name ,args
      (elixir-ert-with-test-buffer (:name ,(format "(Expected)" name))

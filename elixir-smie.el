@@ -25,7 +25,8 @@
 
 ;;; Code:
 
-(require 'smie)
+(require 'smie)           ; Simple minded indentation engine
+(require 'cl-lib)         ; `cl-flet'
 
 ;; HACK: Patch for Emacs 24.3 smie that fix
 ;; https://github.com/elixir-lang/emacs-elixir/issues/107.
@@ -66,10 +67,8 @@
                                (rassoc next smie-closer-alist))))
                      (smie-indent-calculate))))))))
 
-;; FIXME: This is me being lazy. CL is a compile-time dep only.
-;; (But for now, there is no real file-compilation plot, so let's
-;; scrape by with the runtime dep.)
-(require 'cl)
+;; Declare variable that we need from the smie package
+(defvar smie--parent)
 
 (defvar elixir-smie-verbose-p nil
   "Emit context information about the current syntax state.")
