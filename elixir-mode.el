@@ -256,6 +256,7 @@ is used to limit the scan."
 (defun elixir-syntax-propertize-interpolation ()
   (let* ((beg (match-beginning 0))
          (context (save-excursion (save-match-data (syntax-ppss beg)))))
+    (put-text-property beg (1+ beg) 'syntax-table (string-to-syntax "w"))
     (put-text-property beg (1+ beg) 'elixir-interpolation
                        (cons (nth 3 context) (match-data)))))
 
