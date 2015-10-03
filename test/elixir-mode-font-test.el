@@ -288,6 +288,17 @@ when"
    (should-not (eq (elixir-test-face-at 67) 'font-lock-keyword-face))
    (should (eq (elixir-test-face-at 72) 'font-lock-keyword-face))))
 
+(ert-deftest elixir-mode-syntax-table/string-interpolation-in-words-list ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/263"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "~w(SADD users #{user_id})"
+   (should (eq (elixir-test-face-at 4) 'font-lock-string-face))
+
+   (should-not (eq (elixir-test-face-at 15) 'font-lock-comment-face))
+   (should-not (eq (elixir-test-face-at 17) 'font-lock-comment-face))
+   (should-not (eq (elixir-test-face-at 25) 'font-lock-comment-face))))
+
 (provide 'elixir-mode-font-test)
 
 ;;; elixir-mode-font-test.el ends here
