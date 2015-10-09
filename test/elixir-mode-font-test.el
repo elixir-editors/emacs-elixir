@@ -299,6 +299,55 @@ when"
    (should-not (eq (elixir-test-face-at 17) 'font-lock-comment-face))
    (should-not (eq (elixir-test-face-at 25) 'font-lock-comment-face))))
 
+(ert-deftest elixir-mode-syntax-table/quotes-in-sigils ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/265"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "~s/\"/
+~r|'|
+~c\"'\"
+~w'\"'
+~s(\")
+~r[\"]
+~c{\"}
+~w<\">
+~s\"\"\"
+foo
+\"\"\""
+   (should-not (eq (elixir-test-face-at 5) 'font-lock-string-face))   ; ~s//
+
+   (should-not (eq (elixir-test-face-at 7) 'font-lock-string-face))   ; ~r||
+   (should     (eq (elixir-test-face-at 7) 'font-lock-builtin-face))
+   (should-not (eq (elixir-test-face-at 11) 'font-lock-string-face))
+
+   (should-not (eq (elixir-test-face-at 13) 'font-lock-string-face))  ; ~c""
+   (should     (eq (elixir-test-face-at 13) 'font-lock-builtin-face))
+   (should-not (eq (elixir-test-face-at 17) 'font-lock-string-face))
+
+   (should-not (eq (elixir-test-face-at 19) 'font-lock-string-face))  ; ~w''
+   (should     (eq (elixir-test-face-at 19) 'font-lock-builtin-face))
+   (should-not (eq (elixir-test-face-at 23) 'font-lock-string-face))
+
+   (should-not (eq (elixir-test-face-at 25) 'font-lock-string-face))  ; ~s()
+   (should-not (eq (elixir-test-face-at 29) 'font-lock-string-face))
+
+   (should-not (eq (elixir-test-face-at 31) 'font-lock-string-face))  ; ~r[]
+   (should     (eq (elixir-test-face-at 31) 'font-lock-builtin-face))
+   (should-not (eq (elixir-test-face-at 35) 'font-lock-string-face))
+
+   (should-not (eq (elixir-test-face-at 37) 'font-lock-string-face))  ; ~c{}
+   (should     (eq (elixir-test-face-at 37) 'font-lock-builtin-face))
+   (should-not (eq (elixir-test-face-at 41) 'font-lock-string-face))
+
+   (should-not (eq (elixir-test-face-at 43) 'font-lock-string-face))  ; ~w<>
+   (should     (eq (elixir-test-face-at 43) 'font-lock-builtin-face))
+   (should-not (eq (elixir-test-face-at 47) 'font-lock-string-face))
+
+   (should     (eq (elixir-test-face-at 51) 'font-lock-string-face))  ; ~s""" """
+   (should     (eq (elixir-test-face-at 52) 'font-lock-string-face))
+   (should     (eq (elixir-test-face-at 53) 'font-lock-string-face))
+   (should     (eq (elixir-test-face-at 55) 'font-lock-string-face))))
+
 (provide 'elixir-mode-font-test)
 
 ;;; elixir-mode-font-test.el ends here
