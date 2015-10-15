@@ -142,7 +142,7 @@
                                   (or "def" "defp" "defmodule" "defprotocol"
                                       "defmacro" "defmacrop" "defdelegate"
                                       "defexception" "defstruct" "defimpl"
-                                      "defcallback")
+                                      "defcallback" "defoverridable")
                                   symbol-end))
       (builtin-namespace . ,(rx (or line-start (not (any ".")))
                                 symbol-start
