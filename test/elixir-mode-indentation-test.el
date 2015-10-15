@@ -1444,6 +1444,87 @@ hi = for i <- list, do: i
 # weird spacing now
 ")
 
+(elixir-def-indentation-test indent-oneline-for-after-assignment
+                             (:expected-result :failed :tags '(indentation))
+"
+hi =
+for i <- list, do: i
+"
+"
+hi =
+  for i <- list, do: i
+")
+
+(elixir-def-indentation-test indent-multiline-for
+                             (:expected-result :failed :tags '(indentation))
+"
+for {k, v} <- keyword,
+v = process_value(v),
+into: %{}
+do: {v, k}
+"
+"
+for {k, v} <- keyword,
+  v = process_value(v),
+  into: %{}
+  do: {v, k}
+")
+
+(elixir-def-indentation-test indent-multiline-for-do-end
+                             (:expected-result :failed :tags '(indentation))
+"
+for {k, v} <- keyword,
+v = process_value(v),
+into: %{}
+do
+{v, k}
+end
+"
+"
+for {k, v} <- keyword,
+  v = process_value(v),
+  into: %{} do
+  {v, k}
+end
+")
+
+(elixir-def-indentation-test indent-multiline-for-with-assignment
+                             (:expected-result :failed :tags '(indentation))
+"
+result =
+for {k, v} <- keyword,
+v = process_value(v),
+into: %{}
+do: {v, k}
+"
+"
+result =
+  for {k, v} <- keyword,
+    v = process_value(v),
+    into: %{}
+    do: {v, k}
+")
+
+(elixir-def-indentation-test indent-multiline-for-do-end-with-assignment
+                             (:expected-result :failed :tags '(indentation))
+"
+result =
+for {k, v} <- keyword,
+v = process_value(v),
+into: %{}
+do
+{v, k}
+end
+"
+"
+result =
+  for {k, v} <- keyword,
+    v = process_value(v),
+    into: %{} do
+    {v, k}
+  end
+")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
