@@ -241,7 +241,7 @@ some_expr"
       "\"\"\"foo\"bar\"baz #{1 + 2} is 3.\"\"\""
     (should (eq (elixir-test-face-at 1) 'font-lock-string-face))
     (should (eq (elixir-test-face-at 5) 'font-lock-string-face))
-    (should (eq (elixir-test-face-at 19) 'font-lock-string-face))
+    (should (eq (elixir-test-face-at 19) 'font-lock-variable-name-face))
     (should (eq (elixir-test-face-at 31) 'font-lock-string-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-atom-in-pattern-match ()
