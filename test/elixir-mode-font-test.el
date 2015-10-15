@@ -37,7 +37,7 @@ match=~r/foo/"
   (elixir-test-with-temp-buffer
    "asdfg = ~s{Capitalized noncapitalized}"
    (should (eq (elixir-test-face-at 1) 'font-lock-variable-name-face))
-   (should (eq (elixir-test-face-at 9) 'elixir-attribute-face))
+   (should (eq (elixir-test-face-at 9) 'font-lock-builtin-face))
    (should (eq (elixir-test-face-at 12) 'font-lock-string-face))
    (should (eq (elixir-test-face-at 26) 'font-lock-string-face))
    ;; no face for regex delimiters
@@ -159,8 +159,8 @@ end"
   :tags '(fontification heredoc syntax-table)
   (elixir-test-with-temp-buffer
       "~s\"\"\""
-    (should (eq (elixir-test-face-at 1) 'elixir-attribute-face))
-    (should (eq (elixir-test-face-at 2) 'elixir-attribute-face))
+    (should (eq (elixir-test-face-at 1) 'font-lock-builtin-face))
+    (should (eq (elixir-test-face-at 2) 'font-lock-builtin-face))
     (should (eq (elixir-test-face-at 3) 'font-lock-string-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-atoms ()
@@ -329,6 +329,7 @@ foo
    (should-not (eq (elixir-test-face-at 23) 'font-lock-string-face))
 
    (should-not (eq (elixir-test-face-at 25) 'font-lock-string-face))  ; ~s()
+   (should     (eq (elixir-test-face-at 25) 'font-lock-builtin-face)) ; ~s()
    (should-not (eq (elixir-test-face-at 29) 'font-lock-string-face))
 
    (should-not (eq (elixir-test-face-at 31) 'font-lock-string-face))  ; ~r[]

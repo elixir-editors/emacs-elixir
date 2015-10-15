@@ -157,10 +157,6 @@
                                    symbol-start
                                    (or "def" "defp")
                                    symbol-end))
-      ;; Match `@doc' or `@moduledoc' syntax, with or without triple quotes.
-      (heredocs . ,(rx symbol-start
-                       (or "@doc" "@moduledoc" "~s")
-                       symbol-end))
       ;; The first character of an identifier must be a letter or an underscore.
       ;; After that, they may contain any alphanumeric character + underscore.
       ;; Additionally, the final character may be either `?' or `!'.
@@ -317,9 +313,8 @@ is used to limit the scan."
     (elixir-match-interpolation 0 font-lock-variable-name-face t)
 
     ;; Module attributes
-    (,(elixir-rx (group (or heredocs
-                            (and "@" (1+ identifiers)))))
-     1 elixir-attribute-face)
+    (,(elixir-rx (and "@" (1+ identifiers)))
+     0 elixir-attribute-face)
 
     ;; Keywords
     (,(elixir-rx (group (or builtin builtin-declaration builtin-namespace
