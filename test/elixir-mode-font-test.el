@@ -139,6 +139,19 @@ end"
     (should (eq (elixir-test-face-at 5) 'font-lock-function-name-face))
     (should (eq (elixir-test-face-at 8) 'font-lock-function-name-face))))
 
+(ert-deftest elixir-mode-syntax-table/fontify-defoverridable/1 ()
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+      "defmodule Foo do
+  defmacro __using__(_opts) do
+    quote do
+      def bar, do: :ok
+      defoverridable [bar: 0]
+    end
+  end
+end"
+    (should (eq (elixir-test-face-at 91) 'font-lock-keyword-face))))
+
 (ert-deftest elixir-mode-syntax-table/fontify-heredoc/1 ()
   :tags '(fontification heredoc syntax-table)
   (elixir-test-with-temp-buffer
