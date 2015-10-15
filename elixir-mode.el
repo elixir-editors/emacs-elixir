@@ -300,7 +300,7 @@ is used to limit the scan."
     (when (and pos (> pos (point)))
       (goto-char pos)
       (let ((value (get-text-property pos 'elixir-interpolation)))
-        (if (eq (car value) ?\")
+        (if (car value)
             (progn
               (set-match-data (cdr value))
               t)
