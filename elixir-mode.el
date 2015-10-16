@@ -278,7 +278,7 @@ is used to limit the scan."
         (when (memq start-delim '(?' ?\"))
           (setq end (1+ end))
           (forward-char -1))
-        (while (re-search-forward "[\"']" end t)
+        (while (re-search-forward "[\"'#]" end t)
           (put-text-property (1- (point)) (point) 'syntax-table word-syntax))))))
 
 (defun elixir-syntax-propertize-function (start end)

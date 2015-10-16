@@ -362,6 +362,14 @@ foo
    (should     (eq (elixir-test-face-at 53) 'font-lock-string-face))
    (should     (eq (elixir-test-face-at 55) 'font-lock-string-face))))
 
+(ert-deftest elixir-mode-syntax-table/hashmark-in-sigils ()
+  "Don't treat hashmark in sigils as comment"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "~s(# foo)"
+   (should-not (eq (elixir-test-face-at 4) 'font-lock-comment-face))
+   (should     (eq (elixir-test-face-at 6) 'font-lock-string-face))))
+
 (provide 'elixir-mode-font-test)
 
 ;;; elixir-mode-font-test.el ends here
