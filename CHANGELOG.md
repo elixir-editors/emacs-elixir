@@ -1,3 +1,12 @@
+## v2.2.8 - 2015/10/19
+* [#270](https://github.com/elixir-lang/emacs-elixir/pull/270) - Fix highlighting hashmark in sigil
+* [#269](https://github.com/elixir-lang/emacs-elixir/pull/269) - Fix string interpolation
+* [#268](https://github.com/elixir-lang/emacs-elixir/pull/268) - added font-lock to defoverridable
+* [#262](https://github.com/elixir-lang/emacs-elixir/pull/262) - Add indentation tests for comprehensions
+* [#267](https://github.com/elixir-lang/emacs-elixir/pull/267) - ~s is sigil, not attribute
+* [#266](https://github.com/elixir-lang/emacs-elixir/pull/266) - Fix quotes in sigils
+* [#264](https://github.com/elixir-lang/emacs-elixir/pull/264) - Fix string interpolation
+
 ## v2.2.7 - 2015/09/17
 * [#260](https://github.com/elixir-lang/emacs-elixir/pull/260) - Correct indentation after "for" comprehension
 * [#259](https://github.com/elixir-lang/emacs-elixir/pull/259) - Indent receive/after matches correct
