@@ -370,6 +370,17 @@ foo
    (should-not (eq (elixir-test-face-at 4) 'font-lock-comment-face))
    (should     (eq (elixir-test-face-at 6) 'font-lock-string-face))))
 
+(ert-deftest elixir-mode-syntax-table/highlight-modules-after-pipe ()
+  "Module names must be hightligthed if preceded by a pipe character."
+  (elixir-test-with-temp-buffer
+   "|List"
+   (should-not (eq (elixir-test-face-at 1) 'font-lock-type-face))
+   (should     (eq (elixir-test-face-at 3) 'font-lock-type-face)))
+  (elixir-test-with-temp-buffer
+   "[req_code(op_name)|Enum.reverse(data)]"
+   (should-not (eq (elixir-test-face-at 19) 'font-lock-type-face))
+   (should     (eq (elixir-test-face-at 21) 'font-lock-type-face))))
+
 (provide 'elixir-mode-font-test)
 
 ;;; elixir-mode-font-test.el ends here
