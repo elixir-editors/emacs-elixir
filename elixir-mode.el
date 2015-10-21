@@ -135,7 +135,7 @@
                       symbol-start
                       (or "case" "cond" "for" "if" "unless" "try" "receive"
                           "raise" "quote" "unquote" "unquote_splicing" "throw"
-                          "super" "send" "send_after")
+                          "super" "send")
                       symbol-end))
       (builtin-declaration . ,(rx (or line-start (not (any ".")))
                                   symbol-start

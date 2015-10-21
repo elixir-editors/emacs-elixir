@@ -301,19 +301,16 @@ when"
    (should-not (eq (elixir-test-face-at 67) 'font-lock-keyword-face))
    (should (eq (elixir-test-face-at 72) 'font-lock-keyword-face))))
 
-(ert-deftest elixir-mode-syntax-table/highlight-send-and-send-after ()
-  "Highlight both send and send_after as keywords"
+(ert-deftest elixir-mode-syntax-table/highlight-send ()
+  "Highlight send as a keyword"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "defmodule Foo do
   def bar(pid) do
     send pid, :baz
-    send_after pid, :baz, 5000
   end
 end"
-   (should (eq (elixir-test-face-at 40) 'font-lock-keyword-face))
-   (should (eq (elixir-test-face-at 60) 'font-lock-keyword-face))
-   (should (eq (elixir-test-face-at 65) 'font-lock-keyword-face))))
+   (should (eq (elixir-test-face-at 40) 'font-lock-keyword-face))))
 
 (ert-deftest elixir-mode-syntax-table/string-interpolation-in-words-list ()
   "https://github.com/elixir-lang/emacs-elixir/issues/263"
