@@ -941,6 +941,18 @@ end"
   end
 end")
 
+(elixir-def-indentation-test indent-after-def-do-online/3
+                             (:expected-result :failed :tags '(indentation))
+"defmodule Foo do
+  def bar(baz, quun \\\\ nil)
+  def bar(baz, quun) when baz == quun, do: baz
+                                 def bar(baz, quun), do: quun
+end"
+"defmodule Foo do
+  def bar(baz, quun \\\\ nil)
+  def bar(baz, quun) when baz == quun, do: baz
+  def bar(baz, quun), do: quun
+end")
 
 (elixir-def-indentation-test indent-after-not-finished-one-line-def
                              (:tags '(indentation))
