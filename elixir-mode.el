@@ -203,6 +203,9 @@
             (t
              (rx-to-string (car sexps) t))))))
 
+(defsubst elixir-syntax-in-string-or-comment-p ()
+  (nth 8 (syntax-ppss)))
+
 (defsubst elixir-syntax-count-quotes (quote-char &optional point limit)
   "Count number of quotes around point (max is 3).
 QUOTE-CHAR is the quote char to count.  Optional argument POINT is
@@ -263,23 +266,24 @@ is used to limit the scan."
     (?\[ . "]")))
 
 (defun elixir-syntax-replace-property-in-sigil ()
-  (let ((heredoc-p (save-excursion
-                     (goto-char (match-beginning 0))
-                     (looking-at-p "~s\"\"\""))))
-    (unless heredoc-p
-      (forward-char 1)
-      (let* ((start-delim (char-after (1- (point))))
-             (end-delim (or (assoc-default start-delim elixir-sigil-delimiter-pair)
-                            (char-to-string start-delim)))
-             (end (save-excursion
-                    (skip-chars-forward (concat "^" end-delim))
-                    (point)))
-             (word-syntax (string-to-syntax "w")))
-        (when (memq start-delim '(?' ?\"))
-          (setq end (1+ end))
-          (forward-char -1))
-        (while (re-search-forward "[\"'#]" end t)
-          (put-text-property (1- (point)) (point) 'syntax-table word-syntax))))))
+  (unless (elixir-syntax-in-string-or-comment-p)
+    (let ((heredoc-p (save-excursion
+                       (goto-char (match-beginning 0))
+                       (looking-at-p "~s\"\"\""))))
+      (unless heredoc-p
+        (forward-char 1)
+        (let* ((start-delim (char-after (1- (point))))
+               (end-delim (or (assoc-default start-delim elixir-sigil-delimiter-pair)
+                              (char-to-string start-delim)))
+               (end (save-excursion
+                      (skip-chars-forward (concat "^" end-delim))
+                      (point)))
+               (word-syntax (string-to-syntax "w")))
+          (when (memq start-delim '(?' ?\"))
+            (setq end (1+ end))
+            (forward-char -1))
+          (while (re-search-forward "[\"'#]" end t)
+            (put-text-property (1- (point)) (point) 'syntax-table word-syntax)))))))
 
 (defun elixir-syntax-propertize-function (start end)
   (let ((case-fold-search nil))

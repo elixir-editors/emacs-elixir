@@ -392,6 +392,19 @@ foo
    (should-not (eq (elixir-test-face-at 19) 'font-lock-type-face))
    (should     (eq (elixir-test-face-at 21) 'font-lock-type-face))))
 
+(ert-deftest elixir-mode-syntax-table/sigils-in-string ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/275"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "@one 1
+@two \"~s\"
+@three :tre
+"
+   (should-not (eq (elixir-test-face-at 18) 'font-lock-string-face))
+   (should     (eq (elixir-test-face-at 19) 'elixir-attribute-face))
+   (should-not (eq (elixir-test-face-at 25) 'font-lock-string-face))
+   (should     (eq (elixir-test-face-at 26) 'elixir-atom-face))))
+
 (provide 'elixir-mode-font-test)
 
 ;;; elixir-mode-font-test.el ends here
