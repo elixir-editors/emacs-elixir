@@ -942,16 +942,40 @@ end"
 end")
 
 (elixir-def-indentation-test indent-after-def-do-online/3
-                             (:expected-result :failed :tags '(indentation))
-"defmodule Foo do
-  def bar(baz, quun \\\\ nil)
-  def bar(baz, quun) when baz == quun, do: baz
-                                 def bar(baz, quun), do: quun
+                             (:tags '(indentation))
+"     defmodule Foo do
+def bar(baz, quun \\\\ nil)
+def bar(baz, quun) when baz == quun, do: baz
+def bar(baz, quun), do: quun
+
+  defp bar(baz, quun \\\\ nil)
+        defp bar(baz, quun) when baz == quun, do: baz
+     defp bar(baz, quun), do: quun
+
+  defmacro bar(baz, quun \\\\ nil)
+defmacro bar(baz, quun) when baz == quun, do: baz
+          defmacro bar(baz, quun), do: quun
+
+     defmacrop bar(baz, quun \\\\ nil)
+defmacrop bar(baz, quun) when baz == quun, do: baz
+  defmacrop bar(baz, quun), do: quun
 end"
 "defmodule Foo do
   def bar(baz, quun \\\\ nil)
   def bar(baz, quun) when baz == quun, do: baz
   def bar(baz, quun), do: quun
+
+  defp bar(baz, quun \\\\ nil)
+  defp bar(baz, quun) when baz == quun, do: baz
+  defp bar(baz, quun), do: quun
+
+  defmacro bar(baz, quun \\\\ nil)
+  defmacro bar(baz, quun) when baz == quun, do: baz
+  defmacro bar(baz, quun), do: quun
+
+  defmacrop bar(baz, quun \\\\ nil)
+  defmacrop bar(baz, quun) when baz == quun, do: baz
+  defmacrop bar(baz, quun), do: quun
 end")
 
 (elixir-def-indentation-test indent-after-not-finished-one-line-def

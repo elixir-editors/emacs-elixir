@@ -305,9 +305,11 @@
     (`(:elem . args)
      -4)
     (`(:before . "OP")
-     (when (and (not (smie-rule-hanging-p))
-                (smie-rule-prev-p "OP"))
-       -2))
+     (cond ((and (not (smie-rule-hanging-p))
+                 (smie-rule-prev-p "OP"))
+            -2)
+           ((smie-rule-parent-p "def" "defp" "defmacro" "defmacrop")
+            (smie-rule-parent))))
     (`(:after . "OP")
      (cond
       ((smie-rule-sibling-p) nil)
@@ -382,6 +384,9 @@
       ;; for i <- list, do: i
       ;; IO.puts 'WORKED' <- Indent
       ((and (smie-rule-parent-p "for")
+            (not (smie-rule-hanging-p)))
+       (smie-rule-parent))
+      ((and (smie-rule-parent-p "OP")
             (not (smie-rule-hanging-p)))
        (smie-rule-parent))))
     (`(:before . "do")
