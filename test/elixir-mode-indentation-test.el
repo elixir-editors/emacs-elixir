@@ -979,7 +979,7 @@ end"
 end")
 
 (elixir-def-indentation-test indent-after-not-finished-one-line-def
-                             (:tags '(indentation))
+                             (:expected-result :failed :tags '(indentation))
 "
 defmodule Hello do
       defp skip,
@@ -1001,6 +1001,23 @@ defmodule Hello do
   defp self, do: value
   defmacrop whatever, do: do_it!
 end")
+
+(elixir-def-indentation-test indent-correct-with-multiple-one-line-macro-calls
+                             (:tags '(indentation))
+"
+     mymacro x1, do: [:x1]
+mymacro x2, do: [:x2]
+mymacro x3, do: [:x3]
+      mymacro x1, do: [:x1]
+ mymacro x2, do: [:x2]
+         mymacro x3, do: [:x3]"
+"
+mymacro x1, do: [:x1]
+mymacro x2, do: [:x2]
+mymacro x3, do: [:x3]
+mymacro x1, do: [:x1]
+mymacro x2, do: [:x2]
+mymacro x3, do: [:x3]")
 
 (elixir-def-indentation-test indent-binary-sequence
                              (:tags '(indentation))
