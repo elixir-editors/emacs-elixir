@@ -152,6 +152,15 @@ end"
 end"
     (should (eq (elixir-test-face-at 91) 'font-lock-keyword-face))))
 
+(ert-deftest elixir-mode-syntax-table/fontify-end-if-the-last-line-in-a-module-is-a-comment ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/283"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+      "defmodule Foo do
+  # foo
+end"
+    (should (eq (elixir-test-face-at 26) 'font-lock-keyword-face))))
+
 (ert-deftest elixir-mode-syntax-table/fontify-heredoc/1 ()
   :tags '(fontification heredoc syntax-table)
   (elixir-test-with-temp-buffer
