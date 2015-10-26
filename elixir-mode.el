@@ -131,21 +131,18 @@
                       (zero-or-more (any "a-z" "A-Z" "0-9" "_" "\"" "'" "!" "@" "?")))
                      (and "\"" (one-or-more (not (any "\""))) "\"")
                      (and "'" (one-or-more (not (any "'"))) "'"))))
-      (builtin . ,(rx (or line-start (not (any ".")))
-                      symbol-start
+      (builtin . ,(rx symbol-start
                       (or "case" "cond" "for" "if" "unless" "try" "receive"
                           "raise" "quote" "unquote" "unquote_splicing" "throw"
                           "super" "send")
                       symbol-end))
-      (builtin-declaration . ,(rx (or line-start (not (any ".")))
-                                  symbol-start
+      (builtin-declaration . ,(rx symbol-start
                                   (or "def" "defp" "defmodule" "defprotocol"
                                       "defmacro" "defmacrop" "defdelegate"
                                       "defexception" "defstruct" "defimpl"
                                       "defcallback" "defoverridable")
                                   symbol-end))
-      (builtin-namespace . ,(rx (or line-start (not (any ".")))
-                                symbol-start
+      (builtin-namespace . ,(rx symbol-start
                                 (or "import" "require" "use" "alias")
                                 symbol-end))
       ;; Set aside code point syntax for `elixir-negation-face'.
@@ -163,12 +160,10 @@
       (identifiers . ,(rx (one-or-more (any "A-Z" "a-z" "_"))
                           (zero-or-more (any "A-Z" "a-z" "0-9" "_"))
                           (optional (or "?" "!"))))
-      (keyword . ,(rx (or line-start (not (any ".")))
-                      symbol-start
+      (keyword . ,(rx symbol-start
                       (or "fn" "do" "end" "after" "else" "rescue" "catch")
                       symbol-end))
-      (keyword-operator . ,(rx (or line-start (not (any ".")))
-                               symbol-start
+      (keyword-operator . ,(rx symbol-start
                                (or "not" "and" "or" "when" "in")
                                symbol-end))
       ;; Module and submodule names start with upper case letter. This
@@ -321,8 +316,9 @@ is used to limit the scan."
      0 elixir-attribute-face)
 
     ;; Keywords
-    (,(elixir-rx (group (or builtin builtin-declaration builtin-namespace
-                            keyword keyword-operator)))
+    (,(elixir-rx (and (or line-start (not (any ".")))
+                      (group (or builtin builtin-declaration builtin-namespace
+                                 keyword keyword-operator))))
      1 font-lock-keyword-face)
 
     ;; Function names, i.e. `def foo do'.
