@@ -414,6 +414,18 @@ foo
    (should-not (eq (elixir-test-face-at 25) 'font-lock-string-face))
    (should     (eq (elixir-test-face-at 26) 'elixir-atom-face))))
 
+(ert-deftest elixir-mode-syntax-table/sigil-triple-quote ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/286"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "defmodule IEx do
+  @moduledoc ~S\"\"\"
+  Elixir's interactive shell.
+\"\"\"
+end
+"
+   (should (eq (elixir-test-face-at 33) 'font-lock-string-face))))
+
 (provide 'elixir-mode-font-test)
 
 ;;; elixir-mode-font-test.el ends here
