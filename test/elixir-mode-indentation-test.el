@@ -367,6 +367,15 @@ else
 end
 ")
 
+(elixir-def-indentation-test indent-non-finished-one-line-if-else
+                             (:expected-result :failed :tags '(indentation))
+"if condition,
+do: :foo,
+else: :bar"
+"if condition,
+  do: :foo,
+  else: :bar"
+)
 
 (elixir-def-indentation-test indent-try
                              (:tags '(indentation))
