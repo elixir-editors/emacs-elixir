@@ -1527,7 +1527,7 @@ hi = for i <- list, do: i
 ")
 
 (elixir-def-indentation-test indent-multiline-defstruct-without-parens
-                             (:tags '(indentation))
+                             (:expected-result :failed :tags '(indentation))
 "
 defmodule User do
 defstruct first_name: \"first\",
