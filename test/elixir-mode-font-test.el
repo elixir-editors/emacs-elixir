@@ -426,6 +426,33 @@ end
 "
    (should (eq (elixir-test-face-at 33) 'font-lock-string-face))))
 
+(ert-deftest elixir-mode-syntax-table/gray-out-ignored-var ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/292"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "variable
+    _var
+    _x
+    _x!
+    _x?
+    _
+    __MODULE__
+"
+   (should (eq (elixir-test-face-at 4) nil))
+   (should (eq (elixir-test-face-at 14) 'elixir-ignored-var-face))
+   (should (eq (elixir-test-face-at 15) 'elixir-ignored-var-face))
+   (should (eq (elixir-test-face-at 23) 'elixir-ignored-var-face))
+   (should (eq (elixir-test-face-at 24) 'elixir-ignored-var-face))
+   (should (eq (elixir-test-face-at 30) 'elixir-ignored-var-face))
+   (should (eq (elixir-test-face-at 32) 'elixir-ignored-var-face))
+   (should (eq (elixir-test-face-at 38) 'elixir-ignored-var-face))
+   (should (eq (elixir-test-face-at 40) 'elixir-ignored-var-face))
+   (should (eq (elixir-test-face-at 46) 'font-lock-constant-face))
+   (should (eq (elixir-test-face-at 46) 'font-lock-constant-face))
+   (should (eq (elixir-test-face-at 52) 'font-lock-constant-face))
+   (should (eq (elixir-test-face-at 53) 'font-lock-constant-face))
+   (should (eq (elixir-test-face-at 55) 'font-lock-constant-face))))
+
 (provide 'elixir-mode-font-test)
 
 ;;; elixir-mode-font-test.el ends here
