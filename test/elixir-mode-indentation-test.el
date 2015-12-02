@@ -1444,6 +1444,27 @@ fn x ->
   end
 end")
 
+(elixir-def-indentation-test case-with-multiline-maps
+                             ; the last key does not align properly in multiline maps
+                             ; https://github.com/elixir-lang/emacs-elixir/issues/297
+                             (:expected-result :failed :tags '(indentation))
+"case statement do
+  %{\"foo\" => \"foo\",
+     \"baz\" => \"baz\"} ->
+    :ok
+
+  _ ->
+    :ok
+end"
+"case statement do
+  %{\"foo\" => \"foo\",
+    \"baz\" => \"baz\"} ->
+    :ok
+
+  _ ->
+    :ok
+end")
+
 (elixir-def-indentation-test close-map-curly-brackt
                              (:tags '(indentation))
 "
