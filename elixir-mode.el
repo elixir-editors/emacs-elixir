@@ -142,9 +142,9 @@
                      (and "\"" (one-or-more (not (any "\""))) "\"")
                      (and "'" (one-or-more (not (any "'"))) "'"))))
       (builtin . ,(rx symbol-start
-                      (or "case" "cond" "for" "if" "unless" "try" "receive"
-                          "raise" "quote" "unquote" "unquote_splicing" "throw"
-                          "super" "send")
+                      (or "case" "cond" "for" "if" "quote" "raise" "receive" "send"
+                          "super" "throw" "try" "unless" "unquote" "unquote_splicing"
+                          "with")
                       symbol-end))
       (builtin-declaration . ,(rx symbol-start
                                   (or "def" "defp" "defmodule" "defprotocol"
