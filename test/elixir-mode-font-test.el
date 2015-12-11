@@ -321,6 +321,21 @@ when"
 end"
    (should (eq (elixir-test-face-at 40) 'font-lock-keyword-face))))
 
+(ert-deftest elixir-mode-syntax-table/highlight-with ()
+  "Highlight with as a keyword"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "defmodule Foo do
+  def bar(opts) do
+    with(
+      {:ok, width} <- Map.fetch(opts, :width),
+      {:ok, height} <- Map.fetch(opts, :height),
+      do: {:ok, width * height}
+    )
+  end
+end"
+   (should (eq (elixir-test-face-at 41) 'font-lock-keyword-face))))
+
 (ert-deftest elixir-mode-syntax-table/string-interpolation-in-words-list ()
   "https://github.com/elixir-lang/emacs-elixir/issues/263"
   :tags '(fontification syntax-table)
