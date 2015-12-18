@@ -450,24 +450,33 @@ end
     _x
     _x!
     _x?
+    %{ _asdf: a }
     _
     __MODULE__
+    _asdf-asdf
+    _aaad/asd
+    _aaaa+33
 "
-   (should (eq (elixir-test-face-at 4) nil))
-   (should (eq (elixir-test-face-at 14) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 15) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 23) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 24) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 30) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 32) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 38) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 40) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 46) 'font-lock-constant-face))
-   (should (eq (elixir-test-face-at 46) 'font-lock-constant-face))
-   (should (eq (elixir-test-face-at 52) 'font-lock-constant-face))
-   (should (eq (elixir-test-face-at 53) 'font-lock-constant-face))
-   (should (eq (elixir-test-face-at 55) 'font-lock-constant-face))))
+   (should (eq (elixir-test-face-at 4) nil))                        ;; var[i]able
+   (should (eq (elixir-test-face-at 14) 'elixir-ignored-var-face))  ;; [_]var
+   (should (eq (elixir-test-face-at 15) 'elixir-ignored-var-face))  ;; _[v]ar
+   (should (eq (elixir-test-face-at 23) 'elixir-ignored-var-face))  ;; [_]x
+   (should (eq (elixir-test-face-at 24) 'elixir-ignored-var-face))  ;; _[x]
+   (should (eq (elixir-test-face-at 30) 'elixir-ignored-var-face))  ;; [_]x!
+   (should (eq (elixir-test-face-at 32) 'elixir-ignored-var-face))  ;; _x[!]
+   (should (eq (elixir-test-face-at 38) 'elixir-ignored-var-face))  ;; [_]x?
+   (should (eq (elixir-test-face-at 40) 'elixir-ignored-var-face))  ;; _x[?]
+   (should (eq (elixir-test-face-at 52) 'elixir-atom-face))         ;; %{ _as[d]f: a }
+   (should (eq (elixir-test-face-at 64) 'font-lock-constant-face))  ;; [_]
+   (should (eq (elixir-test-face-at 71) 'font-lock-constant-face))  ;; _[_]MODULE__
+   (should (eq (elixir-test-face-at 75) 'font-lock-constant-face))  ;; __MOD[U]LE__
+   (should (eq (elixir-test-face-at 89) 'elixir-ignored-var-face))  ;; _asd[f]-asdf
+   (should (eq (elixir-test-face-at 90) nil))                       ;; _asdf[-]asdf
+   (should (eq (elixir-test-face-at 102) 'elixir-ignored-var-face)) ;; _a[s]df/asd
+   (should (eq (elixir-test-face-at 105) nil))                      ;; _asdf[/]asd
+   (should (eq (elixir-test-face-at 116) 'elixir-ignored-var-face)) ;; _a[a]aa+33
+   (should (eq (elixir-test-face-at 119) nil))                      ;; _aaaa[+]33
+   ))
 
 (provide 'elixir-mode-font-test)
-
 ;;; elixir-mode-font-test.el ends here

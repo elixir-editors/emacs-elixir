@@ -420,7 +420,8 @@ is used to limit the scan."
                  (group (and "_"
                              (any "A-Z" "a-z" "0-9"))
                         (zero-or-more (any "A-Z" "a-z" "0-9" "_"))
-                        (optional (or "?" "!"))))
+                        (optional (or "?" "!")))
+                 (or symbol-end "-" "+" "/"))
      1 elixir-ignored-var-face)
 
     ;; Map keys
