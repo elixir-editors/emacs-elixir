@@ -1547,6 +1547,21 @@ hi = for i <- list, do: i
 # weird spacing now
 ")
 
+(elixir-def-indentation-test indent-multiline-defstruct-without-parens
+                             (:expected-result :failed :tags '(indentation))
+"
+defmodule User do
+defstruct first_name: \"first\",
+last_name: \"last\"
+end
+"
+"
+defmodule User do
+  defstruct first_name: \"first\",
+            last_name: \"last\"
+end
+")
+
 (elixir-def-indentation-test indent-oneline-for-after-assignment
                              (:expected-result :failed :tags '(indentation))
 "
