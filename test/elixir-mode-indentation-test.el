@@ -1628,6 +1628,34 @@ result =
   end
 ")
 
+(elixir-def-indentation-test indent-multiline-function-calls-without-parenthesis
+                             (:expected-result :failed :tags '(indentation))
+"
+some_method :arg1,
+:arg2
+other_method
+"
+"
+some_method :arg1,
+  :arg2
+other_method
+")
+
+(elixir-def-indentation-test indent-multiline-function-calls-without-parenthesis/2
+                             (:expected-result :failed :tags '(indentation))
+"
+some_method :arg1,
+arg1: 1,
+arg2: 2
+other_method
+"
+"
+some_method :arg1,
+  arg1: 1,
+  arg2: 2
+other_method
+")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
