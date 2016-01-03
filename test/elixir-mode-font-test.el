@@ -468,6 +468,38 @@ end
    (should (eq (elixir-test-face-at 53) 'font-lock-constant-face))
    (should (eq (elixir-test-face-at 55) 'font-lock-constant-face))))
 
+(ert-deftest elixir-mode-syntax-table/escaped-sigil-delimiter ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/302"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "def player_id(video) do
+  ~r/^.*(?:youtu.be\\/|v\\/|e\\/|u\\/\\w+\\/|embed\\/|v=)(?<id>[^#\\&\\?]*).*/
+  |> Regex.named_captures(video.url)
+  |> get_in([\"id\"])
+end
+"
+   (should (eq (elixir-test-face-at 45) 'font-lock-string-face)) ;; escaped '/'
+   (should (eq (elixir-test-face-at 84) 'font-lock-string-face)) ;; comment mark '#'
+
+   (elixir-test-with-temp-buffer
+    "~B/\\//
+~C[\\]]
+~R{\\}}
+~C(\\))
+~b|\\||
+~c\"\\\"\"
+~r'\\''
+~s<\\>>"
+    (should (eq (elixir-test-face-at 5) 'font-lock-string-face)) ;; '/'
+    (should (eq (elixir-test-face-at 12) 'font-lock-string-face)) ;; '[]'
+    (should (eq (elixir-test-face-at 19) 'font-lock-string-face)) ;; '{}'
+    (should (eq (elixir-test-face-at 26) 'font-lock-string-face)) ;; '()'
+    (should (eq (elixir-test-face-at 33) 'font-lock-string-face)) ;; '|'
+    (should (eq (elixir-test-face-at 40) 'font-lock-string-face)) ;; '"'
+    (should (eq (elixir-test-face-at 47) 'font-lock-string-face)) ;; '\''
+    (should (eq (elixir-test-face-at 53) 'font-lock-string-face)) ;; '<>'
+    )))
+
 (provide 'elixir-mode-font-test)
 
 ;;; elixir-mode-font-test.el ends here
