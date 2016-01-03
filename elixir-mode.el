@@ -281,13 +281,20 @@ is used to limit the scan."
                (end-delim (or (assoc-default start-delim elixir-sigil-delimiter-pair)
                               (char-to-string start-delim)))
                (end (save-excursion
-                      (skip-chars-forward (concat "^" end-delim))
-                      (point)))
+                      (let (finish)
+                        (while (not finish)
+                          (skip-chars-forward (concat "^" end-delim))
+                          (if (or (not (eq (char-before) ?\\))
+                                  (eq (char-before (1- (point))) ?\\)
+                                  (eobp))
+                              (setq finish t)
+                            (forward-char 1)))
+                        (point))))
                (word-syntax (string-to-syntax "w")))
           (when (memq start-delim '(?' ?\"))
             (setq end (1+ end))
             (forward-char -1))
-          (while (re-search-forward "[\"'#]" end t)
+          (while (re-search-forward "[\"'#]" end 'move)
             (put-text-property (1- (point)) (point) 'syntax-table word-syntax)))))))
 
 (defun elixir-syntax-propertize-function (start end)
@@ -337,63 +344,56 @@ is used to limit the scan."
                  (group identifiers))
      2 font-lock-function-name-face)
 
-    ;; Sigils
-    (,(elixir-rx (group sigils))
-     1 font-lock-builtin-face)
-
     ;; Sigil patterns. Elixir has support for eight different sigil delimiters.
     ;; This isn't a very DRY approach here but it gets the job done.
-    (,(elixir-rx sigils
-                 (and "/" (group (one-or-more (not (any "/")))) "/"))
-     1 font-lock-string-face)
-    (,(elixir-rx sigils
-                 (and "[" (group (one-or-more (not (any "]")))) "]"))
-     1 font-lock-string-face)
-    (,(elixir-rx sigils
-                 (and "{" (group (one-or-more (not (any "}")))) "}"))
-     1 font-lock-string-face)
-    (,(elixir-rx sigils
-                 (and "(" (group (one-or-more (not (any ")")))) ")"))
-     1 font-lock-string-face)
-    (,(elixir-rx sigils
-                 (and "|" (group (one-or-more (not (any "|")))) "|"))
-     1 font-lock-string-face)
-    (,(elixir-rx sigils
-                 (and "\"" (group (one-or-more (not (any "\"")))) "\""))
-     1 font-lock-string-face)
-    (,(elixir-rx sigils
-                 (and "'" (group (one-or-more (not (any "'")))) "'"))
-     1 font-lock-string-face)
-    (,(elixir-rx sigils
-                 (and "<" (group (one-or-more (not (any ">")))) ">"))
-     1 font-lock-string-face)
-
-    ;; Regex patterns. Elixir has support for eight different regex delimiters.
-    ;; This isn't a very DRY approach here but it gets the job done.
-    (,(elixir-rx "~r"
-                 (and "/" (group (one-or-more (not (any "/")))) "/"))
-     1 font-lock-string-face)
-    (,(elixir-rx "~r"
-                 (and "[" (group (one-or-more (not (any "]")))) "]"))
-     1 font-lock-string-face)
-    (,(elixir-rx "~r"
-                 (and "{" (group (one-or-more (not (any "}")))) "}"))
-     1 font-lock-string-face)
-    (,(elixir-rx "~r"
-                 (and "(" (group (one-or-more (not (any ")")))) ")"))
-     1 font-lock-string-face)
-    (,(elixir-rx "~r"
-                 (and "|" (group (one-or-more (not (any "|")))) "|"))
-     1 font-lock-string-face)
-    (,(elixir-rx "~r"
-                 (and "\"" (group (one-or-more (not (any "\"")))) "\""))
-     1 font-lock-string-face)
-    (,(elixir-rx "~r"
-                 (and "'" (group (one-or-more (not (any "'")))) "'"))
-     1 font-lock-string-face)
-    (,(elixir-rx "~r"
-                 (and "<" (group (one-or-more (not (any ">")))) ">"))
-     1 font-lock-string-face)
+    (,(elixir-rx (group sigils)
+                 (and "/"
+                      (group (zero-or-more (or (and "\\" "/") (not (any "/" "\n" "\r")))))
+                      "/"))
+     (1 font-lock-builtin-face)
+     (2 font-lock-string-face))
+    (,(elixir-rx (group sigils)
+                 (and "["
+                      (group (zero-or-more (or (and "\\" "]") (not (any "]" "\n" "\r")))))
+                      "]"))
+     (1 font-lock-builtin-face)
+     (2 font-lock-string-face))
+    (,(elixir-rx (group sigils)
+                 (and "{"
+                      (group (zero-or-more (or (and "\\" "}") (not (any "}" "\n" "\r")))))
+                      "}"))
+     (1 font-lock-builtin-face)
+     (2 font-lock-string-face))
+    (,(elixir-rx (group sigils)
+                 (and "("
+                      (group (zero-or-more (or (and "\\" ")") (not (any ")" "\n" "\r")))))
+                      ")"))
+     (1 font-lock-builtin-face)
+     (2 font-lock-string-face))
+    (,(elixir-rx (group sigils)
+                 (and "|"
+                      (group (zero-or-more (or (and "\\" "|") (not (any "|" "\n" "\r")))))
+                      "|"))
+     (1 font-lock-builtin-face)
+     (2 font-lock-string-face))
+    (,(elixir-rx (group sigils)
+                 (and "\""
+                      (group (zero-or-more (or (and "\\" "\"") (not (any "\"" "\n" "\r")))))
+                      "\""))
+     (1 font-lock-builtin-face)
+     (2 font-lock-string-face))
+    (,(elixir-rx (group sigils)
+                 (and "'"
+                      (group (zero-or-more (or (and "\\" "'") (not (any "'" "\n" "\r")))))
+                      "'"))
+     (1 font-lock-builtin-face)
+     (2 font-lock-string-face))
+    (,(elixir-rx (group sigils)
+                 (and "<"
+                      (group (zero-or-more (or (and "\\" ">") (not (any ">" "\n" "\r")))))
+                      ">"))
+     (1 font-lock-builtin-face)
+     (2 font-lock-string-face))
 
     ;; Modules
     (,(elixir-rx (group module-names))
