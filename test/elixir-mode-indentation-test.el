@@ -1465,6 +1465,23 @@ end"
     :ok
 end")
 
+(elixir-def-indentation-test case-with-for-comprehension
+                             ; the for-comprehension should get indented one level
+                             ; https://github.com/elixir-lang/emacs-elixir/issues/304
+                             (:expected-result :failed :tags '(indentation))
+"case expression do
+  true ->
+  for _ <- [] do
+    :ok
+  end
+end"
+"case expression do
+  true ->
+    for _ <- [] do
+      :ok
+    end
+end")
+
 (elixir-def-indentation-test close-map-curly-brackt
                              (:tags '(indentation))
 "
