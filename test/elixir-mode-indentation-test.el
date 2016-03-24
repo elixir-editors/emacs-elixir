@@ -1466,9 +1466,7 @@ end"
 end")
 
 (elixir-def-indentation-test case-with-for-comprehension
-                             ; the for-comprehension should get indented one level
-                             ; https://github.com/elixir-lang/emacs-elixir/issues/304
-                             (:expected-result :failed :tags '(indentation))
+                             (:tags '(indentation))
 "case expression do
   true ->
   for _ <- [] do
