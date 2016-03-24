@@ -391,7 +391,10 @@
     (`(:before . "fn")
      (smie-rule-parent))
     (`(:before . "for")
-     (smie-rule-parent))
+     (cond
+      ((elixir-smie-last-line-end-with-block-operator-p)
+       (smie-rule-parent elixir-smie-indent-basic))
+      (t (smie-rule-parent))))
     (`(:before . "do:")
      (cond
       ((smie-rule-parent-p "def" "if" "defp" "defmacro" "defmacrop")
