@@ -1688,6 +1688,21 @@ some_method :arg1,
 other_method
 ")
 
+(elixir-def-indentation-test indent-correct-inside-fn-block
+                             (:tags '(indentation))
+"
+Enum.map(addresses, fn({mac_address, dbms}) ->
+sum = Enum.reduce(dbms, fn(x, sum) -> x + sum end)
+        average_dbm = sum / length(addresses)
+end)
+"
+"
+Enum.map(addresses, fn({mac_address, dbms}) ->
+  sum = Enum.reduce(dbms, fn(x, sum) -> x + sum end)
+  average_dbm = sum / length(addresses)
+end)
+")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
