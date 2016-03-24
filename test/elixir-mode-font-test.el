@@ -441,6 +441,23 @@ end
 "
    (should (eq (elixir-test-face-at 33) 'font-lock-string-face))))
 
+(ert-deftest elixir-mode-syntax-table/single-triple-single-quote ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/309"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "defmodule Module do
+  @moduledoc ~S'''
+  foo's \"bar\"
+'''"
+   (should (eq (elixir-test-face-at 34) 'font-lock-builtin-face)) ;; ~S
+   (should (eq (elixir-test-face-at 35) 'font-lock-builtin-face))
+   (should (eq (elixir-test-face-at 36) 'font-lock-string-face))  ;; '''
+   (should (eq (elixir-test-face-at 37) 'font-lock-string-face))
+   (should (eq (elixir-test-face-at 38) 'font-lock-string-face))
+   (should (eq (elixir-test-face-at 54) 'font-lock-string-face))  ;; '''
+   (should (eq (elixir-test-face-at 55) 'font-lock-string-face))
+   (should (eq (elixir-test-face-at 56) 'font-lock-string-face))))
+
 (ert-deftest elixir-mode-syntax-table/gray-out-ignored-var ()
   "https://github.com/elixir-lang/emacs-elixir/issues/292"
   :tags '(fontification syntax-table)
