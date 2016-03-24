@@ -512,8 +512,16 @@
       ;;   ....
       ((elixir-smie-last-line-end-with-block-operator-p)
        (smie-rule-parent elixir-smie-indent-basic))
-      (t
-       (smie-rule-parent))))
+      ;; Indent if inside else
+      ;;
+      ;; Example:
+      ;;
+      ;; else
+      ;;   if condition, do: :bar <-
+      ;; end
+      ((smie-rule-parent-p "else")
+       (smie-rule-parent elixir-smie-indent-basic))
+      (t (smie-rule-parent))))
     (`(:before . "->")
      (cond
       ;; Example

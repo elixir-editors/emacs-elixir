@@ -350,8 +350,7 @@ end")
 
 
 (elixir-def-indentation-test indent-if-else/2
-                             ;; https://github.com/elixir-lang/emacs-elixir/issues/288
-                             (:expected-result :failed :tags '(indentation))
+                             (:tags '(indentation))
   "
 if condition do
 :foo
