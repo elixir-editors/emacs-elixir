@@ -195,6 +195,23 @@
     (beginning-of-line)
     (looking-at "^\s+->.+$")))
 
+(defun elixir-smie-current-line-start-with-pipe-operator-p ()
+  (save-excursion
+    (beginning-of-line)
+    (looking-at "^\s*|>.+$")))
+
+(defun elixir-smie-last-line-is-assignment-p ()
+  (save-excursion
+    (forward-line -1)
+    (beginning-of-line)
+    (looking-at "^.+=.+$")))
+
+(defun elixir-smie-last-line-start-with-pipe-operator-p ()
+  (save-excursion
+    (forward-line -1)
+    (beginning-of-line)
+    (looking-at "^\s*|>.+$")))
+
 (defun elixir-smie-line-starts-with-do-colon-p ()
   (save-excursion
     (beginning-of-line)
@@ -305,11 +322,20 @@
     (`(:elem . args)
      -4)
     (`(:before . "OP")
-     (cond ((and (not (smie-rule-hanging-p))
-                 (smie-rule-prev-p "OP"))
-            -2)
-           ((smie-rule-parent-p "def" "defp" "defmacro" "defmacrop")
-            (smie-rule-parent))))
+     (cond
+      ((and (not (smie-rule-hanging-p))
+            (elixir-smie-current-line-start-with-pipe-operator-p)
+            (elixir-smie-last-line-is-assignment-p))
+       (smie-rule-parent))
+      ((and (not (smie-rule-hanging-p))
+            (elixir-smie-current-line-start-with-pipe-operator-p))
+       (goto-char (elixir-smie--previous-line-indentation)))
+      ((and (not (smie-rule-hanging-p))
+            (smie-rule-prev-p "OP"))
+       -2)
+      ((smie-rule-parent-p "def" "defp" "defmacro" "defmacrop")
+       (smie-rule-parent))
+      (t (smie-rule-parent))))
     (`(:before . "def")
      (cond
       (t
@@ -648,7 +674,10 @@
       ((and (smie-rule-parent-p ";")
             (smie-rule-hanging-p)
             (elixir-smie-line-starts-with-do-colon-p))
-       (smie-rule-parent (- elixir-smie-indent-basic)))))
+       (smie-rule-parent (- elixir-smie-indent-basic)))
+
+      ((elixir-smie-current-line-start-with-pipe-operator-p)
+       (smie-rule-parent))))
     (`(:after . ";")
      (cond
       ((smie-rule-parent-p "def")
