@@ -329,7 +329,7 @@
        (smie-rule-parent))
       ((and (not (smie-rule-hanging-p))
             (elixir-smie-current-line-start-with-pipe-operator-p))
-       (goto-char (elixir-smie--previous-line-indentation)))
+       (cons 'column  (elixir-smie--previous-line-indentation)))
       ((and (not (smie-rule-hanging-p))
             (smie-rule-prev-p "OP"))
        -2)
