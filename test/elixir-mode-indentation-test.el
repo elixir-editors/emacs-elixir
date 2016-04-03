@@ -733,6 +733,28 @@ def foo(x) do
   |> Enum.reverse
 end")
 
+
+(elixir-def-indentation-test indent-pipes-inside-blocks
+                             (:tags '(indentation))
+    "
+defmodule Foo do
+def bar do
+ baz =
+         [1,2,3,4,5,6,7,8,9]
+  |> Enum.reverse
+                  |> Enum.filter(&(&1 > 5))
+  end
+end"
+    "
+defmodule Foo do
+  def bar do
+    baz =
+      [1,2,3,4,5,6,7,8,9]
+      |> Enum.reverse
+      |> Enum.filter(&(&1 > 5))
+  end
+end")
+
 (elixir-def-indentation-test indent-inside-parens
                              (:tags '(indentation))
   "
