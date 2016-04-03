@@ -1,3 +1,29 @@
+## v2.2.9 - 2016/04/03
+* [#317](https://github.com/elixir-lang/emacs-elixir/pull/317) - Correct pipeline indentation
+* [#316](https://github.com/elixir-lang/emacs-elixir/pull/316) - Fix indentation of if within an else block
+* [#315](https://github.com/elixir-lang/emacs-elixir/pull/315) - Correct indentation with for-comprehensions within blocks
+* [#314](https://github.com/elixir-lang/emacs-elixir/pull/314) - Fix highlighting triple single quote(heredoc)
+* [#313](https://github.com/elixir-lang/emacs-elixir/pull/313) - Correct indentation after a one line 'fn' definition
+* [#305](https://github.com/elixir-lang/emacs-elixir/pull/305) - Added test case for for-comprehensions within case
+* [#303](https://github.com/elixir-lang/emacs-elixir/pull/303) - Fix escaped delimiter in sigil issue
+* [#295](https://github.com/elixir-lang/emacs-elixir/pull/295) - Demonstrate defstruct indention in a test case
+* [#261](https://github.com/elixir-lang/emacs-elixir/pull/261) - Test for multi-line function calls without parenthesis
+* [#299](https://github.com/elixir-lang/emacs-elixir/pull/299) - Added `with/1` to the highlighted keywords
+* [#298](https://github.com/elixir-lang/emacs-elixir/pull/298) - Added a test for alignment of the last key in multiline maps in cases
+* [#296](https://github.com/elixir-lang/emacs-elixir/pull/296) - Gray out ignored variables
+* [#291](https://github.com/elixir-lang/emacs-elixir/pull/291) - Added a test for indenting non-finished one-line if-else
+* [#289](https://github.com/elixir-lang/emacs-elixir/pull/289) - Added a test case for if within an else
+* [#287](https://github.com/elixir-lang/emacs-elixir/pull/287) - Fix sigil triple quotes
+* [#284](https://github.com/elixir-lang/emacs-elixir/pull/284) - Added a test for highlighting end after comment
+* [#285](https://github.com/elixir-lang/emacs-elixir/pull/285) - Don't capture '(or line-start (not (any ".")))'
+* [#282](https://github.com/elixir-lang/emacs-elixir/pull/282) - Indent multiple macro calls with do colon correct
+* [#280](https://github.com/elixir-lang/emacs-elixir/pull/280) - Fix one line definitions with equal char inside guard
+* [#279](https://github.com/elixir-lang/emacs-elixir/pull/279) - Fix indentation of single line fun declarations after single line fun declarations with when clauses
+* [#277](https://github.com/elixir-lang/emacs-elixir/pull/277) - Fix syntax highlighting sigils in string
+* [#273](https://github.com/elixir-lang/emacs-elixir/pull/273) - Removed send_after from highlighted keywords
+* [#272](https://github.com/elixir-lang/emacs-elixir/pull/272) - Added `send` and `send_after` to font lock
+* [#271](https://github.com/elixir-lang/emacs-elixir/pull/271) - Highlight module if preceded by a pipe
+
 ## v2.2.8 - 2015/10/19
 * [#270](https://github.com/elixir-lang/emacs-elixir/pull/270) - Fix highlighting hashmark in sigil
 * [#269](https://github.com/elixir-lang/emacs-elixir/pull/269) - Fix string interpolation
