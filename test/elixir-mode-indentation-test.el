@@ -696,7 +696,31 @@ defmodule Foo do
 end
 ")
 
-(elixir-def-indentation-test indent-pipes
+(elixir-def-indentation-test indent-multiline-pipes-after-call
+                             (:tags '(indentation))
+    "
+  some_string
+      |> String.downcase
+   |> String.strip"
+    "
+some_string
+|> String.downcase
+|> String.strip")
+
+(elixir-def-indentation-test indent-multiline-on-the-right-of-pattern-match
+                             (:tags '(indentation))
+    "
+sanitized_string =
+        some_string
+|> String.downcase
+             |> String.strip"
+    "
+sanitized_string =
+  some_string
+  |> String.downcase
+  |> String.strip")
+
+(elixir-def-indentation-test indent-pipes-after-assignment
                              (:tags '(indentation))
     "
 def foo(x) do
