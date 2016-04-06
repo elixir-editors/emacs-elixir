@@ -424,7 +424,7 @@ is used to limit the scan."
      1 elixir-ignored-var-face)
 
     ;; Map keys
-    (,(elixir-rx (group (and (one-or-more identifiers) ":")))
+    (,(elixir-rx (group (and (one-or-more identifiers) ":")) space)
      1 elixir-atom-face)
 
     ;; Pseudovariables

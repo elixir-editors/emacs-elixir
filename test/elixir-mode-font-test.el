@@ -222,7 +222,12 @@ true_false_nil
     (should (eq (elixir-test-face-at 3) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 4) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 9) 'elixir-atom-face))
-    (should (eq (elixir-test-face-at 10) 'elixir-atom-face))))
+    (should (eq (elixir-test-face-at 10) 'elixir-atom-face)))
+
+  ;; https://github.com/elixir-lang/emacs-elixir/issues/320
+  (elixir-test-with-temp-buffer
+   "<<foo::bar>>"
+   (should-not (eq (elixir-test-face-at 3) 'elixir-atom-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-interpolation ()
   :tags '(fontification interpolation syntax-table)
