@@ -277,10 +277,15 @@
    ((looking-at elixir-smie--operator-regexp)
     (goto-char (match-end 0))
     "OP")
-   (t
-    (let ((token (smie-default-forward-token)))
-      (unless (elixir-smie-empty-string-p token)
-        token)))))
+   (t (let ((token (smie-default-forward-token)))
+        (unless (or (elixir-smie-empty-string-p token)
+                    (elixir-smie--at-dot-call))
+          token)))))
+
+(defun elixir-smie--at-dot-call ()
+  (and (eq ?w (char-syntax (following-char)))
+       (eq (char-before) ?.)
+       (not (eq (char-before (1- (point))) ?.))))
 
 (defun elixir-smie-backward-token ()
   (let ((pos (point)))
@@ -303,7 +308,10 @@
      ((looking-back elixir-smie--operator-regexp (- (point) 3) t)
       (goto-char (match-beginning 0))
       "OP")
-     (t (smie-default-backward-token)))))
+     (t (let ((token (smie-default-backward-token)))
+          (unless (or (elixir-smie-empty-string-p token)
+                      (elixir-smie--at-dot-call))
+            token))))))
 
 (defun verbose-elixir-smie-rules (kind token)
   (let ((value (elixir-smie-rules kind token)))
@@ -574,7 +582,7 @@
       ;;   ...
       ((and (not (smie-rule-hanging-p))
             (smie-rule-parent-p "do"))
-          elixir-smie-indent-basic)
+       elixir-smie-indent-basic)
       ((and (not (smie-rule-hanging-p))
             (smie-rule-parent-p "MATCH-STATEMENT-DELIMITER"))
        (smie-rule-parent))
@@ -707,7 +715,7 @@
                       (let ((pos (point)))
                         (parse-partial-sexp 1 pos)))))
         (and (looking-at "\"\"\"")
-           (match-beginning 0)))))
+             (match-beginning 0)))))
 
 (defun elixir-smie--previous-line-empty-p ()
   "Return non-nil if the previous line is blank."

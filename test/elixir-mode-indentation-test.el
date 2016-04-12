@@ -377,8 +377,7 @@ else: :bar"
 )
 
 (elixir-def-indentation-test indent-if-when-condition-is-a-named-function-on-a-module
-                             (:expected-result :failed :tags '(indentation))
-                             ;; https://github.com/elixir-lang/emacs-elixir/issues/323
+                             (:tags '(indentation))
 "defmodule Whois do
   def lookup2(domain) do
     if Server.for(domain) do
@@ -1575,8 +1574,7 @@ end"
 end")
 
 (elixir-def-indentation-test indent-case-when-condition-is-a-named-function-on-a-module
-                             (:expected-result :failed :tags '(indentation))
-                             ;; https://github.com/elixir-lang/emacs-elixir/issues/323
+                             (:tags '(indentation))
 "defmodule Whois do
   def lookup1(domain) do
     case Server.for(domain) do
