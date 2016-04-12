@@ -376,6 +376,29 @@ else: :bar"
   else: :bar"
 )
 
+(elixir-def-indentation-test indent-if-when-condition-is-a-named-function-on-a-module
+                             (:expected-result :failed :tags '(indentation))
+                             ;; https://github.com/elixir-lang/emacs-elixir/issues/323
+"defmodule Whois do
+  def lookup2(domain) do
+    if Server.for(domain) do
+          :ok
+        else
+          :error
+        end
+  end
+end"
+"defmodule Whois do
+  def lookup2(domain) do
+    if Server.for(domain) do
+      :ok
+    else
+      :error
+    end
+  end
+end"
+)
+
 (elixir-def-indentation-test indent-try
                              (:tags '(indentation))
   "
@@ -1524,6 +1547,27 @@ end"
       :ok
     end
 end")
+
+(elixir-def-indentation-test indent-case-when-condition-is-a-named-function-on-a-module
+                             (:expected-result :failed :tags '(indentation))
+                             ;; https://github.com/elixir-lang/emacs-elixir/issues/323
+"defmodule Whois do
+  def lookup1(domain) do
+    case Server.for(domain) do
+          {:ok, server} -> server
+          :error -> {:error, :unsupported}
+        end
+  end
+end"
+"defmodule Whois do
+  def lookup1(domain) do
+    case Server.for(domain) do
+      {:ok, server} -> server
+      :error -> {:error, :unsupported}
+    end
+  end
+end"
+)
 
 (elixir-def-indentation-test close-map-curly-brackt
                              (:tags '(indentation))
