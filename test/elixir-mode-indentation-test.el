@@ -630,6 +630,32 @@ def foo() do
 end
 ")
 
+(elixir-def-indentation-test cond-within-with
+                             (:expected-result :failed :tags '(indentation))
+                             ;; https://github.com/elixir-lang/emacs-elixir/issues/319
+  "with(
+  foo <-
+  cond do
+    bar ->
+      bar
+
+    baz ->
+      baz
+  end,
+  do: :ok
+)"
+  "with(
+  foo <-
+    cond do
+      bar ->
+        bar
+
+      baz ->
+        baz
+    end,
+  do: :ok
+)")
+
 (elixir-def-indentation-test indent-heredoc
                              (:tags '(indentation))
   "
