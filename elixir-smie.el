@@ -530,7 +530,19 @@
        (smie-rule-parent))
       ((smie-rule-parent-p "[")
        (smie-rule-parent))
-      ))
+      ((smie-rule-parent-p "->")
+       (if (save-excursion
+             (move-end-of-line 1)
+             (looking-back elixir-smie--block-operator-regexp (- (point) 3) t))
+           (smie-rule-parent -2)
+         elixir-smie-indent-basic))
+      ((smie-rule-parent-p ";")
+       (if (save-excursion
+             (move-end-of-line 1)
+             (looking-back elixir-smie--block-operator-regexp (- (point) 3) t))
+           (smie-rule-parent -2)
+         elixir-smie-indent-basic))
+      (t (smie-rule-parent))))
     (`(:after . "{")
      (cond
       ((smie-rule-hanging-p)
