@@ -544,7 +544,7 @@
              (looking-back elixir-smie--block-operator-regexp (- (point) 3) t))
            (smie-rule-parent -2)
          elixir-smie-indent-basic))
-      (t (smie-rule-parent))))
+      (t (smie-rule-parent elixir-smie-indent-basic))))
     (`(:after . "{")
      (cond
       ((smie-rule-hanging-p)

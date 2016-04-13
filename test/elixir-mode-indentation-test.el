@@ -366,6 +366,23 @@ else
 end
 ")
 
+(elixir-def-indentation-test indent-tuple-after-if-else
+                             (:tags '(indentation))
+"
+if foo do
+ :ok
+else
+{:tuple}
+end
+"
+"
+if foo do
+  :ok
+else
+  {:tuple}
+end
+")
+
 (elixir-def-indentation-test indent-non-finished-one-line-if-else
                              (:expected-result :failed :tags '(indentation))
 "if condition,
