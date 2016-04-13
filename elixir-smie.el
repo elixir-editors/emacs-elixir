@@ -529,7 +529,9 @@
             (smie-rule-hanging-p))
        (smie-rule-parent))
       ((smie-rule-parent-p "[")
-       (smie-rule-parent))
+       (if (nth 0 smie--parent)
+           (smie-rule-parent elixir-smie-indent-basic)
+         (smie-rule-parent)))
       ((smie-rule-parent-p "->")
        (if (save-excursion
              (move-end-of-line 1)

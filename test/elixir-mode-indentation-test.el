@@ -1836,6 +1836,12 @@ end
                              (:tags '(indentation))
 "
 [
+{1, 2, 3},
+{4, 5, 6},
+    {7, 8, 9}
+]
+
+[
 %{
  name: \"John Doe\",
   email: \"john@doe.org\"
@@ -1851,6 +1857,12 @@ email: \"jane@doe.org\",
 ]
 "
 "
+[
+  {1, 2, 3},
+  {4, 5, 6},
+  {7, 8, 9}
+]
+
 [
   %{
     name: \"John Doe\",
