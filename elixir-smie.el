@@ -246,7 +246,8 @@
          ;; And if we're NOT on a blank line, move to the end of the line, and see
          ;; if we're looking back at a block operator.
          (t (move-end-of-line 1)
-            (looking-back elixir-smie--block-operator-regexp)))))))
+            (and (looking-back elixir-smie--block-operator-regexp)
+                 (not (looking-back ".+fn.+")))))))))
 
 (defun elixir-smie--same-line-as-parent (parent-pos child-pos)
   "Return non-nil if `child-pos' is on same line as `parent-pos'."
@@ -377,6 +378,8 @@
       ((and (smie-rule-parent-p "do")
             (smie-rule-hanging-p))
        (smie-rule-parent))
+      ((and (smie-rule-parent-p "fn"))
+       (smie-rule-parent elixir-smie-indent-basic))
       ;; There is a case when between two line inside a def block
       ;; when jumping to the next line and indent, where the cursor
       ;; jumps too much in front.
@@ -471,8 +474,7 @@
       ((and (smie-rule-parent-p "def")
             (smie-rule-hanging-p))
        (smie-rule-parent elixir-smie-indent-basic))
-      (t
-       elixir-smie-indent-basic)))
+      (t elixir-smie-indent-basic)))
     (`(:before . "end")
      (smie-rule-parent))
     ;; Closing paren on the other line
@@ -685,7 +687,9 @@
        (smie-rule-parent (- elixir-smie-indent-basic)))
 
       ((elixir-smie-current-line-start-with-pipe-operator-p)
-       (smie-rule-parent))))
+       (smie-rule-parent))
+      ((smie-rule-parent-p "(")
+       (smie-rule-parent elixir-smie-indent-basic))))
     (`(:after . ";")
      (cond
       ((smie-rule-parent-p "def")

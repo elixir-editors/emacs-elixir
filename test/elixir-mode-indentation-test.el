@@ -823,7 +823,7 @@ x = do_something(:foo,
                     :bar)"
 "
 x = do_something(:foo,
-                 :bar)")
+  :bar)")
 
 (elixir-def-indentation-test indent-inside-parens/3
                              (:tags '(indentation))
@@ -955,14 +955,15 @@ end"
 
 (elixir-def-indentation-test indent-mixed-match
                              (:tags '(indentation))
-   "
+"
 case x do
 a -> b
 c ->
 d
 e -> f
 end
-" "
+"
+"
 case x do
   a -> b
   c ->
@@ -1812,6 +1813,25 @@ Enum.map(addresses, fn({mac_address, dbms}) ->
   sum = Enum.reduce(dbms, fn(x, sum) -> x + sum end)
   average_dbm = sum / length(addresses)
 end)
+")
+
+(elixir-def-indentation-test indent-statement-with-anonymous-fn
+                             (:tags '(indentation))
+"
+cond do
+ is_nil(val) ->
+IO.puts \"OK\"
+              Enum.any?(1..6, fn -> end)
+    true ->
+end
+"
+"
+cond do
+  is_nil(val) ->
+    IO.puts \"OK\"
+    Enum.any?(1..6, fn -> end)
+  true ->
+end
 ")
 
 ;; We don't want automatic whitespace cleanup here because of the significant
