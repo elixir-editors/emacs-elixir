@@ -527,7 +527,10 @@
            (smie-rule-parent))))
       ((and (smie-rule-parent-p "OP")
             (smie-rule-hanging-p))
-       (smie-rule-parent))))
+       (smie-rule-parent))
+      ((smie-rule-parent-p "[")
+       (smie-rule-parent))
+      ))
     (`(:after . "{")
      (cond
       ((smie-rule-hanging-p)

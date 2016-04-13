@@ -1834,6 +1834,41 @@ cond do
 end
 ")
 
+(elixir-def-indentation-test indent-maps-inside-list
+                             (:tags '(indentation))
+"
+[
+%{
+ name: \"John Doe\",
+  email: \"john@doe.org\"
+},
+%{
+        name: \"Jane Doe\",
+email: \"jane@doe.org\",
+},
+%{
+  name: \"Josie Doe\",
+    email: \"josie@doe.org\",
+  },
+]
+"
+"
+[
+  %{
+    name: \"John Doe\",
+    email: \"john@doe.org\"
+  },
+  %{
+    name: \"Jane Doe\",
+    email: \"jane@doe.org\",
+  },
+  %{
+    name: \"Josie Doe\",
+    email: \"josie@doe.org\",
+  },
+]
+")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
