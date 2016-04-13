@@ -1,3 +1,12 @@
+## v2.3.0 - 2016/04/13
+* [#327](https://github.com/elixir-lang/emacs-elixir/pull/327) - Correct indentation of maps inside lists
+* [#326](https://github.com/elixir-lang/emacs-elixir/pull/326) - Correct anonymous fun indent inside block
+* [#325](https://github.com/elixir-lang/emacs-elixir/pull/325) - Fix indentation of statement keywords on dot call
+* [#324](https://github.com/elixir-lang/emacs-elixir/pull/324) - added failing tests for named functions in if and case
+* [#322](https://github.com/elixir-lang/emacs-elixir/pull/322) - added a failing indentation test for cond within with
+* [#321](https://github.com/elixir-lang/emacs-elixir/pull/321) - Fix invalid highlighting '::' in binaries
+* [#318](https://github.com/elixir-lang/emacs-elixir/pull/318) - Fix indent of pipes inside blocks of 'def' for example
+
 ## v2.2.9 - 2016/04/03
 * [#317](https://github.com/elixir-lang/emacs-elixir/pull/317) - Correct pipeline indentation
 * [#316](https://github.com/elixir-lang/emacs-elixir/pull/316) - Fix indentation of if within an else block
