@@ -277,7 +277,8 @@
         "MATCH-STATEMENT-DELIMITER"
       (if (and (looking-at ".+,$")
                (not (> (nth 0 (syntax-ppss)) 0)))
-          "COMMA"";")))
+          "COMMA"
+        ";")))
    ((looking-at elixir-smie--block-operator-regexp)
     (goto-char (match-end 0))
     "->")
@@ -336,6 +337,8 @@
 (defun elixir-smie-rules (kind token)
   (pcase (cons kind token)
     (`(:list-intro . ";")
+     -4)
+    (`(:list-intro . nil)
      -4)
     (`(:elem . args)
      -4)
@@ -567,10 +570,6 @@
       ((and (smie-rule-parent-p "OP")
             (smie-rule-hanging-p))
        (smie-rule-parent))
-      ((smie-rule-parent-p "[")
-       (if (nth 0 smie--parent)
-           (smie-rule-parent elixir-smie-indent-basic)
-         (smie-rule-parent)))
       ((smie-rule-parent-p "->")
        (if (save-excursion
              (move-end-of-line 1)
@@ -582,8 +581,7 @@
              (move-end-of-line 1)
              (looking-back elixir-smie--block-operator-regexp (- (point) 3) t))
            (smie-rule-parent (- elixir-smie-indent-basic))
-         (smie-rule-parent)))
-      (t (smie-rule-parent elixir-smie-indent-basic))))
+         (smie-rule-parent)))))
     (`(:after . "{")
      (cond
       ((smie-rule-hanging-p)

@@ -1874,6 +1874,11 @@ end
 (elixir-def-indentation-test indent-maps-inside-list
                              (:tags '(indentation))
 "
+[{:earmark, \"~> 0.1\", only: :dev},
+             {:earmark, \"~> 0.1\", only: :dev},
+{:ex_doc, \"~> 0.11\", only: :dev},
+        {:ex_doc, \"~> 0.11\", only: :dev}]
+
 [
 {1, 2, 3},
 {4, 5, 6},
@@ -1896,6 +1901,11 @@ email: \"jane@doe.org\",
 ]
 "
 "
+[{:earmark, \"~> 0.1\", only: :dev},
+ {:earmark, \"~> 0.1\", only: :dev},
+ {:ex_doc, \"~> 0.11\", only: :dev},
+ {:ex_doc, \"~> 0.11\", only: :dev}]
+
 [
   {1, 2, 3},
   {4, 5, 6},
