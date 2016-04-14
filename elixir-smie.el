@@ -455,7 +455,7 @@
      (cond
       ((elixir-smie-last-line-end-with-block-operator-p)
        (smie-rule-parent elixir-smie-indent-basic))
-      ((smie-rule-prev-p "OP")
+      ((smie-rule-prev-p "OP" "def")
        (smie-rule-parent))))
     (`(:before . "do:")
      (cond

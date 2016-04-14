@@ -1918,6 +1918,25 @@ email: \"jane@doe.org\",
 ]
 ")
 
+(elixir-def-indentation-test indent-block-after-for-inside-function-definition
+                             (:tags '(indentation))
+"
+defmodule Test do
+def for(domain) do
+[_, tld] = String.split(domain, \".\", parts: 2)
+Map.fetch(all, tld)
+  end
+end
+"
+"
+defmodule Test do
+  def for(domain) do
+    [_, tld] = String.split(domain, \".\", parts: 2)
+    Map.fetch(all, tld)
+  end
+end
+")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
