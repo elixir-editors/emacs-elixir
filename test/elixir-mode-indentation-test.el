@@ -648,7 +648,7 @@ end")
 
 (elixir-def-indentation-test cond-comment
                              (:tags '(indentation))
-  "
+"
 def foo() do
 cond do
 yadda ->
@@ -658,7 +658,7 @@ badda -> # comment throws this off
 end
 end
 "
-  "
+"
 def foo() do
   cond do
     yadda ->
@@ -822,12 +822,12 @@ end")
 
 (elixir-def-indentation-test indent-inside-parens
                              (:tags '(indentation))
-  "
+"
 x = do_something(
 :foo,
 :bar
 )"
-  "
+"
 x = do_something(
   :foo,
   :bar
@@ -874,8 +874,7 @@ end")
 
 (elixir-def-indentation-test indent-inside-parens/5
                              (:tags '(indentation))
-"
-defmodule IndentPlayground do
+"defmodule IndentPlayground do
 def my_func(arr) do
  Enum.map(arr, fn(x) ->
   x * 2
@@ -883,8 +882,7 @@ end)
    #back here
 end
 end"
-"
-defmodule IndentPlayground do
+"defmodule IndentPlayground do
   def my_func(arr) do
     Enum.map(arr, fn(x) ->
       x * 2
@@ -1145,19 +1143,23 @@ end")
 (elixir-def-indentation-test indent-correct-with-multiple-one-line-macro-calls
                              (:tags '(indentation))
 "
-     mymacro x1, do: [:x1]
+defmodule MyMacros do
+  mymacro x1, do: [:x1]
 mymacro x2, do: [:x2]
+  mymacro x3, do: [:x3]
+       mymacro x1, do: [:x1]
+  mymacro x2, do: [:x2]
 mymacro x3, do: [:x3]
-      mymacro x1, do: [:x1]
- mymacro x2, do: [:x2]
-         mymacro x3, do: [:x3]"
+end"
 "
-mymacro x1, do: [:x1]
-mymacro x2, do: [:x2]
-mymacro x3, do: [:x3]
-mymacro x1, do: [:x1]
-mymacro x2, do: [:x2]
-mymacro x3, do: [:x3]")
+defmodule MyMacros do
+  mymacro x1, do: [:x1]
+  mymacro x2, do: [:x2]
+  mymacro x3, do: [:x3]
+  mymacro x1, do: [:x1]
+  mymacro x2, do: [:x2]
+  mymacro x3, do: [:x3]
+end")
 
 (elixir-def-indentation-test indent-binary-sequence
                              (:tags '(indentation))
@@ -1205,20 +1207,20 @@ end"
 case asd do
   <<c1::5, c2::5, c3::5, c4::5, c5::5, c6::5, c7::2>> ->
     <<main::binary,
-    enc.(c1)::8, enc.(c2)::8, enc.(c3)::8, enc.(c4)::8,
-    enc.(c5)::8, enc.(c6)::8, enc.(bsl(c7, 3))::8, ?=>>
+      enc.(c1)::8, enc.(c2)::8, enc.(c3)::8, enc.(c4)::8,
+      enc.(c5)::8, enc.(c6)::8, enc.(bsl(c7, 3))::8, ?=>>
   <<c1::5, c2::5, c3::5, c4::5, c5::4>> ->
     <<main::binary,
-    enc.(c1)::8, enc.(c2)::8, enc.(c3)::8, enc.(c4)::8,
-    enc.(bsl(c5, 1))::8, ?=,  ?=, ?=>>
+      enc.(c1)::8, enc.(c2)::8, enc.(c3)::8, enc.(c4)::8,
+      enc.(bsl(c5, 1))::8, ?=,  ?=, ?=>>
   <<c1::5, c2::5, c3::5, c4::1>> ->
     <<main::binary,
-    enc.(c1)::8, enc.(c2)::8,  enc.(c3)::8, enc.(bsl(c4, 4))::8,
-    ?=, ?=,  ?=, ?=>>
+      enc.(c1)::8, enc.(c2)::8,  enc.(c3)::8, enc.(bsl(c4, 4))::8,
+      ?=, ?=,  ?=, ?=>>
   <<c1::5, c2::3>> ->
     <<main::binary,
-    enc.(c1)::8, enc.(bsl(c2, 2))::8, ?=, ?=,
-    ?=, ?=, ?=, ?=>>
+      enc.(c1)::8, enc.(bsl(c2, 2))::8, ?=, ?=,
+      ?=, ?=, ?=, ?=>>
   <<>> ->
     main
 end")
@@ -1718,18 +1720,38 @@ hi =
 ")
 
 (elixir-def-indentation-test indent-multiline-for
-                             (:expected-result :failed :tags '(indentation))
+                             (:tags '(indentation))
 "
+defmodule For do
+def test do
+  for {k, v} <- keyword,
+  v = process_value(v),
+into: %{}
+   do: {v, k}
+
 for {k, v} <- keyword,
 v = process_value(v),
-into: %{}
-do: {v, k}
+into: %{} do
+{v, k}
+    end
+  end
+end
 "
 "
-for {k, v} <- keyword,
-  v = process_value(v),
-  into: %{}
-  do: {v, k}
+defmodule For do
+  def test do
+    for {k, v} <- keyword,
+      v = process_value(v),
+      into: %{}
+      do: {v, k}
+
+    for {k, v} <- keyword,
+      v = process_value(v),
+      into: %{} do
+      {v, k}
+    end
+  end
+end
 ")
 
 (elixir-def-indentation-test indent-multiline-for-do-end
@@ -1788,7 +1810,7 @@ result =
 ")
 
 (elixir-def-indentation-test indent-multiline-function-calls-without-parenthesis
-                             (:expected-result :failed :tags '(indentation))
+                             (:tags '(indentation))
 "
 some_method :arg1,
 :arg2
@@ -1801,7 +1823,7 @@ other_method
 ")
 
 (elixir-def-indentation-test indent-multiline-function-calls-without-parenthesis/2
-                             (:expected-result :failed :tags '(indentation))
+                             (:tags '(indentation))
 "
 some_method :arg1,
 arg1: 1,
