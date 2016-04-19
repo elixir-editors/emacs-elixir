@@ -1947,6 +1947,25 @@ defmodule Test do
 end
 ")
 
+(elixir-def-indentation-test indent-before-comma
+                             (:tags '(indentation))
+"
+defmodule TestIndentation do
+import Enum
+
+@att %{ab: 21,
+   de: 22}
+                  IO.inspect @att
+end"
+"
+defmodule TestIndentation do
+  import Enum
+
+  @att %{ab: 21,
+         de: 22}
+  IO.inspect @att
+end")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
