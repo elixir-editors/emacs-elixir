@@ -40,7 +40,7 @@ task "install" do
 end
 
 desc "Run test suite"
-task "test" => [:install] do
+task "test" do
   process_info "Run test suite"
   say ""
   system "#{CASK} exec ert-runner"

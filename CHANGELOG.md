@@ -1,3 +1,9 @@
+## v2.3.1 - 2016/04/19
+* [#337](https://github.com/elixir-lang/emacs-elixir/pull/337) - Fix indentation issue after COMMA token
+* [#333](https://github.com/elixir-lang/emacs-elixir/pull/333) - Fix indentation of second element inside list of tuples
+* [#332](https://github.com/elixir-lang/emacs-elixir/pull/332) - Correct indent after using 'for' as function name
+* [#329](https://github.com/elixir-lang/emacs-elixir/pull/329) - Indent by one level if current line belongs to function call
+
 ## v2.3.0 - 2016/04/13
 * [#327](https://github.com/elixir-lang/emacs-elixir/pull/327) - Correct indentation of maps inside lists
 * [#326](https://github.com/elixir-lang/emacs-elixir/pull/326) - Correct anonymous fun indent inside block
