@@ -285,10 +285,11 @@
    ((looking-at elixir-smie--operator-regexp)
     (goto-char (match-end 0))
     "OP")
-   (t (let ((token (smie-default-forward-token)))
-        (unless (or (elixir-smie-empty-string-p token)
-                    (elixir-smie--at-dot-call))
-          token)))))
+   (t
+    (let ((token (smie-default-forward-token)))
+      (unless (or (elixir-smie-empty-string-p token)
+		  (elixir-smie--at-dot-call))
+	token)))))
 
 (defun elixir-smie--at-dot-call ()
   (and (eq ?w (char-syntax (following-char)))
@@ -346,7 +347,7 @@
      (cond
       ((and (smie-rule-parent-p ";")
             (smie-rule-hanging-p))
-       (smie-rule-parent (- elixir-smie-indent-basic)))
+       (smie-rule-parent))
       ((smie-rule-parent-p "(")
        (smie-rule-parent))
       ((smie-rule-parent-p "->")
