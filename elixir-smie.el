@@ -267,10 +267,7 @@
    ((and (or (looking-at elixir-smie--comment-regexp)
              (looking-at "[\n#]"))
          (elixir-smie--implicit-semi-p))
-    (when (not (save-excursion
-                 (forward-comment 1)
-                 (eobp)))
-      (if (eolp) (forward-char 1) (forward-comment 1)))
+    (if (eolp) (forward-char 1) (forward-comment 1))
     ;; Note: `elixir-smie--semi-ends-match' will be called when the point is at
     ;; the beginning of a new line. Keep that in mind.
     (if (elixir-smie--semi-ends-match)
