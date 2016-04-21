@@ -522,6 +522,17 @@ end
     (should (eq (elixir-test-face-at 53) 'font-lock-string-face)) ;; '<>'
     )))
 
+(ert-deftest elixir-mode-syntax-table/question-quote ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/185"
+  :tags '(fontification syntax-table hoge)
+  (elixir-test-with-temp-buffer
+   "\"\\\"foo\\\"\" |> String.strip(?\")"
+   (should-not (eq (elixir-test-face-at 28) 'font-lock-string-face)))
+
+  (elixir-test-with-temp-buffer
+   "\"\\\"foo\\\"\" |> String.strip(?')"
+   (should-not (eq (elixir-test-face-at 28) 'font-lock-string-face))))
+
 (provide 'elixir-mode-font-test)
 
 ;;; elixir-mode-font-test.el ends here
