@@ -303,8 +303,8 @@
           "MATCH-STATEMENT-DELIMITER"
         (if (and (looking-back ",$" (- (point) 2) t)
                  (not (> (nth 0 (syntax-ppss)) 0)))
-            "COMMA"
-          ";")))
+	    "COMMA"
+	  ";")))
      ((looking-back elixir-smie--oneline-def-operator-regexp (- (point) 3) t)
       (goto-char (match-beginning 0))
       ";")
@@ -743,22 +743,17 @@
             (smie-rule-hanging-p)
             (save-excursion
               (forward-line 1)
-              (looking-at "*.do:.*")))
+              (looking-at "*.\s+do:.*")))
        (smie-rule-parent (- elixir-smie-indent-basic)))
       ((and (smie-rule-parent-p ";")
-            (save-excursion
-              (forward-line -1)
-              (move-end-of-line 1)
-              (looking-back ",$"))
-            (not (smie-rule-hanging-p)))
-       (smie-rule-parent elixir-smie-indent-basic))
+            (smie-rule-hanging-p)
+	    (save-excursion
+	      (forward-line 1)
+	      (looking-at "^.+\s+do:.+$")))
+       (cons 'column elixir-smie-indent-basic))
       ((and (smie-rule-parent-p ";")
             (smie-rule-hanging-p))
-       (if (save-excursion
-             (forward-line 1)
-             (looking-at "^.+do:.+$"))
-           (cons 'column elixir-smie-indent-basic)
-         (smie-rule-parent)))
+       (smie-rule-parent))
       ((elixir-smie-current-line-start-with-pipe-operator-p)
        (smie-rule-parent))
       ((smie-rule-parent-p "(")

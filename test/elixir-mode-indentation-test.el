@@ -1995,6 +1995,83 @@ defmodule TestIndentation do
   IO.inspect @att
 end")
 
+(elixir-def-indentation-test indent-complex-comments
+                             (:tags '(indentation))
+"
+defmodule Foo do
+  @initial_state %{
+    socket: nil,
+opts: nil,
+# TODO: x,
+    tail: \"\",
+  }
+
+  def bar do
+
+    first = {
+asdasd,
+asdasd,
+      asdad,
+   # comment
+# another comment
+   value,
+      another
+}
+
+ another = [
+    asdasd,
+    asdasd,
+     asdad,
+          # comment
+ # another comment
+      value,
+   another
+             ]
+
+  end
+
+  # one
+# two
+              # three
+end"
+"
+defmodule Foo do
+  @initial_state %{
+    socket: nil,
+    opts: nil,
+    # TODO: x,
+    tail: \"\",
+  }
+
+  def bar do
+
+    first = {
+      asdasd,
+      asdasd,
+      asdad,
+      # comment
+      # another comment
+      value,
+      another
+    }
+
+    another = [
+      asdasd,
+      asdasd,
+      asdad,
+      # comment
+      # another comment
+      value,
+      another
+    ]
+
+  end
+
+  # one
+  # two
+  # three
+end")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
