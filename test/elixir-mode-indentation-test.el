@@ -1513,22 +1513,18 @@ end")
                              (:tags '(indentation))
 "
 case parse do
-{ [ help: true ], _, _ }
-           -> :help
-{ _, [ user, project, count ], _ }
-    -> { user, project, count }
-  { _, [ user, project ], _ }
-  -> { user, project, @default_count }
+{ [ help: true ], _, _ } -> :help
+{ _, [ user, project, count ], _ } ->
+{ user, project, count }
+  { _, [ user, project ], _ } -> { user, project, @default_count }
   _ -> :help
 end"
 "
 case parse do
-  { [ help: true ], _, _ }
-    -> :help
-  { _, [ user, project, count ], _ }
-    -> { user, project, count }
-  { _, [ user, project ], _ }
-    -> { user, project, @default_count }
+  { [ help: true ], _, _ } -> :help
+  { _, [ user, project, count ], _ } ->
+    { user, project, count }
+  { _, [ user, project ], _ } -> { user, project, @default_count }
   _ -> :help
 end")
 
@@ -1585,6 +1581,23 @@ fn x ->
   if true do
   end
 end")
+
+(elixir-def-indentation-test complex-case-with-matches/5
+                             (:tags '(indentation))
+"
+case parse do
+  {} -> :help
+   {} -> :help
+_
+end
+"
+"
+case parse do
+  {} -> :help
+  {} -> :help
+  _
+end
+")
 
 (elixir-def-indentation-test case-with-multiline-maps
                              (:tags '(indentation))
