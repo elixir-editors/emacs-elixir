@@ -432,9 +432,7 @@
       ((and (smie-rule-parent-p "MATCH-STATEMENT-DELIMITER")
             (smie-rule-hanging-p)
             (smie-rule-sibling-p))
-       (if (elixir-smie-last-line-end-with-block-operator-p)
-           (smie-rule-parent)
-         0))
+       (smie-rule-parent))
       ((and (smie-rule-parent-p "after")
             (smie-rule-hanging-p))
        (smie-rule-parent elixir-smie-indent-basic))
@@ -583,7 +581,11 @@
              (move-end-of-line 1)
              (looking-back elixir-smie--block-operator-regexp (- (point) 3) t))
            (smie-rule-parent (- elixir-smie-indent-basic))
-         (smie-rule-parent)))))
+         (if (save-excursion
+	       (move-beginning-of-line 1)
+	       (looking-at "^.+->.+$"))
+	     (smie-rule-parent (- elixir-smie-indent-basic))
+	   (smie-rule-parent))))))
     (`(:after . "{")
      (cond
       ((smie-rule-hanging-p)
