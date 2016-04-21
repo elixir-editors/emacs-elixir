@@ -302,6 +302,14 @@ is used to limit the scan."
     (goto-char start)
     (funcall
      (syntax-propertize-rules
+      ("\\(\\?\\)[\"']"
+       (1 (if (save-excursion (nth 3 (syntax-ppss (match-beginning 0))))
+              ;; Within a string, skip.
+              (ignore
+               (goto-char (match-end 1)))
+            (put-text-property (match-end 1) (match-end 0)
+                               'syntax-table (string-to-syntax "_"))
+            (string-to-syntax "'"))))
       ((elixir-rx string-delimiter)
        (0 (ignore (elixir-syntax-stringify))))
       ((elixir-rx sigils)
