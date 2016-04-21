@@ -384,7 +384,7 @@ end
 ")
 
 (elixir-def-indentation-test indent-non-finished-one-line-if-else
-                             (:expected-result :failed :tags '(indentation))
+                             (:tags '(indentation))
 "if condition,
 do: :foo,
 else: :bar"
@@ -1146,7 +1146,7 @@ end"
 end")
 
 (elixir-def-indentation-test indent-after-not-finished-one-line-def
-                             (:expected-result :failed :tags '(indentation))
+                             (:tags '(indentation))
 "
 defmodule Hello do
       defp skip,

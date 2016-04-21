@@ -461,7 +461,11 @@
     (`(:before . "do:")
      (cond
       ((smie-rule-parent-p "def" "if" "defp" "defmacro" "defmacrop")
-       (smie-rule-parent))
+       (if (save-excursion
+	     (move-beginning-of-line 1)
+	     (looking-at "^\s*do:.+$"))
+	   (smie-rule-parent elixir-smie-indent-basic)
+	 (smie-rule-parent)))
       ((and (smie-rule-parent-p ";")
             (not (smie-rule-hanging-p)))
        (smie-rule-parent (+ elixir-smie-indent-basic elixir-smie-indent-basic)))
