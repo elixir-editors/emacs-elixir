@@ -722,26 +722,26 @@ end
 
 (elixir-def-indentation-test indent-heredoc/2
                              (:tags '(indentation))
-  "
+"
 defmodule Foo do
 @doc \"\"\"
-this is a heredoc string
+      this is a heredoc string
 
-\"\"\"
-def convert do
-x = 15
-end
+     \"\"\"
+  def convert do
+       x = 15
+  end
 
 defmodule Bar do
-@moduledoc \"\"\"
-this is a heredoc string
+    @moduledoc \"\"\"
+ this is a heredoc string
 
 last line
-\"\"\"
-end
+    \"\"\"
+  end
 end
 "
-  "
+"
 defmodule Foo do
   @doc \"\"\"
   this is a heredoc string
@@ -758,6 +758,35 @@ defmodule Foo do
     last line
     \"\"\"
   end
+end
+")
+
+(elixir-def-indentation-test indent-heredoc/3
+                             (:tags '(indentation))
+"
+def foo() do
+  \"\"\"
+heredoc
+\"\"\"
+end
+
+for x <- [1, 2, 3] do
+\"\"\"
+heredoc
+  \"\"\"
+end
+"
+"
+def foo() do
+  \"\"\"
+  heredoc
+  \"\"\"
+end
+
+for x <- [1, 2, 3] do
+  \"\"\"
+  heredoc
+  \"\"\"
 end
 ")
 
