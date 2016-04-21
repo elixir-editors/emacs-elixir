@@ -798,7 +798,8 @@
   "Return non-nil if the previous line is blank."
   (save-excursion
     (forward-line -1)
-    (and (eolp) (bolp))))
+    (move-beginning-of-line 1)
+    (looking-at "[[:space:]]*$")))
 
 (defun elixir-smie--previous-line-indentation ()
   "Return the indentation of the previous line."
@@ -821,11 +822,16 @@ Rules:
       (if (elixir-smie--heredoc-at-current-point-p)
           (let ((indent
                  (save-excursion
-                   (when (re-search-backward "^\\(\s+\\).+\"\"\"" nil t)
+                   (when (re-search-backward "^\\(\s+\\)\\(@doc\\|@moduledoc\\|.*\\)\"\"\"" nil t)
                      (string-width (match-string 1))))))
-            (if (elixir-smie--previous-line-empty-p)
-                (goto-char indent)
-              (goto-char (elixir-smie--previous-line-indentation)))))))
+	    (cond
+	     ((elixir-smie--previous-line-empty-p)
+	      (goto-char indent))
+	     ((and (not (save-excursion (looking-at "\"\"\"")))
+		   (not (elixir-smie--previous-line-empty-p)))
+	      (goto-char (elixir-smie--previous-line-indentation)))
+	     (indent
+	      (goto-char indent)))))))
 
 (defun elixir-smie-empty-string-p (string)
   "Return non-nil if STRING is null, blank or whitespace only."
