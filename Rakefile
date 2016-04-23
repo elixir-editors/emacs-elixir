@@ -49,7 +49,7 @@ task "test" do
 end
 
 desc "Run test suite with Emacs without GUI window"
-task "test-no-gui" => [:install] do
+task "test-no-gui" do
   process_info "Run test suite with --no-win"
   say ""
   system "#{CASK} exec ert-runner --no-win"
@@ -60,7 +60,7 @@ end
 
 namespace :testing do
   desc "Run indentation test suite"
-  task "indentation" => [:install] do
+  task "indentation" do
     process_info "Run test suite"
     say ""
     system "#{CASK} exec ert-runner -t indentation"
@@ -69,7 +69,7 @@ namespace :testing do
   end
 
   desc "Run font highlighting test suite"
-  task "fontification" => [:install] do
+  task "fontification" do
     process_info "Run test suite"
     say ""
     system "#{CASK} exec ert-runner -t fontification,syntax-table"
