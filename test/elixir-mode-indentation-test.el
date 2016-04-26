@@ -695,6 +695,70 @@ end
   do: :ok
 )")
 
+(elixir-def-indentation-test with-statement
+			     (:tags '(indentation))
+"
+defmodule Foo do
+
+def bar do
+with {:ok, width} <- Map.fetch(opts, :width),
+{:ok, height} <- Map.fetch(opts, :height) do
+{:ok, width * height}
+else
+:error ->
+{:error, :wrong_data}
+end
+end
+
+end
+"
+
+"
+defmodule Foo do
+
+  def bar do
+    with {:ok, width} <- Map.fetch(opts, :width),
+         {:ok, height} <- Map.fetch(opts, :height) do
+      {:ok, width * height}
+    else
+      :error ->
+        {:error, :wrong_data}
+    end
+  end
+
+end
+")
+
+(elixir-def-indentation-test with-statement/2
+			     (:tags '(indentation))
+"
+defmodule Foo do
+  def bar do
+    with {:ok, width} <- Map.fetch(opts, :width),
+         {:ok, height} <- Map.fetch(opts, :height),
+      do: {:ok, width * height}
+
+    with({:ok, width} <- Map.fetch(opts, :width),
+         {:ok, height} <- Map.fetch(opts, :height),
+      do: {:ok, width * height})
+  end
+end
+"
+
+"
+defmodule Foo do
+  def bar do
+    with {:ok, width} <- Map.fetch(opts, :width),
+         {:ok, height} <- Map.fetch(opts, :height),
+      do: {:ok, width * height}
+
+    with({:ok, width} <- Map.fetch(opts, :width),
+         {:ok, height} <- Map.fetch(opts, :height),
+      do: {:ok, width * height})
+  end
+end
+")
+
 (elixir-def-indentation-test indent-heredoc
                              (:tags '(indentation))
   "
@@ -1775,7 +1839,7 @@ defmodule For do
     for {k, v} <- keyword,
       v = process_value(v),
       into: %{} do
-      {v, k}
+        {v, k}
     end
   end
 end
@@ -1935,25 +1999,6 @@ email: \"jane@doe.org\",
     email: \"josie@doe.org\",
   },
 ]
-")
-
-(elixir-def-indentation-test indent-block-after-for-inside-function-definition
-                             (:tags '(indentation))
-"
-defmodule Test do
-def for(domain) do
-[_, tld] = String.split(domain, \".\", parts: 2)
-Map.fetch(all, tld)
-  end
-end
-"
-"
-defmodule Test do
-  def for(domain) do
-    [_, tld] = String.split(domain, \".\", parts: 2)
-    Map.fetch(all, tld)
-  end
-end
 ")
 
 (elixir-def-indentation-test indent-before-comma
