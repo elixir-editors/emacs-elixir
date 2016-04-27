@@ -413,13 +413,16 @@
             (smie-rule-parent-p "do:"))
        (smie-rule-parent))
       ((smie-rule-parent-p ";")
-       (smie-rule-parent ))
+       (smie-rule-parent))
       (t (smie-rule-parent (- elixir-smie-indent-basic)))))
     (`(:before . "MATCH-STATEMENT-DELIMITER")
      (cond
       ((and (smie-rule-parent-p "do")
             (smie-rule-hanging-p))
        (smie-rule-parent))
+      ((and (smie-rule-parent-p "do")
+            (not (smie-rule-hanging-p)))
+       (smie-rule-parent elixir-smie-indent-basic))
       ((and (smie-rule-parent-p "fn"))
        (smie-rule-parent elixir-smie-indent-basic))
       ;; There is a case when between two line inside a def block
@@ -629,12 +632,6 @@
       ((and (smie-rule-parent-p "OP")
             (smie-rule-hanging-p))
        (smie-rule-parent))
-      ((smie-rule-parent-p "->")
-       (if (save-excursion
-             (move-end-of-line 1)
-             (looking-back elixir-smie--block-operator-regexp (- (point) 3) t))
-           (smie-rule-parent (- elixir-smie-indent-basic))
-         elixir-smie-indent-basic))
       ((smie-rule-parent-p ";")
        (if (save-excursion
              (move-end-of-line 1)

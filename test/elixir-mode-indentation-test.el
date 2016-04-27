@@ -1930,9 +1930,9 @@ end)
 "
 cond do
  is_nil(val) ->
-IO.puts \"OK\"
-              Enum.any?(1..6, fn -> end)
-    true ->
+  IO.puts \"OK\"
+  Enum.any?(1..6, fn -> end)
+true ->
 end
 "
 "
@@ -2096,6 +2096,37 @@ defmodule Foo do
   # two
   # three
 end")
+
+(elixir-def-indentation-test indent-tuples-in-case-statement
+                             (:tags '(indentation))
+"
+defmodule Foo do
+def bar do
+case info do
+:init ->
+{:foo, :bar}
+{:foo, :bar}
+{:foo, :bar}
+{:foo, :bar}
+end
+end
+end
+"
+
+"
+defmodule Foo do
+  def bar do
+    case info do
+      :init ->
+        {:foo, :bar}
+        {:foo, :bar}
+        {:foo, :bar}
+        {:foo, :bar}
+    end
+  end
+end
+"
+			     )
 
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
