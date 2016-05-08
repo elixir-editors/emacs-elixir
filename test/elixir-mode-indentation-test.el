@@ -2128,6 +2128,38 @@ end
 "
 			     )
 
+(elixir-def-indentation-test indent-multiline-function-specs
+                             (:expected-result :failed :tags '(indentation))
+"@callback init(args :: term) ::
+{:ok, state} |
+{:ok, state, timeout | :hibernate} |
+:ignore |
+{:stop, reason :: any} when state: any"
+"@callback init(args :: term) ::
+  {:ok, state} |
+  {:ok, state, timeout | :hibernate} |
+  :ignore |
+  {:stop, reason :: any} when state: any")
+
+(elixir-def-indentation-test indent-multiline-function-specs-followed-by-a-function-def
+                             (:expected-result :failed :tags '(indentation))
+"@spec foo(args :: term) ::
+{:ok, state} |
+{:ok, state, timeout | :hibernate} |
+:ignore |
+{:stop, reason :: any} when state: any
+def foo(_opts) do
+:ignore
+end"
+"@spec foo(args :: term) ::
+  {:ok, state} |
+  {:ok, state, timeout | :hibernate} |
+  :ignore |
+  {:stop, reason :: any} when state: any
+def foo(_opts) do
+  :ignore
+end")
+
 ;; We don't want automatic whitespace cleanup here because of the significant
 ;; whitespace after `Record' above. By setting `whitespace-action' to nil,
 ;; `whitespace-mode' won't automatically clean up trailing whitespace (in my
