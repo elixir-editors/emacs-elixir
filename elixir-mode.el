@@ -72,16 +72,6 @@
 (defvar elixir-key-label-offset 0)
 (defvar elixir-match-label-offset 2)
 
-(defvar elixir-operator-face 'elixir-operator-face)
-(defface elixir-operator-face
-  '((((class color) (min-colors 88) (background light))
-     :foreground "darkred")
-    (((class color) (background dark))
-     (:foreground "lemonchiffon1"))
-    (t nil))
-  "For use with operators."
-  :group 'font-lock-faces)
-
 (defvar elixir-negation-face 'elixir-negation-face)
 (defface elixir-negation-face
   '((((class color) (min-colors 88) (background light))
