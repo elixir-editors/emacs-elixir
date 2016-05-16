@@ -463,7 +463,7 @@ end
    (should (eq (elixir-test-face-at 55) 'font-lock-string-face))
    (should (eq (elixir-test-face-at 56) 'font-lock-string-face))))
 
-(ert-deftest elixir-mode-syntax-table/gray-out-ignored-var ()
+(ert-deftest elixir-mode-syntax-table/comment-out-ignored-var ()
   "https://github.com/elixir-lang/emacs-elixir/issues/292"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
@@ -476,14 +476,14 @@ end
     __MODULE__
 "
    (should (eq (elixir-test-face-at 4) nil))
-   (should (eq (elixir-test-face-at 14) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 15) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 23) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 24) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 30) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 32) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 38) 'elixir-ignored-var-face))
-   (should (eq (elixir-test-face-at 40) 'elixir-ignored-var-face))
+   (should (eq (elixir-test-face-at 14) 'font-lock-comment-face))
+   (should (eq (elixir-test-face-at 15) 'font-lock-comment-face))
+   (should (eq (elixir-test-face-at 23) 'font-lock-comment-face))
+   (should (eq (elixir-test-face-at 24) 'font-lock-comment-face))
+   (should (eq (elixir-test-face-at 30) 'font-lock-comment-face))
+   (should (eq (elixir-test-face-at 32) 'font-lock-comment-face))
+   (should (eq (elixir-test-face-at 38) 'font-lock-comment-face))
+   (should (eq (elixir-test-face-at 40) 'font-lock-comment-face))
    (should (eq (elixir-test-face-at 46) 'font-lock-constant-face))
    (should (eq (elixir-test-face-at 46) 'font-lock-constant-face))
    (should (eq (elixir-test-face-at 52) 'font-lock-constant-face))
