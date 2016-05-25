@@ -102,16 +102,6 @@
   "For use with atoms & map keys."
   :group 'font-lock-faces)
 
-(defvar elixir-ignored-var-face 'elixir-ignored-var-face)
-(defface elixir-ignored-var-face
-  '((((class color) (min-colors 88) (background light))
-     :foreground "#424242")
-    (((class color) (background dark))
-     (:foreground "#616161"))
-    (t nil))
-  "For use with ignored variables (starting with underscore)."
-  :group 'font-lock-faces)
-
 (eval-when-compile
   (defconst elixir-rx-constituents
     `(
@@ -419,7 +409,7 @@ is used to limit the scan."
                              (any "A-Z" "a-z" "0-9"))
                         (zero-or-more (any "A-Z" "a-z" "0-9" "_"))
                         (optional (or "?" "!"))))
-     1 elixir-ignored-var-face)
+     1 font-lock-comment-face)
 
     ;; Map keys
     (,(elixir-rx (group (and (one-or-more identifiers) ":")) space)
