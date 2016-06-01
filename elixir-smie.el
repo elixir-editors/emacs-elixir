@@ -83,6 +83,12 @@
     ;; Note that ?_ might be better as class "_", but either seems to
     ;; work:
     (modify-syntax-entry ?| "." table)
+    (modify-syntax-entry ?- "." table)
+    (modify-syntax-entry ?+ "." table)
+    (modify-syntax-entry ?* "." table)
+    (modify-syntax-entry ?/ "." table)
+    (modify-syntax-entry ?< "." table)
+    (modify-syntax-entry ?> "." table)
     (modify-syntax-entry ?_ "_" table)
     (modify-syntax-entry ?? "w" table)
     (modify-syntax-entry ?~ "w" table)
