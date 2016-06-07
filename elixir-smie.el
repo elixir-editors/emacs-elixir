@@ -115,12 +115,7 @@
      '((id)
        (statements (statement)
                    (statement ";" statements))
-       (statement ("def" non-block-expr "do" statements "end")
-                  ("defp" non-block-expr "do" statements "end")
-		  ("defp" non-block-expr "COMMA" "do:" non-block-expr)
-                  ("defmacro" non-block-expr "do" statements "end")
-                  ("defmacrop" non-block-expr "do" statements "end")
-                  (non-block-expr "fn" match-statements "end")
+       (statement (non-block-expr "fn" match-statements "end")
                   (non-block-expr "do" statements "end")
                   ("if" non-block-expr "do" statements "else" statements "end")
                   ("if" non-block-expr "do" statements "end")
@@ -312,7 +307,7 @@
            (elixir-smie--implicit-semi-p))
       (if (elixir-smie--semi-ends-match)
           "MATCH-STATEMENT-DELIMITER"
-        (if (and (looking-back ",$" (- (point) 2) t)
+        (if (and (looking-back ",$" (- (point) 3) t)
                  (not (> (nth 0 (syntax-ppss)) 0)))
 	    "COMMA"
 	  ";")))
