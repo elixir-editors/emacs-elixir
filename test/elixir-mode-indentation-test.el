@@ -1013,14 +1013,14 @@ end
                              (:tags '(indentation))
   "
 def foo do
-  case is_string(x) do
-    true ->
-      x2 = \" one\"
-      x <> x2
-    false ->
-      x2 = \" two\"
-      x <> x2
-  end
+case is_string(x) do
+true ->
+x2 = \" one\"
+x <> x2
+false ->
+x2 = \" two\"
+x <> x2
+end
 end"
   "
 def foo do
@@ -1549,30 +1549,6 @@ defmodule Foo do
 end
 ")
 
-(elixir-def-indentation-test complex-case-with-matches
-                             (:tags '(indentation))
-"
-case parse do
-{ [ help: true ], _, _ }
-                  -> :help
-{ _, [ user, project, count ], _ } ->
-{ user, project, count }
-              { _, [ user, project ], _ } -> { user, project, @default_count }
-{ _, [ _, project ], _ } -> { _, project, @default_count }
-_ -> :help
-end"
-"
-case parse do
-  { [ help: true ], _, _ }
-    -> :help
-  { _, [ user, project, count ], _ } ->
-    { user, project, count }
-  { _, [ user, project ], _ } -> { user, project, @default_count }
-  { _, [ _, project ], _ } -> { _, project, @default_count }
-  _ -> :help
-end")
-
-
 (elixir-def-indentation-test complex-case-with-matches/2
                              (:tags '(indentation))
 "
@@ -1668,16 +1644,14 @@ end
 "case statement do
   %{\"foo\" => \"foo\",
      \"baz\" => \"baz\"} ->
-    :ok
-
-  _ ->
+:ok
+_ ->
     :ok
 end"
 "case statement do
   %{\"foo\" => \"foo\",
     \"baz\" => \"baz\"} ->
     :ok
-
   _ ->
     :ok
 end")
