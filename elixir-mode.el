@@ -467,6 +467,32 @@ just return nil."
     (backward-char)
     (fill-region (point) (mark))))
 
+(defun elixir-beginning-of-defun (&optional arg)
+  (interactive "p")
+  (let ((command last-command)
+        (regexp (concat "^\\s-*" (elixir-rx builtin-declaration)))
+        case-fold-search)
+    (while (and (re-search-backward regexp nil t (or arg 1))
+                (elixir-syntax-in-string-or-comment-p)))
+    (goto-char (line-beginning-position))))
+
+(defun elixir-end-of-defun ()
+  (interactive)
+  (goto-char (line-beginning-position))
+  (if (re-search-forward "\\_<do:" (line-end-position) t)
+      (goto-char (line-end-position))
+    (goto-char (line-end-position))
+    (let ((level (save-excursion
+                   (elixir-beginning-of-defun)
+                   (current-indentation)))
+          finish)
+      (while (and (not finish) (re-search-forward "^\\s-*\\_<end\\_>" nil t))
+        (when (and (not (elixir-syntax-in-string-or-comment-p))
+                   (= (current-indentation) level))
+          (setq finish t)))
+      (when (looking-back "^\\s-*\\_<end" (line-beginning-position))
+        (forward-line 1)))))
+
 (easy-menu-define elixir-mode-menu elixir-mode-map
   "Elixir mode menu."
   '("Elixir"
@@ -491,6 +517,10 @@ just return nil."
        #'elixir-syntax-propertize-function)
   (set (make-local-variable 'imenu-generic-expression)
        elixir-imenu-generic-expression)
+
+  (set (make-local-variable 'beginning-of-defun-function) #'elixir-beginning-of-defun)
+  (set (make-local-variable 'end-of-defun-function) #'elixir-end-of-defun)
+
   (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token))
