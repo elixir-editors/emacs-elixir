@@ -527,7 +527,7 @@ end
 
 (ert-deftest elixir-mode-syntax-table/question-quote ()
   "https://github.com/elixir-lang/emacs-elixir/issues/185"
-  :tags '(fontification syntax-table hoge)
+  :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "\"\\\"foo\\\"\" |> String.strip(?\")"
    (should-not (eq (elixir-test-face-at 28) 'font-lock-string-face)))
@@ -535,6 +535,15 @@ end
   (elixir-test-with-temp-buffer
    "\"\\\"foo\\\"\" |> String.strip(?')"
    (should-not (eq (elixir-test-face-at 28) 'font-lock-string-face))))
+
+(ert-deftest elixir-mode-syntax-table/ignored-variables-in-pattern-match ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/361"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+   "(_1_day = 86_400)
+_1_day"
+   (should (eq (elixir-test-face-at 2) 'font-lock-comment-face))
+   (should (eq (elixir-test-face-at 19) 'font-lock-comment-face))))
 
 (provide 'elixir-mode-font-test)
 

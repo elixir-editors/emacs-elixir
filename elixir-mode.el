@@ -385,14 +385,6 @@ is used to limit the scan."
                  (optional "="))
      1 elixir-atom-face)
 
-    ;; Variable definitions
-    (,(elixir-rx (group identifiers)
-                 (zero-or-more space)
-                 (repeat 1 "=")
-                 (or (or sigils identifiers space)
-                     (one-or-more "\n")))
-     1 font-lock-variable-name-face)
-
     ;; Gray out variables starting with "_"
     (,(elixir-rx symbol-start
                  (group (and "_"
@@ -400,6 +392,14 @@ is used to limit the scan."
                         (zero-or-more (any "A-Z" "a-z" "0-9" "_"))
                         (optional (or "?" "!"))))
      1 font-lock-comment-face)
+
+    ;; Variable definitions
+    (,(elixir-rx (group identifiers)
+                 (zero-or-more space)
+                 (repeat 1 "=")
+                 (or (or sigils identifiers space)
+                     (one-or-more "\n")))
+     1 font-lock-variable-name-face)
 
     ;; Map keys
     (,(elixir-rx (group (and (one-or-more identifiers) ":")) space)
