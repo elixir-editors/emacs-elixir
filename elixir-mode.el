@@ -499,7 +499,7 @@ just return nil."
     ["Indent line" smie-indent-line]
     "---"
     ["elixir-mode on GitHub" elixir-mode-open-modegithub]
-    ["Elixir homepage" elixir-mode-open-elixirhome]
+    ["Elixir homepage" elixir-mode-open-elixir-home]
     ["About" elixir-mode-version]))
 
 ;;;###autoload
