@@ -167,7 +167,7 @@ end"
       "@doc \"\"\""
     (should (eq (elixir-test-face-at 1) 'elixir-attribute-face))
     (should (eq (elixir-test-face-at 2) 'elixir-attribute-face))
-    (should (eq (elixir-test-face-at 6) 'font-lock-string-face))))
+    (should (eq (elixir-test-face-at 6) 'font-lock-doc-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-heredoc/2 ()
   :tags '(fontification heredoc syntax-table)
@@ -175,7 +175,7 @@ end"
       "@moduledoc \"\"\""
     (should (eq (elixir-test-face-at 1) 'elixir-attribute-face))
     (should (eq (elixir-test-face-at 2) 'elixir-attribute-face))
-    (should (eq (elixir-test-face-at 12) 'font-lock-string-face))))
+    (should (eq (elixir-test-face-at 12) 'font-lock-doc-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-heredoc/3 ()
   :tags '(fontification heredoc syntax-table)
@@ -544,6 +544,46 @@ end
 _1_day"
    (should (eq (elixir-test-face-at 2) 'font-lock-comment-face))
    (should (eq (elixir-test-face-at 19) 'font-lock-comment-face))))
+
+(ert-deftest elixir-mode-in-docstring ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/355"
+  :tags 'fontification
+  (elixir-test-with-temp-buffer
+      "# https://github.com/elixir-lang/emacs-elixir/issues/355
+
+@moduledoc \"\"\"
+Everything in here should be gray, including the @moduledoc and triple-quotes
+\"\"\"
+
+@doc \"\"\"
+Everything in here should be gray, including the @doc and triple-quotes
+\"\"\""
+    ;; (switch-to-buffer (current-buffer))
+    (search-forward "Everything")
+    (should (elixir--docstring-p))
+    (search-forward "Everything")
+    (should (elixir--docstring-p))))
+
+(ert-deftest elixir-mode-docstring-face ()
+  "https://github.com/elixir-lang/emacs-elixir/issues/355"
+  :tags 'fontification
+  (elixir-test-with-temp-buffer
+      "# https://github.com/elixir-lang/emacs-elixir/issues/355
+
+@moduledoc \"\"\"
+Everything in here should be gray, including the @moduledoc and triple-quotes
+\"\"\"
+
+@doc \"\"\"
+Everything in here should be gray, including the @doc and triple-quotes
+\"\"\""
+    (switch-to-buffer (current-buffer))
+    (search-forward "Everything")
+    (should (eq 'font-lock-doc-face (get-char-property (point) 'face)))
+    (search-forward "Everything")
+    (should (eq 'font-lock-doc-face (get-char-property (point) 'face)))))
+
+
 
 (provide 'elixir-mode-font-test)
 
