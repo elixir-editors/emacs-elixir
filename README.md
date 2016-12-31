@@ -89,7 +89,7 @@ You can install `Elixir-Mode` manually by placing `Elixir-Mode` on your `load-pa
         <td>Switches to elixir-mode.</td>
     </tr>
     <tr>
-        <td><code>elixir-mode-opengithub</code></td>
+        <td><code>elixir-mode-open-github</code></td>
         <td>Open the GitHub page for Elixir.</td>
     </tr>
     </tr>
