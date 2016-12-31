@@ -414,7 +414,7 @@ is used to limit the scan."
      1 font-lock-negation-char-face)))
 
 ;;;###autoload
-(defun elixir-mode-open-modegithub ()
+(defun elixir-mode-open-github ()
   "Elixir mode open GitHub page."
   (interactive)
   (browse-url "https://github.com/elixir-lang/emacs-elixir"))
@@ -498,7 +498,7 @@ just return nil."
   '("Elixir"
     ["Indent line" smie-indent-line]
     "---"
-    ["elixir-mode on GitHub" elixir-mode-open-modegithub]
+    ["elixir-mode on GitHub" elixir-mode-open-github]
     ["Elixir homepage" elixir-mode-open-elixir-home]
     ["About" elixir-mode-version]))
 
