@@ -367,7 +367,9 @@ end"
 ~s\"\"\"
 foo
 \"\"\"
-~D(\")"
+~D(\")
+~N(\")
+~T(\")"
    (should-not (eq (elixir-test-face-at 5) 'font-lock-string-face))   ; ~s//
 
    (should-not (eq (elixir-test-face-at 7) 'font-lock-string-face))   ; ~r||
@@ -403,7 +405,11 @@ foo
    (should     (eq (elixir-test-face-at 53) 'font-lock-string-face))
    (should     (eq (elixir-test-face-at 55) 'font-lock-string-face))
 
-   (should     (eq (elixir-test-face-at 66) 'font-lock-string-face)))) ; ~D()
+   (should     (eq (elixir-test-face-at 66) 'font-lock-string-face)) ; ~D()
+
+   (should     (eq (elixir-test-face-at 72) 'font-lock-string-face)) ; ~N()
+
+   (should     (eq (elixir-test-face-at 78) 'font-lock-string-face)))) ; ~T()
 
 (ert-deftest elixir-mode-syntax-table/hashmark-in-sigils ()
   "Don't treat hashmark in sigils as comment"
