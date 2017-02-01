@@ -518,11 +518,19 @@ just return nil."
     ["Elixir homepage" elixir-mode-open-elixir-home]
     ["About" elixir-mode-version]))
 
+(defconst elixir--prettify-symbols-alist
+  '(("fn"  . ?λ)))
+
+(defun elixir-mode-variables ()
+  "Set up initial buffer-local variables for Elixir mode."
+  (setq-local prettify-symbols-alist elixir--prettify-symbols-alist))
+
 ;;;###autoload
 (define-derived-mode elixir-mode prog-mode "Elixir"
   "Major mode for editing Elixir code.
 
 \\{elixir-mode-map}"
+  (elixir-mode-variables)
   (set (make-local-variable 'font-lock-defaults)
        '(elixir-font-lock-keywords
          nil nil nil nil
