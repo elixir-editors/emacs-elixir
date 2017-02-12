@@ -252,6 +252,19 @@ def str(s, sub, start_pos, end_pos) when is_binary(s) and is_binary(sub) do # an
 end
 ")
 
+(elixir-def-indentation-test indent-continuation-lines-when-without-parens
+                             (:tags '(indentation))
+  "
+def foo(x) when x + 1 > 2 do
+                    []
+end
+"
+  "
+def foo(x) when x + 1 > 2 do
+  []
+end
+")
+
 (elixir-def-indentation-test indent-continuation-lines-assignment
                              (:tags '(indentation))
   "
