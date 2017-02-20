@@ -1218,6 +1218,8 @@ do: true
 def on?, do: true
 defmacro switch,
 do: on!
+defmacro another,
+do: on!
 defp self, do: value
 defmacrop whatever, do: do_it!
 end"
@@ -1229,8 +1231,34 @@ defmodule Hello do
   def on?, do: true
   defmacro switch,
     do: on!
+  defmacro another,
+    do: on!
   defp self, do: value
   defmacrop whatever, do: do_it!
+end")
+
+(elixir-def-indentation-test indent-multiline-when
+                             (:tags '(indentation))
+"
+defmodule Hello do
+def foo(a)
+ when is_integer(a) do
+   true
+end
+ def foo(_) do
+   false
+ end
+end"
+
+"
+defmodule Hello do
+  def foo(a)
+      when is_integer(a) do
+    true
+  end
+  def foo(_) do
+    false
+  end
 end")
 
 (elixir-def-indentation-test indent-correct-with-multiple-one-line-macro-calls
