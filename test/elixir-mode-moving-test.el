@@ -2,8 +2,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (ert-deftest beginning-of-defun ()
   :tags '(moving)
   (elixir-test-with-temp-buffer
