@@ -126,10 +126,11 @@ functionality easily.
 
 Keymaps can be added to the `elixir-mode-map` variable.
 
-## Notes
+### Pairing
 
-If you want to use `ruby-end-mode` for a more comfortable editing
-experience, you can add the following to your `elixir-mode-hook`:
+[Smartparens](https://github.com/Fuco1/smartparens) has direct support for Elixir.
+
+Alternatively, if you want to use `ruby-end-mode`, you can add the following to your `elixir-mode-hook`:
 
 ```lisp
 (add-to-list 'elixir-mode-hook
@@ -138,21 +139,6 @@ experience, you can add the following to your `elixir-mode-hook`:
                     "\\(?:^\\|\\s-+\\)\\(?:do\\)")
                (set (make-variable-buffer-local 'ruby-end-check-statement-modifiers) nil)
                (ruby-end-mode +1)))
-```
-
-Also, if you use [smartparens](https://github.com/Fuco1/smartparens) you can
-piggyback on some of its functionality for dealing with Ruby's `do .. end`
-blocks. A sample configuration would be:
-
-```lisp
-(sp-with-modes '(elixir-mode)
-  (sp-local-pair "fn" "end"
-         :when '(("SPC" "RET"))
-         :actions '(insert navigate))
-  (sp-local-pair "do" "end"
-         :when '(("SPC" "RET"))
-         :post-handlers '(sp-ruby-def-post-handler)
-         :actions '(insert navigate)))
 ```
 
 ## Elixir Tooling Integration
@@ -172,8 +158,8 @@ Please read [CONTRIBUTING.md](https://github.com/elixir-lang/emacs-elixir/blob/m
 
 ## License
 
-Copyright © 2011-2015 Samuel Tonini, Matt DeBoard, Andreas Fuchs, secondplanet and
-[contributors](https://github.com/tonini/alchemist.el/contributors).
+Copyright © 2011-2017 Samuel Tonini, Matt DeBoard, Andreas Fuchs, secondplanet and
+[contributors](https://github.com/elixir-lang/emacs-elixir/contributors).
 
 Distributed under the GNU General Public License, version 3
 
