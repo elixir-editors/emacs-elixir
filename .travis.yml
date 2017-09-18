@@ -4,12 +4,15 @@ otp_release:
   - 18.0
 cache: apt
 env:
-  - EVM_EMACS=emacs-24.3-bin TEST_RUN="rake test"
-  - EVM_EMACS=emacs-24.4-bin TEST_RUN="rake test"
-  - EVM_EMACS=emacs-24.5-bin TEST_RUN="rake test-no-gui"
+  - EVM_EMACS=24.3 TEST_RUN="rake test"
+  - EVM_EMACS=24.4 TEST_RUN="rake test"
+  - EVM_EMACS=24.5 TEST_RUN="rake test-no-gui"
+  - EVM_EMACS=25.1 TEST_RUN="rake test"
+  - EVM_EMACS=25.2 TEST_RUN="rake test"
+  - EVM_EMACS=git-snapshot TEST_RUN="rake test"
 before_install:
   - curl -fsSkL https://gist.githubusercontent.com/tonini/09a8bec7a0b2c219e0d7/raw > travis.sh && source ./travis.sh
-  - evm install $EVM_EMACS --use --skip
+  - evm install emacs-$EVM_EMACS-travis --use --skip
   - cask
 install:
   - cask install
