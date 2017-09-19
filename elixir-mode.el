@@ -469,8 +469,7 @@ just return nil."
 
 (defun elixir-beginning-of-defun (&optional arg)
   (interactive "p")
-  (let ((command last-command)
-        (regexp (concat "^\\s-*" (elixir-rx builtin-declaration)))
+  (let ((regexp (concat "^\\s-*" (elixir-rx builtin-declaration)))
         case-fold-search)
     (while (and (re-search-backward regexp nil t (or arg 1))
                 (elixir-syntax-in-string-or-comment-p)))
