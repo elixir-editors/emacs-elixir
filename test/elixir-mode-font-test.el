@@ -8,8 +8,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (defun elixir-test-face-at (pos &optional content)
   "Get the face at POS in CONTENT.
 

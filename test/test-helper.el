@@ -63,6 +63,4 @@
   (defun ert-runner/run-tests-batch-and-exit (selector)
     (ert-run-tests-interactively selector)))
 
-(provide 'test-helper)
-
 ;;; test-helper.el ends here
