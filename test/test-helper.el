@@ -18,6 +18,9 @@
 ;; Load the elixir-mode under test
 (require 'elixir-mode)
 
+;; Load elixir-format under test
+(require 'elixir-format)
+
 ;; Helpers
 
 (cl-defmacro elixir-deftest (name args &body body)
@@ -62,5 +65,39 @@
 (when (s-contains? "--win" (getenv "ERT_RUNNER_ARGS"))
   (defun ert-runner/run-tests-batch-and-exit (selector)
     (ert-run-tests-interactively selector)))
+
+(setq elixir-format-elixir-path (executable-find "elixir"))
+(setq elixir-format-mix-path (executable-find "mix"))
+
+(defconst elixir-format-test-example "defmodule Foo do
+use GenServer.Behaviour
+def foobar do
+if true, do: IO.puts \"yay\"
+end
+end")
+
+(defconst elixir-format-wrong-test-example "defmodule Foo do
+use GenServer.Behaviour
+def foobar do
+if true, do: IO.puts \"yay\"
+end")
+
+(setq elixir-version (let ((str (shell-command-to-string (concat elixir-format-elixir-path " --version"))))
+  (car (when (string-match "\s\\(.+[.].+[.].+\\)[\s\n]" str)
+    (list (match-string 1 str))))))
+
+(defconst elixir-formatter-supported
+  (>= (string-to-number elixir-version) (string-to-number "1.6"))
+  )
+
+(defconst elixir-format-formatted-test-example
+  "defmodule Foo do
+  use GenServer.Behaviour
+
+  def foobar do
+    if true, do: IO.puts(\"yay\")
+  end
+end
+")
 
 ;;; test-helper.el ends here

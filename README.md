@@ -18,6 +18,7 @@ Provides font-locking, indentation and navigation support for the
   - [Keymapping](#keymapping)
 - [Notes](#notes)
 - [Elixir Tooling Integration](#elixir-tooling-integration)
+- [Elixir Format](#elixir-format)
 - [History](#history)
 - [Contributing](#contributing)
 - [License](#license)
@@ -146,6 +147,74 @@ Alternatively, if you want to use `ruby-end-mode`, you can add the following to 
 If you looking for elixir tooling integration for Emacs, check: [alchemist.el](https://github.com/tonini/alchemist.el)
 
 You can use [web-mode.el](http://web-mode.org) to edit elixir templates (eex files).
+
+
+## Elixir Format
+
+### Setup of elixir-format
+Customize the elixir and mix paths
+
+In Emacs, run following command to customize option
+``` elisp
+M-x customize-option
+
+Customize-variable: elixir-format-elixir-path
+```
+and set your elixir executable path there. After that run:
+``` elisp
+M-x customize-option
+
+Customize-variable: elixir-format-mix-path
+```
+and set your mix executable path there.
+
+Your machine's elixir and mix executable paths can be found with `which` command as shown below
+
+``` shell
+$ which elixir
+/usr/local/bin/elixir
+
+$ which mix
+/usr/local/bin/mix
+```
+Alternavively you can define variables as below
+
+``` elisp
+(setq elixir-format-elixir-path "/usr/local/bin/elixir")
+(setq elixir-format-mix-path "/usr/local/bin/mix")
+```
+
+### Use it
+
+``` elisp
+M-x elixir-format
+```
+
+### Add elixir-mode hook to run elixir format on file save
+
+``` elisp
+;; Create a buffer-local hook to run elixir-format on save, only when we enable elixir-mode.
+(add-hook 'elixir-mode-hook
+          (lambda () (add-hook 'before-save-hook 'elixir-format nil t)))
+```
+
+To use a `.formatter.exs` you can either set `elixir-format-arguments` globally to a path like this:
+
+``` elisp
+(setq elixir-format-arguments (list "--dot-formatter" "/path/to/.formatter.exs"))
+```
+
+or you set `elixir-format-arguments` in a hook like this:
+
+``` elisp
+(add-hook elixir-format-hook '(lambda ()
+                                 (if (projectile-project-p)
+                                     (setq elixir-format-arguments (list "--dot-formatter" (concat (projectile-project-root) "/.formatter.exs")))
+                                   (setq elixir-format-arguments nil))))
+```
+
+In this example we use [Projectile](https://github.com/bbatsov/projectile) to get the project root and set `elixir-format-arguments` accordingly.
+
 
 ## History
 
