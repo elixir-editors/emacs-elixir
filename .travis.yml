@@ -1,5 +1,7 @@
 language: elixir
 cache: apt
+config:
+  path: /tmp
 env:
   - EVM_EMACS=24.3 TEST_RUN="rake test"
   - EVM_EMACS=24.4 TEST_RUN="rake test"
