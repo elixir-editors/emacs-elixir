@@ -6,7 +6,7 @@ env:
   - EVM_EMACS=24.5 TEST_RUN="rake test-no-gui"
   - EVM_EMACS=25.1 TEST_RUN="rake test"
   - EVM_EMACS=25.2 TEST_RUN="rake test"
-  - EVM_EMACS=git-snapshot TEST_RUN="rake test"
+  # - EVM_EMACS=git-snapshot TEST_RUN="rake test"
 matrix:
   include:
     - elixir: 1.0.5
