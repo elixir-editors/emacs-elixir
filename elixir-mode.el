@@ -39,6 +39,7 @@
 (require 'easymenu)           ; Elixir Mode menu definition
 (require 'elixir-smie)        ; Syntax and indentation support
 (require 'pkg-info)           ; Display Elixir Mode package version
+(require 'elixir-format)      ; Elixir Format functions
 
 (defgroup elixir nil
   "Major mode for editing Elixir code."
