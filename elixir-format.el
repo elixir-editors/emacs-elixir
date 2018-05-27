@@ -23,6 +23,8 @@
 ;; M-x elixir-format
 ;;
 
+(require 'ansi-color)
+
 (defcustom elixir-format-elixir-path "elixir"
   "Path to the Elixir interpreter."
   :type 'string
