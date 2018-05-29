@@ -207,7 +207,7 @@ To use a `.formatter.exs` you can either set `elixir-format-arguments` globally 
 or you set `elixir-format-arguments` in a hook like this:
 
 ``` elisp
-(add-hook elixir-format-hook '(lambda ()
+(add-hook 'elixir-format-hook (lambda ()
                                  (if (projectile-project-p)
                                      (setq elixir-format-arguments (list "--dot-formatter" (concat (projectile-project-root) "/.formatter.exs")))
                                    (setq elixir-format-arguments nil))))
