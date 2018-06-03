@@ -209,7 +209,9 @@ or you set `elixir-format-arguments` in a hook like this:
 ``` elisp
 (add-hook 'elixir-format-hook (lambda ()
                                  (if (projectile-project-p)
-                                     (setq elixir-format-arguments (list "--dot-formatter" (concat (projectile-project-root) "/.formatter.exs")))
+                                      (setq elixir-format-arguments
+                                            (list "--dot-formatter"
+                                                  (concat (locate-dominating-file buffer-file-name ".formatter.exs") ".formatter.exs")))
                                    (setq elixir-format-arguments nil))))
 ```
 
