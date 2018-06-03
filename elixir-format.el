@@ -119,7 +119,7 @@ Customize-variable: elixir-format-mix-path"
   (setq our-elixir-format-arguments (append our-elixir-format-arguments (list tmpfile)))
 
   (if (zerop (apply #'call-process elixir-format-elixir-path nil (elixir-format--errbuff) nil our-elixir-format-arguments))
-      (elixir-format--call-format-command)
+      (elixir-format--call-format-command tmpfile)
     (elixir-format--failed-to-format called-interactively-p))
 
   (delete-file tmpfile)
