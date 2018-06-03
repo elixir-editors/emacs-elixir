@@ -62,7 +62,85 @@ Customize-variable: elixir-format-mix-path"
   :group 'elixir-format)
 
 
-;;; Code
+;;; Code:
+
+(defun elixir-format--errbuff ()
+  (get-buffer-create "*elixir-format-errors*"))
+
+(defun elixir-format--outbuff ()
+  (get-buffer-create "*elixir-format-output*"))
+
+(defun elixir-format--clean-output-buffers ()
+  (with-current-buffer (elixir-format--outbuff)
+    (erase-buffer))
+
+  (with-current-buffer (elixir-format--errbuff)
+    (setq buffer-read-only nil)
+    (erase-buffer)))
+
+;;;###autoload
+(defun elixir-format (&optional called-interactively-p)
+  (interactive "p")
+
+  (let ((tmpfile (make-temp-file "elixir-format" nil ".ex"))
+        (our-elixir-format-arguments (list elixir-format-mix-path "format"))
+        (output nil))
+
+    (if (elixir-format--elixir-and-mix-path-not-set-p)
+        (elixir-format--display-missing-configuration-error called-interactively-p)
+      (unwind-protect
+          (save-restriction
+            (elixir-format--clean-output-buffers)
+            (elixir-format--run-format called-interactively-p tmpfile))))))
+
+(defun elixir-format--elixir-and-mix-path-not-set-p ()
+  (or (= (length elixir-format-mix-path) 0)
+      (= (length elixir-format-elixir-path) 0)))
+
+(defun elixir-format--display-missing-configuration-error (called-interactively-p)
+  (with-current-buffer (elixir-format--errbuff)
+    (setq buffer-read-only nil)
+    (erase-buffer)
+    (insert "Elixir or mix binary path not set, please check the documentation for `elixir-format-elixir-path` and `elixir-format-mix-path` with `C-h v <VARNAME> RET` to set the variables appropriately")
+    (setq buffer-read-only t)
+    (ansi-color-apply-on-region (point-min) (point-max))
+    (special-mode)
+    (if called-interactively-p
+        (display-buffer elixir-format--errbuff)
+      (error "elixir-format-configuration-missing: see %s" (buffer-name (elixir-format--errbuff))))))
+
+(defun elixir-format--run-format (called-interactively-p tmpfile)
+  (write-region nil nil tmpfile)
+
+  (run-hooks 'elixir-format-hook)
+
+  (when elixir-format-arguments
+    (setq our-elixir-format-arguments (append our-elixir-format-arguments elixir-format-arguments)))
+  (setq our-elixir-format-arguments (append our-elixir-format-arguments (list tmpfile)))
+
+  (if (zerop (apply #'call-process elixir-format-elixir-path nil (elixir-format--errbuff) nil our-elixir-format-arguments))
+      (elixir-format--call-format-command)
+    (elixir-format--failed-to-format called-interactively-p))
+
+  (delete-file tmpfile)
+  (kill-buffer (elixir-format--outbuff)))
+
+(defun elixir-format--call-format-command (tmpfile)
+  (if (zerop (call-process-region (point-min) (point-max) "diff" nil (elixir-format--outbuff) nil "-n" "-" tmpfile))
+      (message "File is already formatted")
+    (elixir-format--apply-rcs-patch (elixir-format--outbuff))
+    (message "elixir-format format applied"))
+  (kill-buffer (elixir-format--errbuff)))
+
+(defun elixir-format--failed-to-format (called-interactively-p)
+  (with-current-buffer (elixir-format--errbuff)
+    (setq buffer-read-only t)
+    (ansi-color-apply-on-region (point-min) (point-max))
+    (special-mode))
+
+  (if called-interactively-p
+      (display-buffer (elixir-format--errbuff))
+    (error "elixir-format failed: see %s" (buffer-name (elixir-format--errbuff)))))
 
 (defun elixir-format--goto-line (line)
   (goto-char (point-min))
@@ -138,78 +216,7 @@ Shamelessly stolen from go-mode (https://github.com/dominikh/go-mode.el)"
                 (cl-incf line-offset len)
                 (elixir-format--delete-whole-line len)))
              (t
-              (error "Invalid rcs patch or internal error in elixir-format--apply-rcs-patch"))))))))
-  )
-
-(defun elixir-format-elixir-and-mix-path-not-set-p ()
- (or (= (length elixir-format-mix-path) 0) (= (length elixir-format-elixir-path) 0))
-  )
-
-(defun elixir-format-display-missing-configuration-error (errbuff is-interactive)
-  (with-current-buffer errbuff
-    (progn
-      (setq buffer-read-only nil)
-      (erase-buffer)
-      (insert "elixir or mix binary path not set. Please run `C-h v a-variable RET` for `elixir-format-elixir-path` and `elixir-format-mix-path` variables to see docs to customize necessary variables for elixir and mix.")
-      (setq buffer-read-only t)
-      (ansi-color-apply-on-region (point-min) (point-max))
-      (special-mode)
-      (if is-interactive
-          (display-buffer errbuff)
-        (error "elixir-format-configuration-missing: see %s" (buffer-name errbuff))))
-    ))
-
-;;;###autoload
-(defun elixir-format (&optional is-interactive)
-  (interactive "p")
-
-  (let ((outbuff (get-buffer-create "*elixir-format-output*"))
-        (errbuff (get-buffer-create "*elixir-format-errors*"))
-        (tmpfile (make-temp-file "elixir-format" nil ".ex"))
-        (our-elixir-format-arguments (list elixir-format-mix-path "format"))
-        (output nil))
-
-    (unwind-protect
-        (save-restriction
-          (with-current-buffer outbuff
-            (erase-buffer))
-
-          (with-current-buffer errbuff
-            (setq buffer-read-only nil)
-            (erase-buffer))
-
-          (if (elixir-format-elixir-and-mix-path-not-set-p)
-              (elixir-format-display-missing-configuration-error errbuff is-interactive)
-
-            (write-region nil nil tmpfile)
-
-            (run-mode-hooks 'elixir-format-hook)
-
-            (when elixir-format-arguments
-              (setq our-elixir-format-arguments (append our-elixir-format-arguments elixir-format-arguments)))
-            (setq our-elixir-format-arguments (append our-elixir-format-arguments (list tmpfile)))
-
-            (if (zerop (apply #'call-process elixir-format-elixir-path nil errbuff nil our-elixir-format-arguments))
-                (progn
-                  (if (zerop (call-process-region (point-min) (point-max) "diff" nil outbuff nil "-n" "-" tmpfile))
-                      (message "File is already formatted")
-                    (progn
-                      (elixir-format--apply-rcs-patch outbuff)
-                      (message "elixir-format format applied")))
-                  (kill-buffer errbuff))
-
-              (progn
-                (with-current-buffer errbuff
-                  (setq buffer-read-only t)
-                  (ansi-color-apply-on-region (point-min) (point-max))
-                  (special-mode))
-
-                (if is-interactive
-                    (display-buffer errbuff)
-                  (error "elixir-format failed: see %s" (buffer-name errbuff)))))
-
-            (delete-file tmpfile)
-            (kill-buffer outbuff))))))
+              (error "Invalid rcs patch or internal error in elixir-format--apply-rcs-patch")))))))))
 
 (provide 'elixir-format)
 
