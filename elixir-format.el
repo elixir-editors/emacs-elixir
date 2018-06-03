@@ -183,7 +183,7 @@ Shamelessly stolen from go-mode (https://github.com/dominikh/go-mode.el)"
 
             (write-region nil nil tmpfile)
 
-            (run-hooks 'elixir-format-hook)
+            (run-mode-hooks 'elixir-format-hook)
 
             (when elixir-format-arguments
               (setq our-elixir-format-arguments (append our-elixir-format-arguments elixir-format-arguments)))
