@@ -151,41 +151,6 @@ You can use [web-mode.el](http://web-mode.org) to edit elixir templates (eex fil
 
 ## Elixir Format
 
-### Setup of elixir-format
-Customize the elixir and mix paths
-
-In Emacs, run following command to customize option
-``` elisp
-M-x customize-option
-
-Customize-variable: elixir-format-elixir-path
-```
-and set your elixir executable path there. After that run:
-``` elisp
-M-x customize-option
-
-Customize-variable: elixir-format-mix-path
-```
-and set your mix executable path there.
-
-Your machine's elixir and mix executable paths can be found with `which` command as shown below
-
-``` shell
-$ which elixir
-/usr/local/bin/elixir
-
-$ which mix
-/usr/local/bin/mix
-```
-Alternavively you can define variables as below
-
-``` elisp
-(setq elixir-format-elixir-path "/usr/local/bin/elixir")
-(setq elixir-format-mix-path "/usr/local/bin/mix")
-```
-
-### Use it
-
 ``` elisp
 M-x elixir-format
 ```
@@ -215,7 +180,8 @@ or you set `elixir-format-arguments` in a hook like this:
                                    (setq elixir-format-arguments nil))))
 ```
 
-In this example we use [Projectile](https://github.com/bbatsov/projectile) to get the project root and set `elixir-format-arguments` accordingly.
+In this example we use [Projectile](https://github.com/bbatsov/projectile) to determine if we are in a project and then set `elixir-format-arguments` accordingly.
+Please note that this code snippet may cause unhappiness if there is no `.formatter.exs` file available.
 
 
 ## History
