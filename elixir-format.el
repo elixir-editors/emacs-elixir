@@ -25,16 +25,6 @@
 
 (require 'ansi-color)
 
-(defcustom elixir-format-elixir-path "elixir"
-  "Path to the Elixir interpreter."
-  :type 'string
-  :group 'elixir-format)
-
-(defcustom elixir-format-mix-path "/usr/bin/mix"
-  "Path to the 'mix' executable."
-  :type 'string
-  :group 'elixir-format)
-
 (defcustom elixir-format-arguments nil
   "Additional arguments to 'mix format'"
   :type '(repeat string)
@@ -46,39 +36,87 @@
   :group 'elixir-format)
 
 
-;;; Code
+;;; Code:
 
-(defun elixir-format--goto-line (line)
-  (goto-char (point-min))
-  (forward-line (1- line)))
+(defun elixir-format--errbuff ()
+  (get-buffer-create "*elixir-format-errors*"))
 
-(defun elixir-format--delete-whole-line (&optional arg)
-  "Delete the current line without putting it in the `kill-ring'.
-Derived from function `kill-whole-line'.  ARG is defined as for that
-function.
+(defun elixir-format--outbuff ()
+  (get-buffer-create "*elixir-format-output*"))
 
-Shamelessly stolen from go-mode (https://github.com/dominikh/go-mode.el)"
-  (setq arg (or arg 1))
-  (if (and (> arg 0)
-           (eobp)
-           (save-excursion (forward-visible-line 0) (eobp)))
-      (signal 'end-of-buffer nil))
-  (if (and (< arg 0)
-           (bobp)
-           (save-excursion (end-of-visible-line) (bobp)))
-      (signal 'beginning-of-buffer nil))
-  (cond ((zerop arg)
-         (delete-region (progn (forward-visible-line 0) (point))
-                        (progn (end-of-visible-line) (point))))
-        ((< arg 0)
-         (delete-region (progn (end-of-visible-line) (point))
-                        (progn (forward-visible-line (1+ arg))
-                               (unless (bobp)
-                                 (backward-char))
-                               (point))))
-        (t
-         (delete-region (progn (forward-visible-line 0) (point))
-                        (progn (forward-visible-line arg) (point))))))
+(defun elixir-format--elixir-executable ()
+  (executable-find "elixir"))
+
+(defun elixir-format--mix-executable ()
+  (executable-find "mix"))
+
+;;;###autoload
+(defun elixir-format (&optional called-interactively-p)
+  (interactive "p")
+  (if (not (elixir-format--elixir-and-mix-path-set-p))
+      (elixir-format--display-missing-executables-error called-interactively-p)
+    (unwind-protect
+        (save-restriction
+          (elixir-format--clean-output-buffers)
+          (elixir-format--run-format called-interactively-p)))))
+
+(defun elixir-format--elixir-and-mix-path-set-p ()
+  (and (elixir-format--elixir-executable)
+       (elixir-format--mix-executable)))
+
+(defun elixir-format--display-missing-executables-error (called-interactively-p)
+  (with-current-buffer (elixir-format--errbuff)
+    (setq buffer-read-only nil)
+    (erase-buffer)
+    (insert "Emacs is unable to find the executables for elixir and/or mix. Either they are not installed on your system or emacs' PATH is not as wide as it needs to be. The latter is most likely to happen on OSX, in which case the simplest answer may be to add the exec-path-from-shell package to your configuration.")
+    (setq buffer-read-only t)
+    (ansi-color-apply-on-region (point-min) (point-max))
+    (special-mode)
+    (if called-interactively-p
+        (display-buffer (elixir-format--errbuff))
+      (error "Elixir Format error see %s" (elixir-format--errbuff)))))
+
+(defun elixir-format--clean-output-buffers ()
+  (with-current-buffer (elixir-format--outbuff)
+    (erase-buffer))
+
+  (with-current-buffer (elixir-format--errbuff)
+    (setq buffer-read-only nil)
+    (erase-buffer)))
+
+(defun elixir-format--run-format (called-interactively-p)
+  (let ((tmpfile (make-temp-file "elixir-format" nil ".ex"))
+        (our-elixir-format-arguments (list (elixir-format--mix-executable) "format")))
+
+    (write-region nil nil tmpfile)
+    (run-hooks 'elixir-format-hook)
+
+    (when elixir-format-arguments
+      (setq our-elixir-format-arguments (append our-elixir-format-arguments elixir-format-arguments)))
+    (setq our-elixir-format-arguments (append our-elixir-format-arguments (list tmpfile)))
+
+    (if (zerop (apply #'call-process (elixir-format--elixir-executable) nil (elixir-format--errbuff) nil our-elixir-format-arguments))
+        (elixir-format--call-format-command tmpfile)
+      (elixir-format--failed-to-format called-interactively-p))
+    (delete-file tmpfile)
+    (kill-buffer (elixir-format--outbuff))))
+
+(defun elixir-format--call-format-command (tmpfile)
+  (if (zerop (call-process-region (point-min) (point-max) "diff" nil (elixir-format--outbuff) nil "-n" "-" tmpfile))
+      (message "File is already formatted")
+    (elixir-format--apply-rcs-patch (elixir-format--outbuff))
+    (message "elixir-format format applied"))
+  (kill-buffer (elixir-format--errbuff)))
+
+(defun elixir-format--failed-to-format (called-interactively-p)
+  (with-current-buffer (elixir-format--errbuff)
+    (setq buffer-read-only t)
+    (ansi-color-apply-on-region (point-min) (point-max))
+    (special-mode))
+
+  (if called-interactively-p
+      (display-buffer (elixir-format--errbuff))
+    (error "elixir-format failed: see %s" (buffer-name (elixir-format--errbuff)))))
 
 (defun elixir-format--apply-rcs-patch (patch-buffer)
   "Apply an RCS-formatted diff from PATCH-BUFFER to the current buffer.
@@ -122,57 +160,39 @@ Shamelessly stolen from go-mode (https://github.com/dominikh/go-mode.el)"
                 (cl-incf line-offset len)
                 (elixir-format--delete-whole-line len)))
              (t
-              (error "Invalid rcs patch or internal error in elixir-format--apply-rcs-patch"))))))))
-  )
+              (error "Invalid rcs patch or internal error in elixir-format--apply-rcs-patch")))))))))
 
-;;;###autoload
-(defun elixir-format (&optional is-interactive)
-  (interactive "p")
+(defun elixir-format--goto-line (line)
+  (goto-char (point-min))
+  (forward-line (1- line)))
 
-  (let ((outbuff (get-buffer-create "*elixir-format-output*"))
-        (errbuff (get-buffer-create "*elixir-format-errors*"))
-        (tmpfile (make-temp-file "elixir-format" nil ".ex"))
-        (our-elixir-format-arguments (list elixir-format-mix-path "format"))
-        (output nil))
+(defun elixir-format--delete-whole-line (&optional arg)
+  "Delete the current line without putting it in the `kill-ring'.
+Derived from function `kill-whole-line'.  ARG is defined as for that
+function.
 
-    (unwind-protect
-        (save-restriction
-          (with-current-buffer outbuff
-            (erase-buffer))
-
-          (with-current-buffer errbuff
-            (setq buffer-read-only nil)
-            (erase-buffer))
-
-          (write-region nil nil tmpfile)
-
-          (run-hooks 'elixir-format-hook)
-
-          (when elixir-format-arguments
-            (setq our-elixir-format-arguments (append our-elixir-format-arguments elixir-format-arguments)))
-          (setq our-elixir-format-arguments (append our-elixir-format-arguments (list tmpfile)))
-
-          (if (zerop (apply #'call-process elixir-format-elixir-path nil errbuff nil our-elixir-format-arguments))
-              (progn
-                (if (zerop (call-process-region (point-min) (point-max) "diff" nil outbuff nil "-n" "-" tmpfile))
-                    (message "File is already formatted")
-                  (progn
-                    (elixir-format--apply-rcs-patch outbuff)
-                    (message "mix format applied")))
-                (kill-buffer errbuff))
-
-            (progn
-              (with-current-buffer errbuff
-                (setq buffer-read-only t)
-                (ansi-color-apply-on-region (point-min) (point-max))
-                (special-mode))
-
-              (if is-interactive
-                  (display-buffer errbuff)
-                (error "elixir-format failed: see %s" (buffer-name errbuff)))))
-
-          (delete-file tmpfile)
-          (kill-buffer outbuff)))))
+Shamelessly stolen from go-mode (https://github.com/dominikh/go-mode.el)"
+  (setq arg (or arg 1))
+  (if (and (> arg 0)
+           (eobp)
+           (save-excursion (forward-visible-line 0) (eobp)))
+      (signal 'end-of-buffer nil))
+  (if (and (< arg 0)
+           (bobp)
+           (save-excursion (end-of-visible-line) (bobp)))
+      (signal 'beginning-of-buffer nil))
+  (cond ((zerop arg)
+         (delete-region (progn (forward-visible-line 0) (point))
+                        (progn (end-of-visible-line) (point))))
+        ((< arg 0)
+         (delete-region (progn (end-of-visible-line) (point))
+                        (progn (forward-visible-line (1+ arg))
+                               (unless (bobp)
+                                 (backward-char))
+                               (point))))
+        (t
+         (delete-region (progn (forward-visible-line 0) (point))
+                        (progn (forward-visible-line arg) (point))))))
 
 (provide 'elixir-format)
 
