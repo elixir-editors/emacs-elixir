@@ -51,6 +51,9 @@
 (defvar elixir-mode-website-url "http://elixir-lang.org"
   "Official url of Elixir programming website.")
 
+(defvar elixir-mode-doc-url "https://hexdocs.pm/elixir"
+  "Official documentation for the Elixir programming language.")
+
 (defvar elixir-mode-hook nil)
 
 (defvar elixir-mode-map
@@ -430,13 +433,13 @@ is used to limit the scan."
 (defun elixir-mode-open-docs-master ()
   "Elixir mode go to master documentation."
   (interactive)
-  (browse-url (concat elixir-mode-website-url "/docs/master/elixir")))
+  (browse-url (concat elixir-mode-doc-url "/master")))
 
 ;;;###autoload
 (defun elixir-mode-open-docs-stable ()
   "Elixir mode go to stable documentation."
   (interactive)
-  (browse-url (concat elixir-mode-website-url "/docs/stable/elixir")))
+  (browse-url elixir-mode-doc-url))
 
 ;;;###autoload
 (defun elixir-mode-version (&optional show-version)
