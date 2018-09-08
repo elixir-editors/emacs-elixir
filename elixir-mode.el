@@ -124,7 +124,8 @@
                                   (or "def" "defp" "defmodule" "defprotocol"
                                       "defmacro" "defmacrop" "defdelegate"
                                       "defexception" "defstruct" "defimpl"
-                                      "defcallback" "defoverridable")
+                                      "defguard" "defguardp" "defcallback"
+                                      "defoverridable")
                                   symbol-end))
       (builtin-namespace . ,(rx symbol-start
                                 (or "import" "require" "use" "alias")
