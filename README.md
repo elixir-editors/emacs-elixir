@@ -30,7 +30,7 @@ Provides font-locking, indentation and navigation support for the
 `package.el` is the built-in package manager in Emacs.
 
 `elixir-mode` is available on the two major community maintained repositories -
-[MELPA STABLE](melpa-stable.milkbox.net) and [MELPA](http://melpa.milkbox.net).
+[MELPA STABLE](https://stable.melpa.org/) and [MELPA](https://melpa.org/).
 
 You can install `elixir-mode` with the following command:
 
