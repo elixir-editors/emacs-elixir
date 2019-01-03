@@ -110,6 +110,22 @@ x = 15"
 x = 15"
     (should (eq (elixir-test-face-at 15) 'font-lock-variable-name-face))))
 
+(ert-deftest elixir-mode-syntax-table/fontify-defguard ()
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+      "defmodule Foo do
+defguard is_foo(arg) when arg == true
+end"
+    (should (eq (elixir-test-face-at 18) 'font-lock-keyword-face))))
+
+(ert-deftest elixir-mode-syntax-table/fontify-defguardp ()
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+      "defmodule Foo do
+defguardp is_foo(arg) when arg == true
+end"
+    (should (eq (elixir-test-face-at 18) 'font-lock-keyword-face))))
+
 (ert-deftest elixir-mode-syntax-table/fontify-function-name/1 ()
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
@@ -586,8 +602,6 @@ Everything in here should be gray, including the @doc and triple-quotes
     (should (eq 'font-lock-doc-face (get-char-property (point) 'face)))
     (search-forward "Everything")
     (should (eq 'font-lock-doc-face (get-char-property (point) 'face)))))
-
-
 
 (provide 'elixir-mode-font-test)
 
