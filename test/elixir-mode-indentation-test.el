@@ -1510,7 +1510,7 @@ defmodule Foo do
 end")
 
 (elixir-def-indentation-test indent-maps-with-stings-as-keys
-                             (:expected-result :failed :tags '(indentation))
+                             (:tags '(indentation))
 "%{
 \"data\" => %{
 \"foo\" => %{
