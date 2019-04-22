@@ -1510,7 +1510,7 @@ defmodule Foo do
 end")
 
 (elixir-def-indentation-test indent-maps-with-stings-as-keys
-                             (:expected-result :failed :tags '(indentation))
+                             (:tags '(indentation))
 "%{
 \"data\" => %{
 \"foo\" => %{
@@ -1525,6 +1525,23 @@ end")
     }
   }
 }")
+
+(elixir-def-indentation-test indent-maps-with-multiple-string-keys
+                             (:expected-result :failed :tags '(indentation))
+"Enum.map [], fn x ->
+%{
+\"a\" => 5555,
+\"b\" => 5555,
+\"c\" => x,
+}
+end"
+"Enum.map [], fn x ->
+  %{
+    \"a\" => 5555,
+    \"b\" => 5555,
+    \"c\" => x,
+  }
+end")
 
 (elixir-def-indentation-test indent-maps-and-structs-elements
                              (:tags '(indentation))

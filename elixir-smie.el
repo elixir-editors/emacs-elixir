@@ -415,6 +415,8 @@
        (smie-rule-parent))
       ((smie-rule-parent-p ";")
        (smie-rule-parent))
+      ((smie-rule-parent-p "{")
+       (smie-rule-parent elixir-smie-indent-basic))
       (t (smie-rule-parent (- elixir-smie-indent-basic)))))
     (`(:before . "MATCH-STATEMENT-DELIMITER")
      (cond
