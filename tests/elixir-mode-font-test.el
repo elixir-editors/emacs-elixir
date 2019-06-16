@@ -612,6 +612,17 @@ Everything in here should be gray, including the @doc and triple-quotes
     (search-forward "Everything")
     (should (eq 'font-lock-doc-face (get-char-property (point) 'face)))))
 
+(ert-deftest elixir-mode-syntax-table/string-interpolation-in-string-interpolation()
+  "https://github.com/elixir-lang/emacs-elixir/issues/263"
+  :tags '(fontification syntax-table)
+  (elixir-test-with-temp-buffer
+      "\"foo #{\"foo #{\"foo\"} oof\"} oof\""
+    (should (eq (elixir-test-face-at 4) 'font-lock-string-face))
+    (should (eq (elixir-test-face-at 6) 'font-lock-variable-name-face))
+    (should (eq (elixir-test-face-at 15) 'font-lock-variable-name-face))
+    (should (eq (elixir-test-face-at 23) 'font-lock-variable-name-face))
+    (should (eq (elixir-test-face-at 28) 'font-lock-string-face))))
+
 (provide 'elixir-mode-font-test)
 
 ;;; elixir-mode-font-test.el ends here
