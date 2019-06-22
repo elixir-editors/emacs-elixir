@@ -102,7 +102,7 @@ files in subdirectories."
 
 (defun elixir-format--run-format (called-interactively-p)
   (let ((tmpfile (elixir-format--temp-file-path))
-        (our-elixir-format-arguments (list (elixir-format--mix-executable) "format")))
+        (our-elixir-format-arguments (list "format")))
 
     (write-region nil nil tmpfile)
     (run-hooks 'elixir-format-hook)
@@ -111,7 +111,7 @@ files in subdirectories."
       (setq our-elixir-format-arguments (append our-elixir-format-arguments elixir-format-arguments)))
     (setq our-elixir-format-arguments (append our-elixir-format-arguments (list tmpfile)))
 
-    (if (zerop (elixir-format--from-mix-root (elixir-format--elixir-executable) (elixir-format--errbuff) our-elixir-format-arguments))
+    (if (zerop (elixir-format--from-mix-root (elixir-format--mix-executable) (elixir-format--errbuff) our-elixir-format-arguments))
         (elixir-format--call-format-command tmpfile)
       (elixir-format--failed-to-format called-interactively-p))
     (delete-file tmpfile)
@@ -211,7 +211,7 @@ Shamelessly stolen from go-mode (https://github.com/dominikh/go-mode.el)"
                         (progn (forward-visible-line arg) (point))))))
 
 
-(defun elixir-format--from-mix-root (elixir-path errbuff format-arguments)
+(defun elixir-format--from-mix-root (mix-path errbuff format-arguments)
   "Run mix format where `mix.exs' is located, because mix is
 meant to be run from the project root. Otherwise, run in the
 current directory."
@@ -226,7 +226,7 @@ current directory."
                      (mapconcat 'identity format-arguments " ")))
 
     (let ((result (apply #'call-process
-                         elixir-path nil errbuff nil format-arguments)))
+                         mix-path nil errbuff nil format-arguments)))
       (setq default-directory original-default-directory)
       result)))
 
