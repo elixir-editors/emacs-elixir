@@ -84,13 +84,21 @@
     (setq buffer-read-only nil)
     (erase-buffer)))
 
+(defun elixir-format--target-file-name ()
+  "Returns the file name of current visited file.
+
+If the buffer is not visiting any file (like during tests) then
+it returns a file name based on the name of the buffer."
+  (or buffer-file-name (concat (secure-hash 'md5 (buffer-name)) ".ex")))
+
 (defun elixir-format--temp-file-path ()
   "Make a temp file in the current directory, because mix format
 applies rules based on path patterns and looks for .formatter.exs
 files in subdirectories."
-  (concat (file-name-sans-extension buffer-file-name)
-          "-emacs-elixir-format."
-          (file-name-extension buffer-file-name)))
+  (let ((target-file-name (elixir-format--target-file-name)))
+    (concat (file-name-sans-extension target-file-name)
+            "-emacs-elixir-format."
+            (file-name-extension target-file-name))))
 
 (defun elixir-format--run-format (called-interactively-p)
   (let ((tmpfile (elixir-format--temp-file-path))
@@ -208,7 +216,7 @@ Shamelessly stolen from go-mode (https://github.com/dominikh/go-mode.el)"
 meant to be run from the project root. Otherwise, run in the
 current directory."
   (let ((original-default-directory default-directory)
-        (mix-dir (locate-dominating-file buffer-file-name "mix.exs")))
+        (mix-dir (locate-dominating-file (elixir-format--target-file-name) "mix.exs")))
 
     (when mix-dir
       (setq default-directory (expand-file-name mix-dir)))
