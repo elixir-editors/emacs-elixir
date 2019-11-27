@@ -134,7 +134,7 @@
       ;; The first character of an identifier must be a letter or an underscore.
       ;; After that, they may contain any alphanumeric character + underscore.
       ;; Additionally, the final character may be either `?' or `!'.
-      (identifiers . ,(rx (one-or-more (any "A-Z" "a-z" "_"))
+      (identifiers . ,(rx (any "A-Z" "a-z" "_")
                           (zero-or-more (any "A-Z" "a-z" "0-9" "_"))
                           (optional (or "?" "!"))))
       (keyword . ,(rx symbol-start
@@ -151,11 +151,11 @@
       ;; or `!'.
       (module-names . ,(rx symbol-start
                            (optional (or "%" "&"))
-                           (one-or-more (any "A-Z"))
+                           (any "A-Z")
                            (zero-or-more (any "A-Z" "a-z" "_" "0-9"))
                            (zero-or-more
                             (and "."
-                                 (one-or-more (any "A-Z" "_"))
+                                 (any "A-Z" "_")
                                  (zero-or-more (any "A-Z" "a-z" "_" "0-9"))))
                            (optional (or "!" "?"))
                            symbol-end))
