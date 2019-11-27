@@ -304,7 +304,7 @@ is used to limit the scan."
     (elixir-match-interpolation 0 font-lock-variable-name-face t)
 
     ;; Module attributes
-    (,(elixir-rx (and "@" (1+ identifiers)))
+    (,(elixir-rx (and "@" identifiers))
      0 elixir-attribute-face)
 
     ;; Keywords
@@ -399,7 +399,7 @@ is used to limit the scan."
      1 font-lock-variable-name-face)
 
     ;; Map keys
-    (,(elixir-rx (group (and (one-or-more identifiers) ":")) space)
+    (,(elixir-rx (group (and identifiers ":")) space)
      1 elixir-atom-face)
 
     ;; Pseudovariables
