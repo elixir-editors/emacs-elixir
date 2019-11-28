@@ -538,7 +538,10 @@ just return nil."
 
   (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
-              :backward-token 'elixir-smie-backward-token))
+              :backward-token 'elixir-smie-backward-token)
+  ;; https://github.com/elixir-editors/emacs-elixir/issues/363
+  ;; http://debbugs.gnu.org/cgi/bugreport.cgi?bug=35496
+  (set (make-local-variable 'smie-blink-matching-inners) nil))
 
 ;; Invoke elixir-mode when appropriate
 
