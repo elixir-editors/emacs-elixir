@@ -85,7 +85,7 @@ __aliases__
    (should (eq (elixir-test-face-at 97) nil))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-regex-with-quote ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/23"
+  "https://github.com/elixir-editors/emacs-elixir/issues/23"
   :tags '(fontification syntax-table)
   :expected-result :failed
   (elixir-test-with-temp-buffer
@@ -94,7 +94,7 @@ x = 15"
     (should (eq (elixir-test-face-at 8) 'font-lock-variable-name-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-regex-with-question/1 ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/36"
+  "https://github.com/elixir-editors/emacs-elixir/issues/36"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
       "~r/^matt: (?<ct>\d+)$/mg
@@ -103,7 +103,7 @@ x = 15"
     (should (eq (elixir-test-face-at 25) 'font-lock-variable-name-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-regex-with-question/2 ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/29"
+  "https://github.com/elixir-editors/emacs-elixir/issues/29"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
       "a = \"\" <> \"?\"
@@ -167,7 +167,7 @@ end"
     (should (eq (elixir-test-face-at 91) 'font-lock-keyword-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-end-if-the-last-line-in-a-module-is-a-comment ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/283"
+  "https://github.com/elixir-editors/emacs-elixir/issues/283"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
       "defmodule Foo do
@@ -238,7 +238,7 @@ true_false_nil
     (should (eq (elixir-test-face-at 9) 'elixir-atom-face))
     (should (eq (elixir-test-face-at 10) 'elixir-atom-face)))
 
-  ;; https://github.com/elixir-lang/emacs-elixir/issues/320
+  ;; https://github.com/elixir-editors/emacs-elixir/issues/320
   (elixir-test-with-temp-buffer
    "<<foo::bar>>"
    (should-not (eq (elixir-test-face-at 3) 'elixir-atom-face))))
@@ -296,7 +296,7 @@ some_expr"
    (should (eq (elixir-test-face-at 4) 'font-lock-variable-name-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-assignment-with-singleton ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/245"
+  "https://github.com/elixir-editors/emacs-elixir/issues/245"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "true_false_nil = 1"
@@ -305,7 +305,7 @@ some_expr"
    (should (eq (elixir-test-face-at 12) 'font-lock-variable-name-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-keyword-after-dot ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/250"
+  "https://github.com/elixir-editors/emacs-elixir/issues/250"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "Mix.raise
@@ -356,7 +356,7 @@ end"
    (should (eq (elixir-test-face-at 41) 'font-lock-keyword-face))))
 
 (ert-deftest elixir-mode-syntax-table/string-interpolation-in-words-list ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/263"
+  "https://github.com/elixir-editors/emacs-elixir/issues/263"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "~w(SADD users #{user_id})"
@@ -367,7 +367,7 @@ end"
    (should-not (eq (elixir-test-face-at 25) 'font-lock-comment-face))))
 
 (ert-deftest elixir-mode-syntax-table/quotes-in-sigils ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/265"
+  "https://github.com/elixir-editors/emacs-elixir/issues/265"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "~s/\"/
@@ -445,7 +445,7 @@ foo
    (should     (eq (elixir-test-face-at 21) 'font-lock-type-face))))
 
 (ert-deftest elixir-mode-syntax-table/sigils-in-string ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/275"
+  "https://github.com/elixir-editors/emacs-elixir/issues/275"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "@one 1
@@ -458,7 +458,7 @@ foo
    (should     (eq (elixir-test-face-at 26) 'elixir-atom-face))))
 
 (ert-deftest elixir-mode-syntax-table/sigil-triple-quote ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/286"
+  "https://github.com/elixir-editors/emacs-elixir/issues/286"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "defmodule IEx do
@@ -470,7 +470,7 @@ end
    (should (eq (elixir-test-face-at 33) 'font-lock-string-face))))
 
 (ert-deftest elixir-mode-syntax-table/single-triple-single-quote ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/309"
+  "https://github.com/elixir-editors/emacs-elixir/issues/309"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "defmodule Module do
@@ -487,7 +487,7 @@ end
    (should (eq (elixir-test-face-at 56) 'font-lock-string-face))))
 
 (ert-deftest elixir-mode-syntax-table/comment-out-ignored-var ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/292"
+  "https://github.com/elixir-editors/emacs-elixir/issues/292"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "variable
@@ -514,7 +514,7 @@ end
    (should (eq (elixir-test-face-at 55) 'font-lock-constant-face))))
 
 (ert-deftest elixir-mode-syntax-table/escaped-sigil-delimiter ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/302"
+  "https://github.com/elixir-editors/emacs-elixir/issues/302"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "def player_id(video) do
@@ -546,7 +546,7 @@ end
     )))
 
 (ert-deftest elixir-mode-syntax-table/question-quote ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/185"
+  "https://github.com/elixir-editors/emacs-elixir/issues/185"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "\"\\\"foo\\\"\" |> String.strip(?\")"
@@ -557,7 +557,7 @@ end
    (should-not (eq (elixir-test-face-at 28) 'font-lock-string-face))))
 
 (ert-deftest elixir-mode-syntax-table/ignored-variables-in-pattern-match ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/361"
+  "https://github.com/elixir-editors/emacs-elixir/issues/361"
   :tags '(fontification syntax-table)
   (elixir-test-with-temp-buffer
    "(_1_day = 86_400)
@@ -566,10 +566,10 @@ _1_day"
    (should (eq (elixir-test-face-at 19) 'font-lock-comment-face))))
 
 (ert-deftest elixir-mode-in-docstring ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/355"
+  "https://github.com/elixir-editors/emacs-elixir/issues/355"
   :tags 'fontification
   (elixir-test-with-temp-buffer
-      "# https://github.com/elixir-lang/emacs-elixir/issues/355
+      "# https://github.com/elixir-editors/emacs-elixir/issues/355
 
 @moduledoc \"\"\"
 Everything in here should be gray, including the @moduledoc and triple-quotes
@@ -585,10 +585,10 @@ Everything in here should be gray, including the @doc and triple-quotes
     (should (elixir--docstring-p))))
 
 (ert-deftest elixir-mode-docstring-face ()
-  "https://github.com/elixir-lang/emacs-elixir/issues/355"
+  "https://github.com/elixir-editors/emacs-elixir/issues/355"
   :tags 'fontification
   (elixir-test-with-temp-buffer
-      "# https://github.com/elixir-lang/emacs-elixir/issues/355
+      "# https://github.com/elixir-editors/emacs-elixir/issues/355
 
 @moduledoc \"\"\"
 Everything in here should be gray, including the @moduledoc and triple-quotes

@@ -191,12 +191,12 @@ This mode is based on the
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/elixir-lang/emacs-elixir/blob/master/CONTRIBUTING.md) for guidelines on how to contribute to this project.
+Please read [CONTRIBUTING.md](https://github.com/elixir-editors/emacs-elixir/blob/master/CONTRIBUTING.md) for guidelines on how to contribute to this project.
 
 ## License
 
 Copyright © 2011-2017 Samuel Tonini, Matt DeBoard, Andreas Fuchs, secondplanet and
-[contributors](https://github.com/elixir-lang/emacs-elixir/contributors).
+[contributors](https://github.com/elixir-editors/emacs-elixir/contributors).
 
 Distributed under the GNU General Public License, version 3
 

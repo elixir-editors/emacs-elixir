@@ -756,7 +756,7 @@ end
 
 (elixir-def-indentation-test cond-within-with
                              (:expected-result :failed :tags '(indentation))
-                             ;; https://github.com/elixir-lang/emacs-elixir/issues/319
+                             ;; https://github.com/elixir-editors/emacs-elixir/issues/319
 "
 with(
   foo <-

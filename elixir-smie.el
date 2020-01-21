@@ -29,7 +29,7 @@
 (require 'cl-lib)         ; `cl-flet'
 
 ;; HACK: Patch for Emacs 24.3 smie that fix
-;; https://github.com/elixir-lang/emacs-elixir/issues/107.
+;; https://github.com/elixir-editors/emacs-elixir/issues/107.
 ;;
 ;; defadvice is used to change the behavior only for elixir-mode.
 ;; Definition of advice is a definition of corresponding function

@@ -7,7 +7,7 @@
 ;;          Matt DeBoard
 ;;          Samuel Tonini <tonini.samuel@gmail.com>
 
-;; URL: https://github.com/elixir-lang/emacs-elixir
+;; URL: https://github.com/elixir-editors/emacs-elixir
 ;; Created: Mon Nov 7 2011
 ;; Keywords: languages elixir
 ;; Version: 2.3.1
@@ -45,7 +45,7 @@
   "Major mode for editing Elixir code."
   :prefix "elixir-"
   :group 'languages
-  :link '(url-link :tag "Github" "https://github.com/elixir-lang/emacs-elixir")
+  :link '(url-link :tag "Github" "https://github.com/elixir-editors/emacs-elixir")
   :link '(emacs-commentary-link :tag "Commentary" "elixir-mode"))
 
 (defvar elixir-mode-website-url "http://elixir-lang.org"
@@ -414,7 +414,7 @@ is used to limit the scan."
 (defun elixir-mode-open-github ()
   "Elixir mode open GitHub page."
   (interactive)
-  (browse-url "https://github.com/elixir-lang/emacs-elixir"))
+  (browse-url "https://github.com/elixir-editors/emacs-elixir"))
 
 ;;;###autoload
 (defun elixir-mode-open-elixir-home ()
