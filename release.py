@@ -25,7 +25,7 @@ def commit_msgs(start_commit, end_commit):
 
     """
     fmt_string = ("'%s%n* [#{pr_num}]"
-                  "(https://github.com/elixir-lang/emacs-elixir/pull/{pr_num}) - %b'")
+                  "(https://github.com/elixir-editors/emacs-elixir/pull/{pr_num}) - %b'")
     return subprocess.check_output([
         "git",
         "log",
