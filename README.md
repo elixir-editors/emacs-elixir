@@ -148,6 +148,8 @@ If you looking for elixir tooling integration for Emacs, check: [alchemist.el](h
 
 You can use [web-mode.el](http://web-mode.org) to edit elixir templates (eex files).
 
+[mix.el](https://github.com/ayrat555/mix.el) provides a minor mode for integration with Mix, a build tool that ships with Elixir.
+
 
 ## Elixir Format
 
