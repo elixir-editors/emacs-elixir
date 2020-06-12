@@ -164,7 +164,7 @@
                          (or "_" "__MODULE__" "__DIR__" "__ENV__" "__CALLER__"
                              "__block__" "__aliases__")
                          symbol-end))
-      (sigils . ,(rx "~" (or "B" "C" "D" "E" "L" "N" "R" "S" "T" "U" "b" "c" "r" "s" "w")))))
+      (sigils . ,(rx "~" (or "B" "C" "D" "E" "L" "N" "R" "S" "T" "U" "b" "c" "e" "r" "s" "w")))))
 
   (defmacro elixir-rx (&rest sexps)
     (let ((rx-constituents (append elixir-rx-constituents rx-constituents)))
