@@ -16,8 +16,8 @@ should take to help get it added/fixed in emacs-elixir
     * elixir-mode
     * emacs
 
-  * Ideally, creating a pull request with a (failing) test case demonstrating
-    what's wrong. This makes it easy for us to reproduce & fix the problem.
+  * Ideally, creating a pull request with a test case demonstrating what's wrong.
+    This makes it easy for us to review, reproduce & fix the problem.
 
 You might also hop into the IRC channel (``#elixir-lang`` on ``irc.freenode.net``)
 & raise your question there, as there may be someone who can help you with a
@@ -58,13 +58,14 @@ substantial time for the all-volunteer team to get to.
 
 ## How to run tests
 
-There are three tools that helps us to test emacs-elixir:
+There are two tools that helps us to test emacs-elixir:
 
-* [EVM](https://github.com/rejeep/evm) - a command-line tool which allows you to easily install, manage, and work with multiple Emacs versions.
 * [Cask](https://github.com/cask/cask) - a project management tool for Emacs that helps automate the package development cycle.
 * [Ert-runner](https://github.com/rejeep/ert-runner.el) - a tool for Emacs projects tested using Ert.
 
 ### Emacs Version Manager
+
+Emacs has many versions and currently we support from version 24+. If you want to reproduce a bug/issue on a specific version of Emacs, there are some alternatives like EVM. Here is a setup for EVM. 
 
 To install [EVM](https://github.com/rejeep/evm), run:
 
@@ -94,7 +95,7 @@ Read more about [EVM](https://github.com/rejeep/evm).
 To install Cask, run:
 
 ```bash
-$ curl -fsSkL https://raw.github.com/cask/cask/master/go | python
+$ curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python
 $ export PATH="~/.cask/bin:$PATH" # Add it to your .bashrc or analogue
 ```
 

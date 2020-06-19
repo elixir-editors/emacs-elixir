@@ -1,12 +1,11 @@
 language: elixir
 cache: apt
 env:
-  - EVM_EMACS=24.3 TEST_RUN="rake test"
-  - EVM_EMACS=24.4 TEST_RUN="rake test"
-  - EVM_EMACS=24.5 TEST_RUN="rake test-no-gui"
-  - EVM_EMACS=25.1 TEST_RUN="rake test"
-  - EVM_EMACS=25.2 TEST_RUN="rake test"
-  # - EVM_EMACS=git-snapshot TEST_RUN="rake test"
+  - EVM_EMACS=24.3
+  - EVM_EMACS=24.4
+  - EVM_EMACS=24.5
+  - EVM_EMACS=25.1
+  - EVM_EMACS=25.2
 matrix:
   include:
     - elixir: 1.0.5
@@ -22,4 +21,4 @@ before_install:
 install:
   - cask install
 script:
-  - $TEST_RUN
+  - cask exec ert-runner
