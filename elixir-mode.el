@@ -1,4 +1,4 @@
-;;; elixir-mode.el --- Major mode for editing Elixir files
+;;; elixir-mode.el --- Major mode for editing Elixir files -*- lexical-binding: t -*-
 
 ;; Copyright 2011-2015 secondplanet
 ;;           2013-2015 Samuel Tonini, Matt DeBoard, Andreas Fuchs
@@ -10,7 +10,7 @@
 ;; URL: https://github.com/elixir-editors/emacs-elixir
 ;; Created: Mon Nov 7 2011
 ;; Keywords: languages elixir
-;; Version: 2.3.1
+;; Version: 2.4.0
 ;; Package-Requires: ((emacs "24") (pkg-info "0.4"))
 
 ;; This file is not a part of GNU Emacs.
@@ -48,13 +48,17 @@
   :link '(url-link :tag "Github" "https://github.com/elixir-editors/emacs-elixir")
   :link '(emacs-commentary-link :tag "Commentary" "elixir-mode"))
 
-(defvar elixir-mode-website-url "http://elixir-lang.org"
-  "Official url of Elixir programming website.")
+(defcustom elixir-mode-website-url "http://elixir-lang.org"
+  "Official url of Elixir programming website."
+  :type 'string)
 
-(defvar elixir-mode-doc-url "https://hexdocs.pm/elixir"
-  "Official documentation for the Elixir programming language.")
+(defcustom elixir-mode-doc-url "https://hexdocs.pm/elixir"
+  "Official documentation for the Elixir programming language."
+  :type 'string)
 
-(defvar elixir-mode-hook nil)
+(defcustom elixir-mode-hook nil
+  "Hook that runs when switching to major mode"
+  :type 'hook)
 
 (defvar elixir-mode-map
   (let ((map (make-sparse-keymap)))
@@ -72,27 +76,35 @@
     ("Tests" "^\\s-*test[ \t\n]+\"?\\(:?[a-z0-9_@+() \t-]+\\)\"?[ \t\n]+.*" 1))
   "Imenu pattern for `elixir-mode'.")
 
-(defvar elixir-basic-offset 2)
-(defvar elixir-key-label-offset 0)
-(defvar elixir-match-label-offset 2)
+(defcustom elixir-basic-offset 2
+  "Basic offset."
+  :type 'integer)
+(defcustom elixir-key-label-offset 0
+  "Offset used for key label."
+  :type 'integer)
+(defcustom elixir-match-label-offset 2
+  "Offset for a match label."
+  :type 'integer)
+
+(defgroup elixir-faces nil
+  "Font-lock faces for `elixir'."
+  :group 'elixir
+  :group 'faces)
 
 (defvar elixir-attribute-face 'elixir-attribute-face)
 (defface elixir-attribute-face
   '((t (:inherit font-lock-preprocessor-face)))
-  "For use with module attribute tokens."
-  :group 'font-lock-faces)
+  "For use with module attribute tokens.")
 
 (defvar elixir-atom-face 'elixir-atom-face)
 (defface elixir-atom-face
   '((t (:inherit font-lock-builtin-face)))
-  "For use with atoms & map keys."
-  :group 'font-lock-faces)
+  "For use with atoms & map keys.")
 
 (defvar elixir-number-face 'elixir-number-face)
 (defface elixir-number-face
-  '((t (:inherit font-lock-builtin-face)))
-  "For use with numbers."
-  :group 'font-lock-faces)
+  '((t (:inherit default)))
+  "For use with numbers.")
 
 
 (eval-when-compile
