@@ -2,14 +2,13 @@ dist: xenial
 language: elixir
 cache: apt
 env:
-  - EVM_EMACS=git-snapshot
   - EVM_EMACS=26.3
 elixir:
   - 1.7.4
   - 1.9.4
   - 1.10.4
 otp_release:
-  - 20.3
+  - 21.3
   - 22.3
 before_install:
   - curl -fsSkL https://gist.githubusercontent.com/Trevoke/90409590f43abfd0d7fe3b02b5249849/raw > travis.sh && source ./travis.sh
