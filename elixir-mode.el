@@ -88,6 +88,13 @@
   "For use with atoms & map keys."
   :group 'font-lock-faces)
 
+(defvar elixir-number-face 'elixir-number-face)
+(defface elixir-number-face
+  '((t (:inherit font-lock-builtin-face)))
+  "For use with numbers."
+  :group 'font-lock-faces)
+
+
 (eval-when-compile
   (defconst elixir-rx-constituents
     `(
@@ -107,6 +114,11 @@
                       (zero-or-more (any "a-z" "A-Z" "0-9" "_" "\"" "'" "!" "@" "?")))
                      (and "\"" (one-or-more (not (any "\""))) "\"")
                      (and "'" (one-or-more (not (any "'"))) "'"))))
+      (numbers . ,(rx (and symbol-start
+                           (? "-")
+                           (+ digit)
+                           (0+ (and "_" (= 3 digit)))
+                           symbol-end)))
       (builtin . ,(rx symbol-start
                       (or "case" "cond" "for" "if" "quote" "raise" "receive" "send"
                           "super" "throw" "try" "unless" "unquote" "unquote_splicing"
@@ -381,6 +393,10 @@ is used to limit the scan."
                  (zero-or-more space)
                  (optional "="))
      1 elixir-atom-face)
+
+    ;; Numbers
+    (,(elixir-rx (group numbers))
+     1 elixir-number-face)
 
     ;; Gray out variables starting with "_"
     (,(elixir-rx symbol-start
