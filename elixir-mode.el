@@ -456,7 +456,7 @@ just return nil."
 (defun elixir-mode-fill-doc-string ()
   (interactive)
   (save-excursion
-    (re-search-backward "@\\(?:module\\)?doc +\"\"\"" nil t)
+    (re-search-backward (rx "@" (or "moduledoc" "typedoc" "doc") space "\"\"\"") nil t)
     (re-search-forward "\"\"\"" nil t)
     (set-mark (point))
     (re-search-forward "\"\"\"" nil t)
@@ -495,7 +495,7 @@ just return nil."
     (when pos
       (save-excursion
         (goto-char pos)
-        (and (looking-at "\"\"\"")(looking-back "@moduledoc[ \]+\\|@doc[ \]+"
+        (and (looking-at "\"\"\"")(looking-back (rx "@" (or "moduledoc" "typedoc" "doc") (+ space))
                                                 (line-beginning-position)))))))
 
 (defun elixir-font-lock-syntactic-face-function (state)
