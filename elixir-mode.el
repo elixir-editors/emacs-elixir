@@ -11,7 +11,7 @@
 ;; Created: Mon Nov 7 2011
 ;; Keywords: languages elixir
 ;; Version: 2.4.0
-;; Package-Requires: ((emacs "24") (pkg-info "0.4"))
+;; Package-Requires: ((emacs "26.3"))
 
 ;; This file is not a part of GNU Emacs.
 

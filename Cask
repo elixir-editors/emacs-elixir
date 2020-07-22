@@ -6,4 +6,5 @@
 (files "*.el")
 
 (development
+ (depends-on "pkg-info")
  (depends-on "ert-runner"))

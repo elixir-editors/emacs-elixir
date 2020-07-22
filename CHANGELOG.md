@@ -1,3 +1,6 @@
+## v2.4.0 - Unreleased
+* [#459](https://github.com/elixir-editors/emacs-elixir/pull/459) - Customizable font-face for numbers
+
 ## v2.3.1 - 2016/04/19
 * [#337](https://github.com/elixir-editors/emacs-elixir/pull/337) - Fix indentation issue after COMMA token
 * [#333](https://github.com/elixir-editors/emacs-elixir/pull/333) - Fix indentation of second element inside list of tuples
