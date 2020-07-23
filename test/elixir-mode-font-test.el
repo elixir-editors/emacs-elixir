@@ -199,6 +199,14 @@ end"
     (should (eq (elixir-test-face-at 2) 'font-lock-builtin-face))
     (should (eq (elixir-test-face-at 3) 'font-lock-string-face))))
 
+(ert-deftest elixir-mode-syntax-table/fontify-heredoc/4 ()
+  :tags '(fontification heredoc syntax-table)
+  (elixir-test-with-temp-buffer
+      "@typedoc \"\"\""
+    (should (eq (elixir-test-face-at 1) 'elixir-attribute-face))
+    (should (eq (elixir-test-face-at 2) 'elixir-attribute-face))
+    (should (eq (elixir-test-face-at 10) 'font-lock-doc-face))))
+
 (ert-deftest elixir-mode-syntax-table/fontify-atoms ()
   :tags '(fontification atom syntax-table)
   (elixir-test-with-temp-buffer
