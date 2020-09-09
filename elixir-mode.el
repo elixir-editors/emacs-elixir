@@ -36,10 +36,11 @@
 
 ;;; Code:
 
+(require 'compile)            ; compilation-error-regexp-alist-alist
 (require 'easymenu)           ; Elixir Mode menu definition
+(require 'elixir-format)      ; Elixir Format functions
 (require 'elixir-smie)        ; Syntax and indentation support
 (require 'pkg-info)           ; Display Elixir Mode package version
-(require 'elixir-format)      ; Elixir Format functions
 
 (defgroup elixir nil
   "Major mode for editing Elixir code."
@@ -550,6 +551,67 @@ just return nil."
   (add-to-list 'auto-mode-alist '("\\.elixir\\'" . elixir-mode))
   (add-to-list 'auto-mode-alist '("\\.ex\\'" . elixir-mode))
   (add-to-list 'auto-mode-alist '("\\.exs\\'" . elixir-mode)))
+
+;;;###autoload
+(mapc
+ (cl-function
+  (lambda ((symbol . spec))
+    "Add SPEC to `compilation-error-regexp-alist-alist'."
+    (setf (alist-get symbol compilation-error-regexp-alist-alist) spec)))
+
+ '((elixir-error
+    "^== Compilation error in file \\(.*\\) ==$"
+    1   ;; file
+    nil ;; no line
+    nil ;; no column
+    2   ;; type, 2 for error
+    1   ;; hyperlink; file
+    )
+
+   (elixir-trace
+    "^ +\\(\\([^:]+\\):\\([0-9]+\\)\\): .*$"
+    2   ;; file
+    3   ;; line
+    nil ;; no column
+    0   ;; type, 0 for info
+    1   ;; hyperlink; file & line together
+    )
+
+   (elixir-credo-warning
+    "^┃ \\[W] . .*\n┃ +\\(\\([^:]+\\):\\([0-9]+\\):\\([0-9]+\\)\\) .*$"
+    2 ;; file
+    3 ;; line
+    4 ;; column
+    1 ;; type, 1 for warning
+    1 ;; hyperlink, file, line and column together
+    )
+
+   (elixir-credo-warning-no-column
+    "^┃ \\[W] . .*\n┃ +\\(\\([^:]+\\):\\([0-9]+\\)\\) .*$"
+    2   ;; file
+    3   ;; line
+    nil ;; no column
+    1   ;; type, 1 for warning
+    1   ;; hyperlink, file and line together
+    )
+
+   (elixir-credo-info
+    "^┃ \\[[^W]] . .*\n┃ +\\(\\([^:]+\\):\\([0-9]+\\):\\([0-9]+\\)\\) .*$"
+    2 ;; file
+    3 ;; line
+    4 ;; column
+    0 ;; type, 0 for info
+    1 ;; hyperlink, file, line and column together
+    )
+
+   (elixir-credo-info-no-column
+    "^┃ \\[[^W]] . .*\n┃ +\\(\\([^:]+\\):\\([0-9]+\\)\\) .*$"
+    2   ;; file
+    3   ;; line
+    nil ;; no column
+    0   ;; type, 0 for info
+    1   ;; hyperlink, file and line together
+    )))
 
 (provide 'elixir-mode)
 
