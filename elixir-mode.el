@@ -557,7 +557,9 @@ just return nil."
  (cl-function
   (lambda ((symbol . spec))
     "Add SPEC to `compilation-error-regexp-alist-alist'."
-    (setf (alist-get symbol compilation-error-regexp-alist-alist) spec)))
+    (if (< 24 emacs-major-version)
+        (setf (alist-get symbol compilation-error-regexp-alist-alist) spec)
+      (cl-pushnew (cons symbol spec) compilation-error-regexp-alist-alist :key #'car))))
 
  '((elixir-error
     "^== Compilation error in file \\(.*\\) ==$"
