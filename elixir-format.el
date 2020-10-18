@@ -28,13 +28,11 @@
 (defcustom elixir-format-arguments nil
   "Additional arguments to 'mix format'"
   :type '(repeat string)
-  :group 'elixir
   :group 'elixir-format)
 
 (defcustom elixir-format-hook nil
   "Hook called by `elixir-format'."
   :type 'hook
-  :group 'elixir
   :group 'elixir-format)
 
 
