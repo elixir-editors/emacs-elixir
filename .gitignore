@@ -3,4 +3,3 @@
 /.cask/
 /dist/
 *-emacs-elixir-format.ex
-ert-profile
