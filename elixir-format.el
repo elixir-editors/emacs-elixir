@@ -230,6 +230,10 @@ current directory."
       (setq default-directory original-default-directory)
       result)))
 
+(defun elixir-format-before-save ()
+  "Add `elixir-format' to `before-save-hook'."
+  (add-hook 'before-save-hook #'elixir-format nil t))
+
 (provide 'elixir-format)
 
 ;;; elixir-format.el ends here

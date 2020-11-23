@@ -54,7 +54,11 @@
 (defvar elixir-mode-doc-url "https://hexdocs.pm/elixir"
   "Official documentation for the Elixir programming language.")
 
-(defvar elixir-mode-hook nil)
+(defcustom elixir-mode-hook '()
+  "Hook run after entering Elixir mode."
+  :group 'elixir
+  :type 'hook
+  :options '(elixir-format-before-save))
 
 (defvar elixir-mode-map
   (let ((map (make-sparse-keymap)))
@@ -519,6 +523,7 @@ just return nil."
   "Major mode for editing Elixir code.
 
 \\{elixir-mode-map}"
+  :group 'elixir
   (set (make-local-variable 'font-lock-defaults)
        '(elixir-font-lock-keywords
          nil nil nil nil
