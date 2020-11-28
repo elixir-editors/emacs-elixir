@@ -1,3 +1,7 @@
+## v2.4.0 - Unreleased
+
+* [#459](https://github.com/elixir-editors/emacs-elixir/pull/459) - Customizable face for numbers
+
 ## v2.3.2 - 2020-11-16
 * [#460](https://github.com/elixir-editors/emacs-elixir/pull/460) - @typedoc recognized as heredoc
 * [#454](https://github.com/elixir-editors/emacs-elixir/pull/454) - Add ~L, ~E, and ~e sigils for EEx and LiveView
