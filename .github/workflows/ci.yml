@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  test:
+    name: mix test (Emacs ${{matrix.emacs_version}} | Elixir ${{matrix.elixir}} | Erlang/OTP ${{matrix.otp}})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        emacs_version:
+          # Add more lines like this if you want to test on different Emacs versions.
+          - 27.1
+          - 26.3
+          - 26.1
+          - 25.2
+          - 25.1
+        include:
+          - elixir: 1.8.x
+            otp: 21.3.8.18
+          - elixir: 1.9.x
+            otp: 21.3.8.18
+          - elixir: 1.10.x
+            otp: 21.3.8.18
+          - elixir: 1.11.x
+            otp: 21.3.8.18
+          - elixir: 1.11.x
+            otp: 23.1.4
+    env:
+      MIX_ENV: test
+
+    steps:
+    - name: Set up Emacs
+      uses: purcell/setup-emacs@master
+      with:
+        version: ${{matrix.emacs_version}}
+
+    - name: Install Eldev
+      run: curl -fsSL https://raw.github.com/doublep/eldev/master/webinstall/github-eldev | sh
+
+    - name: Check out the source code
+      uses: actions/checkout@v2
+
+    - name: Test the project
+      run: |
+        eldev prepare
+        eldev -p -dtT test
