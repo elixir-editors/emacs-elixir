@@ -3,3 +3,7 @@
 /.cask/
 /dist/
 *-emacs-elixir-format.ex
+
+# Added automatically by `eldev init'.
+/.eldev
+/Eldev-local
