@@ -35,6 +35,7 @@ jobs:
             otp: 23.1.4
     env:
       MIX_ENV: test
+      ERT_RUNNER_ARGS:
 
     steps:
     - name: Set up Emacs
