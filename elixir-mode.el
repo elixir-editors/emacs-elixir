@@ -265,7 +265,7 @@ is used to limit the scan."
   (unless (elixir-syntax-in-string-or-comment-p)
     (let ((heredoc-p (save-excursion
                        (goto-char (match-beginning 0))
-                       (looking-at-p "~[sS]\\(?:'''\\|\"\"\"\\)"))))
+                       (looking-at-p "~[BCDELNRSTUbcersw]\\(?:'''\\|\"\"\"\\)"))))
       (unless heredoc-p
         (forward-char 1)
         (let* ((start-delim (char-after (1- (point))))
