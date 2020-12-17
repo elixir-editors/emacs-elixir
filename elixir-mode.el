@@ -427,7 +427,7 @@ is used to limit the scan."
      1 font-lock-variable-name-face)
 
     ;; Map keys
-    (,(elixir-rx (group (and identifiers ":")) space)
+    (,(elixir-rx (group (and identifiers ":")) (or space "\n"))
      1 elixir-atom-face)
 
     ;; Pseudovariables
