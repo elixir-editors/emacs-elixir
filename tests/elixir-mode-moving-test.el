@@ -1,6 +1,7 @@
 ;;; elixir-mode-moving-test.el --- Tests for moving cursor functions
 
 ;;; Code:
+(require 'test-helper)
 
 (ert-deftest beginning-of-defun ()
   :tags '(moving)

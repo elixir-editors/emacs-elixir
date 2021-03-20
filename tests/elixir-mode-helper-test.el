@@ -1,6 +1,7 @@
 ;;; elixir-mode-helper-test.el --- Tests for helper functions
 
 ;;; Code:
+(require 'test-helper)
 
 (ert-deftest check-if-currently-inside-heredoc ()
   (should (with-temp-buffer

@@ -1,6 +1,7 @@
 ;;; elixir-format-test.el --- Basic tests for elixir-format
 
 ;;; Code:
+(require 'test-helper)
 
 (ert-deftest elixir-format-indents-a-buffer ()
   (when elixir-formatter-supported
