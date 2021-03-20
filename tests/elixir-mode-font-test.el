@@ -7,6 +7,7 @@
 ;; https://github.com/lunaryorn/puppet-mode/blob/master/test/puppet-mode-test.el
 
 ;;; Code:
+(require 'test-helper)
 
 (defun elixir-test-face-at (pos &optional content)
   "Get the face at POS in CONTENT.

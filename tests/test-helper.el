@@ -7,6 +7,7 @@
 
 (require 'ert-x)          ; `ert-with-test-buffer'
 (require 'cl-lib)         ; `cl-defmacro'
+(require 's)
 
 (message "Running tests on Emacs %s" emacs-version)
 
@@ -62,10 +63,6 @@
            (insert indented)
            (should (equal indented ,expected-output)))))))
 
-(when (s-contains? "--win" (getenv "ERT_RUNNER_ARGS"))
-  (defun ert-runner/run-tests-batch-and-exit (selector)
-    (ert-run-tests-interactively selector)))
-
 (setq elixir-format-elixir-path (executable-find "elixir"))
 (setq elixir-format-mix-path (executable-find "mix"))
 
@@ -100,4 +97,5 @@ end")
 end
 ")
 
+(provide 'test-helper)
 ;;; test-helper.el ends here
