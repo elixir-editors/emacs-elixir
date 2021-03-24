@@ -250,7 +250,12 @@ true_false_nil
   ;; https://github.com/elixir-editors/emacs-elixir/issues/320
   (elixir-test-with-temp-buffer
    "<<foo::bar>>"
-   (should-not (eq (elixir-test-face-at 3) 'elixir-atom-face))))
+   (should-not (eq (elixir-test-face-at 3) 'elixir-atom-face)))
+
+  (elixir-test-with-temp-buffer
+   "%{key:
+ a_very_long_value_that_needed_to_wrap}"
+   (should (eq (elixir-test-face-at 3) 'elixir-atom-face))))
 
 (ert-deftest elixir-mode-syntax-table/fontify-interpolation ()
   :tags '(fontification interpolation syntax-table)
