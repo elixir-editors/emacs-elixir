@@ -547,29 +547,27 @@ just return nil."
   "Major mode for editing Elixir code.
 
 \\{elixir-mode-map}"
-  (set (make-local-variable 'font-lock-defaults)
-       '(elixir-font-lock-keywords
-         nil nil nil nil
-         (font-lock-syntactic-face-function
-          . elixir-font-lock-syntactic-face-function)))
-  (set (make-local-variable 'comment-start) "# ")
-  (set (make-local-variable 'comment-end) "")
-  (set (make-local-variable 'comment-start-skip) "#+ *")
-  (set (make-local-variable 'comment-use-syntax) t)
-  (set (make-local-variable 'syntax-propertize-function)
-       #'elixir-syntax-propertize-function)
-  (set (make-local-variable 'imenu-generic-expression)
-       elixir-imenu-generic-expression)
+  (setq-local font-lock-defaults
+              '(elixir-font-lock-keywords
+                nil nil nil nil
+                (font-lock-syntactic-face-function
+                 . elixir-font-lock-syntactic-face-function)))
+  (setq-local comment-start "# ")
+  (setq-local comment-end "")
+  (setq-local comment-start-skip "#+ *")
+  (setq-local comment-use-syntax t)
+  (setq-local syntax-propertize-function #'elixir-syntax-propertize-function)
+  (setq-local imenu-generic-expression elixir-imenu-generic-expression)
 
-  (set (make-local-variable 'beginning-of-defun-function) #'elixir-beginning-of-defun)
-  (set (make-local-variable 'end-of-defun-function) #'elixir-end-of-defun)
+  (setq-local beginning-of-defun-function #'elixir-beginning-of-defun)
+  (setq-local end-of-defun-function #'elixir-end-of-defun)
 
   (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules
               :forward-token 'elixir-smie-forward-token
               :backward-token 'elixir-smie-backward-token)
   ;; https://github.com/elixir-editors/emacs-elixir/issues/363
   ;; http://debbugs.gnu.org/cgi/bugreport.cgi?bug=35496
-  (set (make-local-variable 'smie-blink-matching-inners) nil))
+  (setq-local smie-blink-matching-inners nil))
 
 ;; Invoke elixir-mode when appropriate
 
