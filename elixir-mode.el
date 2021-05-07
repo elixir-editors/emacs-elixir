@@ -520,7 +520,7 @@ just return nil."
         (forward-line 1)))))
 
 (defun elixir--docstring-p (&optional pos)
-  "Check to see if there is a docstring at pos."
+  "Check to see if there is a docstring at POS."
   (let ((pos (or pos (elixir-ppss-comment-or-string-start
                       (parse-partial-sexp (point-min) (point))))))
     (when pos

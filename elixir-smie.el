@@ -219,7 +219,7 @@
            (looking-back elixir-smie--operator-regexp (- (point) 3) t))))
 
 (defun elixir-smie-current-line-contains-built-in-keyword-p ()
-  "Return non-nil if the current line contains built in keywords with a `.'"
+  "Return non-nil if the current line contains built in keywords with a \".\"."
   (save-excursion
     (beginning-of-line)
     (looking-at ".+\\.\\(case\\|try\\|if\\|rescue\\)")))
@@ -292,7 +292,7 @@
                  (not (looking-back ".+fn.+")))))))))
 
 (defun elixir-smie--same-line-as-parent (parent-pos child-pos)
-  "Return non-nil if `child-pos' is on same line as `parent-pos'."
+  "Return non-nil if CHILD-POS is on same line as PARENT-POS."
   (= (line-number-at-pos parent-pos) (line-number-at-pos child-pos)))
 
 (defun elixir-smie-forward-token ()
@@ -906,8 +906,7 @@
 Rules:
   1. If the previous line is empty, indent as the basic indentation
      at the beginning of the heredoc.
-  2. If the previous line is not empty, indent as the previous line.
-"
+  2. If the previous line is not empty, indent as the previous line."
   (if (eq major-mode 'elixir-mode)
       (if (elixir-smie--heredoc-at-current-point-p)
           (let ((indent

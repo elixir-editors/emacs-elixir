@@ -26,7 +26,7 @@
 (require 'ansi-color)
 
 (defcustom elixir-format-arguments nil
-  "Additional arguments to 'mix format'"
+  "Additional arguments to 'mix format'."
   :type '(repeat string)
   :group 'elixir
   :group 'elixir-format)
