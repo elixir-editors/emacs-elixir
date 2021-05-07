@@ -7,5 +7,3 @@
 (eldev-use-plugin 'undercover)
 
 (eldev-add-loading-roots 'test "tests")
-
-(eldev-add-extra-dependencies 'test 's)
