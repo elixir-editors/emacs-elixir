@@ -217,14 +217,12 @@ is used to limit the scan."
 (defun elixir-syntax-stringify ()
   "Put `syntax-table' property correctly on single/triple quotes."
   (let* ((num-quotes (length (match-string-no-properties 1)))
-         (ppss (prog2
-                   (backward-char num-quotes)
-                   (syntax-ppss)
-                 (forward-char num-quotes)))
-         (string-start (and (not (elixir-ppss-comment-depth ppss))
-                            (elixir-ppss-comment-or-string-start ppss)))
          (quote-starting-pos (- (point) num-quotes))
          (quote-ending-pos (point))
+         (ppss (save-excursion
+                 (syntax-ppss quote-starting-pos)))
+         (string-start (and (not (elixir-ppss-comment-depth ppss))
+                            (elixir-ppss-comment-or-string-start ppss)))
          (num-closing-quotes
           (and string-start
                (elixir-syntax-count-quotes
@@ -528,8 +526,9 @@ just return nil."
     (when pos
       (save-excursion
         (goto-char pos)
-        (and (looking-at "\"\"\"")(looking-back (rx "@" (or "moduledoc" "typedoc" "doc") (+ space))
-                                                (line-beginning-position)))))))
+        (and (looking-at "\"\"\"")
+             (looking-back (rx "@" (or "moduledoc" "typedoc" "doc") (+ space))
+                           (line-beginning-position)))))))
 
 (defun elixir-font-lock-syntactic-face-function (state)
   (if (elixir-ppss-string-terminator state)
