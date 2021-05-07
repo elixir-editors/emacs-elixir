@@ -200,7 +200,7 @@
              (rx-to-string (car sexps) t))))))
 
 (defsubst elixir-syntax-in-string-or-comment-p ()
-  (nth 8 (syntax-ppss)))
+  (elixir-ppss-comment-or-string-start (syntax-ppss)))
 
 (defsubst elixir-syntax-count-quotes (quote-char &optional point limit)
   "Count number of quotes around point (max is 3).
@@ -221,7 +221,8 @@ is used to limit the scan."
                    (backward-char num-quotes)
                    (syntax-ppss)
                  (forward-char num-quotes)))
-         (string-start (and (not (nth 4 ppss)) (nth 8 ppss)))
+         (string-start (and (not (elixir-ppss-comment-depth ppss))
+                            (elixir-ppss-comment-or-string-start ppss)))
          (quote-starting-pos (- (point) num-quotes))
          (quote-ending-pos (point))
          (num-closing-quotes
@@ -253,7 +254,8 @@ is used to limit the scan."
          (context (save-excursion (save-match-data (syntax-ppss beg)))))
     (put-text-property beg (1+ beg) 'syntax-table (string-to-syntax "w"))
     (put-text-property beg (1+ beg) 'elixir-interpolation
-                       (cons (nth 3 context) (match-data)))))
+                       (cons (elixir-ppss-string-terminator context)
+                             (match-data)))))
 
 (defconst elixir-sigil-delimiter-pair
   '((?\( . ")")
@@ -294,7 +296,9 @@ is used to limit the scan."
     (funcall
      (syntax-propertize-rules
       ("\\(\\?\\)[\"']"
-       (1 (if (save-excursion (nth 3 (syntax-ppss (match-beginning 0))))
+       (1 (if (save-excursion
+                (elixir-ppss-string-terminator
+                 (syntax-ppss (match-beginning 0))))
               ;; Within a string, skip.
               (ignore
                (goto-char (match-end 1)))
@@ -519,7 +523,8 @@ just return nil."
 
 (defun elixir--docstring-p (&optional pos)
   "Check to see if there is a docstring at pos."
-  (let ((pos (or pos (nth 8 (parse-partial-sexp (point-min) (point))))))
+  (let ((pos (or pos (elixir-ppss-comment-or-string-start
+                      (parse-partial-sexp (point-min) (point))))))
     (when pos
       (save-excursion
         (goto-char pos)
@@ -527,8 +532,8 @@ just return nil."
                                                 (line-beginning-position)))))))
 
 (defun elixir-font-lock-syntactic-face-function (state)
-  (if (nth 3 state)
-      (if (elixir--docstring-p (nth 8 state))
+  (if (elixir-ppss-string-terminator state)
+      (if (elixir--docstring-p (elixir-ppss-comment-or-string-start state))
           font-lock-doc-face
         font-lock-string-face)
     font-lock-comment-face))
