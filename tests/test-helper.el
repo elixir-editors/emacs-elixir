@@ -7,7 +7,6 @@
 
 (require 'ert-x)          ; `ert-with-test-buffer'
 (require 'cl-lib)         ; `cl-defmacro'
-(require 's)
 
 (message "Running tests on Emacs %s" emacs-version)
 
