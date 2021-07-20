@@ -90,8 +90,9 @@
   "Returns the file name of current visited file.
 
 If the buffer is not visiting any file (like during tests) then
-it returns a file name based on the name of the buffer."
-  (or buffer-file-name (concat (secure-hash 'md5 (buffer-name)) ".ex")))
+it returns a file name based on the name of the buffer. Unquote the file first
+if it is already quoted."
+  (file-name-unquote (or buffer-file-name (concat (secure-hash 'md5 (buffer-name)) ".ex"))))
 
 (defun elixir-format--temp-file-path ()
   "Make a temp file in the current directory, because mix format
