@@ -1,5 +1,13 @@
-## v2.4.0 - Unreleased
+## v2.5.0 - Unreleased
 
+## v2.4.0 - 2021-10-05
+* [#482](https://github.com/elixir-editors/emacs-elixir/pull/482) - Remove pkg-info dependency
+* [#481](https://github.com/elixir-editors/emacs-elixir/pull/481) - Enable elixir-mode by default when opening mix.lock file.
+* [#475](https://github.com/elixir-editors/emacs-elixir/pull/475) - Backport ppss accessors, use setq-local & more
+* [#472](https://github.com/elixir-editors/emacs-elixir/pull/472) - chore: update guides with new build system
+* [#471](https://github.com/elixir-editors/emacs-elixir/pull/471) - feat: switch CI and build system
+* [#470](https://github.com/elixir-editors/emacs-elixir/pull/470) - Highlight atom map keys that end with a newline
+* [#468](https://github.com/elixir-editors/emacs-elixir/pull/468) - Sigil heredoc support
 * [#459](https://github.com/elixir-editors/emacs-elixir/pull/459) - Customizable face for numbers
 
 ## v2.3.2 - 2020-11-16
