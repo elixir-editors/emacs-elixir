@@ -11,7 +11,7 @@
 ;; Created: Mon Nov 7 2011
 ;; Keywords: languages elixir
 ;; Version: 2.4.0
-;; Package-Requires: ((emacs "25") (pkg-info "0.6"))
+;; Package-Requires: ((emacs "25"))
 
 ;; This file is not a part of GNU Emacs.
 
@@ -38,7 +38,6 @@
 
 (require 'easymenu)           ; Elixir Mode menu definition
 (require 'elixir-smie)        ; Syntax and indentation support
-(require 'pkg-info)           ; Display Elixir Mode package version
 (require 'elixir-format)      ; Elixir Format functions
 
 (defgroup elixir nil
@@ -464,6 +463,19 @@ is used to limit the scan."
   (interactive)
   (browse-url elixir-mode-doc-url))
 
+(defconst elixir--version
+  (eval-when-compile
+    (require 'lisp-mnt)
+    (let ((file (or byte-compile-current-file
+		    load-file-name
+		    (buffer-file-name))))
+      (if file
+	  (with-temp-buffer
+	    (insert-file-contents file)
+	    (lm-version))
+	"Unknown")))
+  "The current version of `elixir-mode'.")
+
 ;;;###autoload
 (defun elixir-mode-version (&optional show-version)
   "Get the Elixir-Mode version as string.
@@ -478,10 +490,9 @@ If the version number could not be determined, signal an error,
 if called interactively, or if SHOW-VERSION is non-nil, otherwise
 just return nil."
   (interactive (list t))
-  (let ((version (pkg-info-version-info 'elixir-mode)))
-    (when show-version
-      (message "Elixir-Mode version: %s" version))
-    version))
+  (when show-version
+    (message "Elixir-Mode version: %s" elixir--version))
+  elixir--version)
 
 (defun elixir-mode-fill-doc-string ()
   (interactive)
