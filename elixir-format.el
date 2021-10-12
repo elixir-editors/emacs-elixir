@@ -24,6 +24,7 @@
 ;;
 
 (require 'ansi-color)
+(require 'cl-lib)
 
 (defcustom elixir-format-arguments nil
   "Additional arguments to 'mix format'."
