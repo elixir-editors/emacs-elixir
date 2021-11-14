@@ -1,6 +1,7 @@
 ## v2.5.0 - Unreleased
 
 ## v2.4.0 - 2021-10-05
+* [#485](https://github.com/elixir-editors/emacs-elixir/pull/485) - Add require for cl-lib
 * [#482](https://github.com/elixir-editors/emacs-elixir/pull/482) - Remove pkg-info dependency
 * [#481](https://github.com/elixir-editors/emacs-elixir/pull/481) - Enable elixir-mode by default when opening mix.lock file.
 * [#475](https://github.com/elixir-editors/emacs-elixir/pull/475) - Backport ppss accessors, use setq-local & more
