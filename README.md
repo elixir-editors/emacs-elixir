@@ -133,6 +133,11 @@ Alternatively, if you want to use `ruby-end-mode`, you can add the following to 
                (ruby-end-mode +1)))
 ```
 
+## Notes
+
+This package is tested only with a single version of OTP and 3 versions of Elixir. Please, always report versions
+ (Emacs, Elixir and Erlang/OTP) when raising issues.
+
 ## Elixir Tooling Integration
 
 If you looking for elixir tooling integration for Emacs, check: [alchemist.el](https://github.com/tonini/alchemist.el)
