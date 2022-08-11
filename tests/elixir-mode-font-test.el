@@ -579,6 +579,31 @@ _1_day"
    (should (eq (elixir-test-face-at 2) 'font-lock-comment-face))
    (should (eq (elixir-test-face-at 19) 'font-lock-comment-face))))
 
+(ert-deftest elixir-mode-syntax-table/arrows ()
+  :tags '(fontification syntax-table)
+
+  (elixir-test-with-temp-buffer
+   "with {:ok, _} <- SomeModule.call(),
+         :ok <- OtherModule.call() do
+      :ok
+    end"
+   (should (eq (elixir-test-face-at 15) 'font-lock-keyword-face))
+   (should (eq (elixir-test-face-at 50) 'font-lock-keyword-face)))
+
+  (elixir-test-with-temp-buffer
+   "%{
+      \"\"foo\"\" => \"bar\"
+    }"
+   (should (eq (elixir-test-face-at 18) 'font-lock-keyword-face)))
+
+  (elixir-test-with-temp-buffer
+   "[] |> IO.inspect()"
+   (should (eq (elixir-test-face-at 4) 'font-lock-keyword-face)))
+
+  (elixir-test-with-temp-buffer
+   "a = fn x -> x end"
+   (should (eq (elixir-test-face-at 10) 'font-lock-keyword-face))))
+
 (ert-deftest elixir-mode-in-docstring ()
   "https://github.com/elixir-editors/emacs-elixir/issues/355"
   :tags 'fontification
