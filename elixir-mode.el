@@ -39,6 +39,7 @@
 (require 'easymenu)           ; Elixir Mode menu definition
 (require 'elixir-smie)        ; Syntax and indentation support
 (require 'elixir-format)      ; Elixir Format functions
+(require 'elixir-tree-sitter) ; Elixir tree-sitter support
 
 (defgroup elixir nil
   "Major mode for editing Elixir code."
@@ -58,6 +59,13 @@
 (defcustom elixir-mode-hook nil
   "Hook that runs when switching to major mode"
   :type 'hook)
+
+(defcustom elixir-use-tree-sitter t
+  "If non-nil, `elixir-mode' tries to use tree-sitter.
+Currently `elixir-mode' uses tree-sitter for font-locking, imenu,
+and movement functions."
+  :type 'boolean
+  :version "29.1")
 
 (defvar elixir-mode-map
   (let ((map (make-sparse-keymap)))
@@ -567,11 +575,23 @@ just return nil."
   "Major mode for editing Elixir code.
 
 \\{elixir-mode-map}"
+
+  (if (and elixir-use-tree-sitter
+           (treesit-can-enable-p))
+      (progn
+        (setq-local font-lock-keywords-only t)
+        (setq-local treesit-font-lock-feature-list
+                    '((basic) (moderate) (elaborate)))
+        (setq-local treesit-font-lock-settings
+                    elixir--treesit-settings)
+        (treesit-font-lock-enable))
   (setq-local font-lock-defaults
               '(elixir-font-lock-keywords
                 nil nil nil nil
                 (font-lock-syntactic-face-function
-                 . elixir-font-lock-syntactic-face-function)))
+                 . elixir-font-lock-syntactic-face-function))))
+
+
   (setq-local comment-start "# ")
   (setq-local comment-end "")
   (setq-local comment-start-skip "#+ *")
