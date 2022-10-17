@@ -24,10 +24,10 @@
 
 ;;; Code:
 
-(require 'treesit nil t)
-
 ;; Custom faces match highlights.scm as close as possible
 ;; to help with updates
+
+(require 'treesit nil t)
 
 (defface elixir-font-keyword-face
   '((t (:inherit font-lock-keyword-face)))
@@ -133,8 +133,6 @@
   '((t (:inherit error)))
   "For use with @comment.unused tag.")
 
-;; Faces end
-
 (defconst elixir--definition-keywords
   '("def" "defdelegate" "defexception" "defguard" "defguardp" "defimpl" "defmacro" "defmacrop" "defmodule" "defn" "defnp" "defoverridable" "defp" "defprotocol" "defstruct"))
 
@@ -162,11 +160,11 @@
 
 (defconst elixir--reserved-keywords
   '("when" "and" "or" "not" "in"
-   "not in" "fn" "do" "end" "catch" "rescue" "after" "else"))
+    "not in" "fn" "do" "end" "catch" "rescue" "after" "else"))
 
 (defconst elixir--reserved-keywords
   '("when" "and" "or" "not" "in"
-   "not in" "fn" "do" "end" "catch" "rescue" "after" "else"))
+    "not in" "fn" "do" "end" "catch" "rescue" "after" "else"))
 
 (defconst elixir--reserved-keywords-re
   (concat "^" (regexp-opt elixir--reserved-keywords) "$"))
@@ -278,22 +276,22 @@
       [
        quoted_end: _ @elixir-font-string-face
        quoted_start: _ @elixir-font-string-face
-      (quoted_content) @elixir-font-string-face
-      (interpolation
-       "#{"
-       @elixir-font-string-escape-face
-       "}" @elixir-font-string-escape-face)
-      ])
+       (quoted_content) @elixir-font-string-face
+       (interpolation
+        "#{"
+        @elixir-font-string-escape-face
+        "}" @elixir-font-string-escape-face)
+       ])
      (string
       [
        quoted_end: _ @elixir-font-string-face
        quoted_start: _ @elixir-font-string-face
-      (quoted_content) @elixir-font-string-face
-      (interpolation
-       "#{"
-       @elixir-font-string-escape-face
-       "}" @elixir-font-string-escape-face)
-      ]))
+       (quoted_content) @elixir-font-string-face
+       (interpolation
+        "#{"
+        @elixir-font-string-escape-face
+        "}" @elixir-font-string-escape-face)
+       ]))
    :language 'elixir
    :feature 'moderate
    :override t
@@ -307,7 +305,7 @@
       quoted_start: _ @elixir-font-string-face
       quoted_end: _ @elixir-font-string-face
       (:match "^[sS]$" @elixir-font-sigil-name-face)) @elixir-font-string-face
-      (sigil
+     (sigil
       (sigil_name) @elixir-font-sigil-name-face
       quoted_start: _ @elixir-font-string-regex-face
       quoted_end: _ @elixir-font-string-regex-face

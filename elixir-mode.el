@@ -39,7 +39,6 @@
 (require 'easymenu)           ; Elixir Mode menu definition
 (require 'elixir-smie)        ; Syntax and indentation support
 (require 'elixir-format)      ; Elixir Format functions
-(require 'elixir-tree-sitter) ; Elixir tree-sitter support
 
 (defgroup elixir nil
   "Major mode for editing Elixir code."
@@ -60,7 +59,7 @@
   "Hook that runs when switching to major mode"
   :type 'hook)
 
-(defcustom elixir-use-tree-sitter t
+(defcustom elixir-use-tree-sitter nil
   "If non-nil, `elixir-mode' tries to use tree-sitter.
 Currently `elixir-mode' uses tree-sitter for font-locking, imenu,
 and movement functions."
@@ -570,14 +569,22 @@ just return nil."
     ["Elixir homepage" elixir-mode-open-elixir-home]
     ["About" elixir-mode-version]))
 
+(defun elixir--use-tree-sitter ()
+  "Ensure tree-sitter can be used."
+  (if (and (<= 29 emacs-major-version)
+           elixir-use-tree-sitter)
+      (progn
+        (require 'elixir-tree-sitter)
+        (treesit-can-enable-p))))
+
+
 ;;;###autoload
 (define-derived-mode elixir-mode prog-mode "Elixir"
   "Major mode for editing Elixir code.
 
 \\{elixir-mode-map}"
 
-  (if (and elixir-use-tree-sitter
-           (treesit-can-enable-p))
+  (if (elixir--use-tree-sitter)
       (progn
         (setq-local font-lock-keywords-only t)
         (setq-local treesit-font-lock-feature-list
