@@ -575,8 +575,8 @@ just return nil."
            elixir-use-tree-sitter)
       (progn
         (require 'elixir-tree-sitter)
-        (treesit-can-enable-p))))
-
+        (treesit-can-enable-p)
+        (treesit-language-available-p 'elixir))))
 
 ;;;###autoload
 (define-derived-mode elixir-mode prog-mode "Elixir"
