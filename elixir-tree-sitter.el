@@ -27,7 +27,7 @@
 ;; Custom faces match highlights.scm as close as possible
 ;; to help with updates
 
-(require 'treesit nil t)
+(require 'treesit)
 
 ;; Font lock
 
