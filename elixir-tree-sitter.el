@@ -356,8 +356,7 @@
        ])
      (:match ,elixir--definition-keywords-re @type)
      ))))
-    (when (treesit-query-validate 'elixir query)
-      (treesit-query-compile 'elixir query))))
+    (treesit-query-compile 'elixir query)))
 
 (defun elixir--treesit-defun (node)
   "Get the module name from the NODE if exists."
