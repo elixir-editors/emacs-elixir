@@ -29,6 +29,8 @@
 
 (require 'treesit nil t)
 
+;; Font lock
+
 (defface elixir-font-keyword-face
   '((t (:inherit font-lock-keyword-face)))
   "For use with @keyword tag.")
@@ -133,6 +135,8 @@
   '((t (:inherit error)))
   "For use with @comment.unused tag.")
 
+;; Faces end
+
 (defconst elixir--definition-keywords
   '("def" "defdelegate" "defexception" "defguard" "defguardp" "defimpl" "defmacro" "defmacrop" "defmodule" "defn" "defnp" "defoverridable" "defp" "defprotocol" "defstruct"))
 
@@ -174,12 +178,28 @@
 
 ;; reference:
 ;; https://github.com/elixir-lang/tree-sitter-elixir/blob/main/queries/highlights.scm
-(defvar elixir--treesit-settings
+(defvar elixir--treesit-font-lock-settings
   (treesit-font-lock-rules
    :language 'elixir
-   :feature 'basic
+   :feature 'minimal
    `(
      (comment) @elixir-font-comment-face
+
+     ;; (string
+     ;;  [
+     ;;   quoted_end: _ @elixir-font-string-face
+     ;;   quoted_start: _ @elixir-font-string-face
+     ;;  (quoted_content) @elixir-font-string-face
+     ;;  (interpolation
+     ;;   "#{"
+     ;;   @elixir-font-string-escape-face
+     ;;   "}" @elixir-font-string-escape-face)
+     ;;  ])
+
+
+     [(string) (charlist)] @font-lock-string-face
+     (interpolation) @default ; color everything in substitution white
+     (interpolation ["#{" "}"] @font-lock-constant-face)
 
      ,elixir--reserved-keywords-vector @elixir-font-keyword-face
 
@@ -194,7 +214,7 @@
                 ;; a more specific font which takes precedence
                 (arguments
                  [
-                  (string) @elixir-font-comment-doc-face
+                  ;; (string) @elixir-font-comment-doc-face
                   (charlist) @elixir-font-comment-doc-face
                   (sigil) @elixir-font-comment-doc-face
                   (boolean) @elixir-font-comment-doc-face
@@ -272,26 +292,27 @@
      ["," ";"] @elixir-font-punctuation-delimiter-face
      ["(" ")" "[" "]" "{" "}" "<<" ">>"] @elixir-font-punctuation-bracket-face
 
-     (charlist
-      [
-       quoted_end: _ @elixir-font-string-face
-       quoted_start: _ @elixir-font-string-face
-       (quoted_content) @elixir-font-string-face
-       (interpolation
-        "#{"
-        @elixir-font-string-escape-face
-        "}" @elixir-font-string-escape-face)
-       ])
-     (string
-      [
-       quoted_end: _ @elixir-font-string-face
-       quoted_start: _ @elixir-font-string-face
-       (quoted_content) @elixir-font-string-face
-       (interpolation
-        "#{"
-        @elixir-font-string-escape-face
-        "}" @elixir-font-string-escape-face)
-       ]))
+     ;; (charlist
+     ;;  [
+     ;;   quoted_end: _ @elixir-font-string-face
+     ;;   quoted_start: _ @elixir-font-string-face
+     ;;  (quoted_content) @elixir-font-string-face
+     ;;  (interpolation
+     ;;   "#{"
+     ;;   @elixir-font-string-escape-face
+     ;;   "}" @elixir-font-string-escape-face)
+     ;;  ])
+     ;; (string
+     ;;  [
+     ;;   quoted_end: _ @elixir-font-string-face
+     ;;   quoted_start: _ @elixir-font-string-face
+     ;;  (quoted_content) @elixir-font-string-face
+     ;;  (interpolation
+     ;;   "#{"
+     ;;   @elixir-font-string-escape-face
+     ;;   "}" @elixir-font-string-escape-face)
+     ;;  ])
+     )
    :language 'elixir
    :feature 'moderate
    :override t
@@ -312,11 +333,101 @@
       (:match "^[rR]$" @elixir-font-sigil-name-face)) @elixir-font-string-regex-face
      )
    :language 'elixir
-   :feature 'elaborate
+   :feature 'full
    :override t
    `((escape_sequence) @elixir-font-string-escape-face)
    )
   "Tree-sitter font-lock settings.")
+
+
+;; Navigation
+
+(defvar elixir--treesit-query-defun
+  (let ((query `((call
+     target: (identifier) @type
+     (arguments
+      [
+       (alias) @name
+       (identifier) @name
+       (call target: (identifier)) @name
+       (binary_operator
+        left: (call target: (identifier)) @name
+        operator: "when")
+       ])
+     (:match ,elixir--definition-keywords-re @type)
+     ))))
+    (when (treesit-query-validate 'elixir query)
+      (treesit-query-compile 'elixir query))))
+
+(defun elixir--treesit-defun (node)
+  "Get the module name from the NODE if exists."
+  (treesit-query-capture node elixir--treesit-query-defun))
+
+(defun elixir--treesit-defun-name (&optional node)
+  "Get the module name from the NODE if exists."
+  (let* ((node (or node (elixir--treesit-largest-node-at-point)))
+        (name-node (alist-get 'name (elixir--treesit-defun node))))
+    (when name-node (treesit-node-text name-node))))
+
+(defun elixir--treesit-defun-type (&optional node)
+  "Get the module name from the NODE if exists."
+  (let* ((node (or node (elixir--treesit-largest-node-at-point)))
+        (name-node (alist-get 'type (elixir--treesit-defun node))))
+    (when name-node (treesit-node-text name-node))))
+
+
+(defun elixir--treesit-largest-node-at-point ()
+  (let* ((node-at-point (treesit-node-at (point)))
+         (node-list
+          (cl-loop for node = node-at-point
+                   then (treesit-node-parent node)
+                   while node
+                   if (eq (treesit-node-start node)
+                          (point))
+                   collect node))
+         (largest-node (car (last node-list))))
+    (if (null largest-node)
+        (treesit-node-at (point))
+      largest-node)))
+
+(defun elixir--imenu-item-parent-label (_type name)
+  "Elixir imenu parent label for NAME."
+  (format "%s" name))
+
+(defun elixir--imenu-item-label (type name)
+  "Elixir imenu item label for TYPE and NAME."
+  (format "%s %s" type name))
+
+(defun elixir--imenu-jump-label (_type _name)
+  "Elixir imenu jump label."
+  (format "..."))
+
+(defun elixir--imenu-treesit-create-index (&optional node)
+  "Return tree Imenu alist for the current Elixir buffer or NODE tree."
+  (let* ((node (or node (treesit-buffer-root-node 'elixir)))
+         (tree (treesit-induce-sparse-tree
+                node
+                (rx (seq bol (or "call") eol)))))
+    (elixir--imenu-treesit-create-index-from-tree tree)))
+
+(defun elixir--imenu-treesit-create-index-from-tree (node)
+  (let* ((ts-node (car node))
+         (children (cdr node))
+         (subtrees (mapcan #'elixir--imenu-treesit-create-index-from-tree children))
+         (type (elixir--treesit-defun-type ts-node))
+         (name (when type (elixir--treesit-defun-name ts-node)))
+         (marker (when ts-node
+                   (set-marker (make-marker)
+                               (treesit-node-start ts-node)))))
+    (cond ((null ts-node) subtrees)
+          ((null type) subtrees)
+          (subtrees (let ((parent-label (funcall 'elixir--imenu-item-parent-label type name))
+                          (jump-label (funcall 'elixir--imenu-jump-label type name)))
+                      `((,parent-label ,(cons jump-label marker) ,@subtrees))))
+          (t (let ((label (funcall 'elixir--imenu-item-label type name)))
+               (list (cons label marker)))))))
+
+
 
 (provide 'elixir-tree-sitter)
 

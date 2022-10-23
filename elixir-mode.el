@@ -569,35 +569,41 @@ just return nil."
     ["Elixir homepage" elixir-mode-open-elixir-home]
     ["About" elixir-mode-version]))
 
-(defun elixir--use-tree-sitter ()
+(defun elixir--treesit-setup ()
   "Ensure tree-sitter can be used."
-  (if (and (<= 29 emacs-major-version)
-           elixir-use-tree-sitter)
+  (if (and (<= 29 emacs-major-version))
       (progn
         (require 'elixir-tree-sitter)
-        (treesit-can-enable-p)
-        (treesit-language-available-p 'elixir))))
+
+        (setq-local treesit-mode-supported t)
+        (setq-local treesit-required-languages '(elixir))
+        ;; (setq-local treesit-simple-indent-rules elixir--treesit-indent-rules)
+        (setq-local treesit-font-lock-settings elixir--treesit-font-lock-settings)
+        (setq-local treesit-font-lock-feature-list '((minimal) (moderate) (full)))
+
+        (setq-local treesit-imenu-function #'elixir--imenu-treesit-create-index)
+
+        ;; (setq-local beginning-of-defun-function 'elixir--treesit-beginning-of-defun)
+        ;; (setq-local end-of-defun-function 'elixir--treesit-end-of-defun)
+
+        (cond
+         ((treesit-ready-p '(elixir))
+          (treesit-mode))
+         (t
+          (message "Tree-sitter for Elixir isn't available"))))))
 
 ;;;###autoload
 (define-derived-mode elixir-mode prog-mode "Elixir"
+  :group 'elixir
   "Major mode for editing Elixir code.
 
 \\{elixir-mode-map}"
 
-  (if (elixir--use-tree-sitter)
-      (progn
-        (setq-local font-lock-keywords-only t)
-        (setq-local treesit-font-lock-feature-list
-                    '((basic) (moderate) (elaborate)))
-        (setq-local treesit-font-lock-settings
-                    elixir--treesit-settings)
-        (treesit-font-lock-enable))
   (setq-local font-lock-defaults
               '(elixir-font-lock-keywords
                 nil nil nil nil
                 (font-lock-syntactic-face-function
-                 . elixir-font-lock-syntactic-face-function))))
-
+                 . elixir-font-lock-syntactic-face-function)))
 
   (setq-local comment-start "# ")
   (setq-local comment-end "")
@@ -614,7 +620,9 @@ just return nil."
               :backward-token 'elixir-smie-backward-token)
   ;; https://github.com/elixir-editors/emacs-elixir/issues/363
   ;; http://debbugs.gnu.org/cgi/bugreport.cgi?bug=35496
-  (setq-local smie-blink-matching-inners nil))
+  (setq-local smie-blink-matching-inners nil)
+
+  (elixir--treesit-setup))
 
 ;; Invoke elixir-mode when appropriate
 
