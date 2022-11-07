@@ -575,25 +575,18 @@ just return nil."
       (progn
         (require 'elixir-tree-sitter)
 
-        (setq-local treesit-mode-supported t)
-        (setq-local treesit-required-languages '(elixir))
-        ;; (setq-local treesit-simple-indent-rules elixir--treesit-indent-rules)
-
         ;; Font-lock.
         (setq-local treesit-font-lock-settings elixir--treesit-font-lock-settings)
         (setq-local treesit-font-lock-feature-list '((minimal) (moderate) (full)))
 
-
         (setq-local treesit-imenu-function #'elixir--imenu-treesit-create-index)
 
-
-        ;; (setq-local beginning-of-defun-function 'elixir--treesit-beginning-of-defun)
-        ;; (setq-local end-of-defun-function 'elixir--treesit-end-of-defun)
-
+        ;; TODO: set to (treesit-ready-p 'elixir-mode 'elixir)
+        ;; but leaving nil so it assumes true while WIP
         (cond
-         ((treesit-ready-p '(elixir))
-          (treesit-mode)
-          (treesit-font-lock-enable))
+         ((treesit-ready-p nil 'elixir)
+          (treesit-major-mode-setup))
+
          (t
           (message "Tree-sitter for Elixir isn't available"))))))
 
