@@ -181,29 +181,49 @@
 (defvar elixir--treesit-font-lock-settings
   (treesit-font-lock-rules
    :language 'elixir
-   :feature 'minimal
-   `(
-     (comment) @elixir-font-comment-face
+   :feature 'comment
+   '((comment) @elixir-font-comment-face)
 
-     ;; (string
-     ;;  [
-     ;;   quoted_end: _ @elixir-font-string-face
-     ;;   quoted_start: _ @elixir-font-string-face
-     ;;  (quoted_content) @elixir-font-string-face
-     ;;  (interpolation
-     ;;   "#{"
-     ;;   @elixir-font-string-escape-face
-     ;;   "}" @elixir-font-string-escape-face)
-     ;;  ])
+   :language 'elixir
+   :feature 'string
+   :override t
+   '([(string) (charlist)] @font-lock-string-face)
 
+   :language 'elixir
+   :feature 'string-interpolation
+   :override t
+   '((string
+      [
+       quoted_end: _ @elixir-font-string-face
+       quoted_start: _ @elixir-font-string-face
+       (quoted_content) @elixir-font-string-face
+       (interpolation
+        "#{" @elixir-font-string-escape-face "}" @elixir-font-string-escape-face
+        )
+       ])
+     (charlist
+      [
+       quoted_end: _ @elixir-font-string-face
+       quoted_start: _ @elixir-font-string-face
+       (quoted_content) @elixir-font-string-face
+       (interpolation
+        "#{" @elixir-font-string-escape-face "}" @elixir-font-string-escape-face
+        )
+       ])
+     )
 
-     [(string) (charlist)] @font-lock-string-face
-     (interpolation) @default ; color everything in substitution white
-     (interpolation ["#{" "}"] @font-lock-constant-face)
+   :language 'elixir
+   :feature 'keyword
+   ;; :override `prepend
+   `(,elixir--reserved-keywords-vector @elixir-font-keyword-face
+     ;; these are operators, should we mark them as keywords?
+     (binary_operator
+      operator: _ @elixir-font-keyword-face
+      (:match ,elixir--reserved-keywords-re @elixir-font-keyword-face)))
 
-     ,elixir--reserved-keywords-vector @elixir-font-keyword-face
-
-     (unary_operator
+   :language 'elixir
+   :feature 'unary-operator
+   `((unary_operator
       operator: "@" @elixir-font-comment-doc-attribute-face
       operand: (call
                 target: (identifier) @elixir-font-comment-doc-identifier-face
@@ -220,7 +240,6 @@
                   (boolean) @elixir-font-comment-doc-face
                   ]))
       (:match ,elixir--doc-keywords-re @elixir-font-comment-doc-identifier-face))
-
      (unary_operator
       operator: "@" @elixir-font-comment-doc-attribute-face
       operand: (call
@@ -237,13 +256,11 @@
 
      (unary_operator operator: "&") @elixir-font-function-face
      (operator_identifier) @elixir-font-operator-face
+     )
 
-     ;; these are operators, should we mark them as keywords?
-     (binary_operator
-      operator: _ @elixir-font-keyword-face
-      (:match ,elixir--reserved-keywords-re @elixir-font-keyword-face))
-
-     (binary_operator operator: _ @elixir-font-operator-face)
+   :language 'elixir
+   :feature 'operator
+   '((binary_operator operator: _ @elixir-font-operator-face)
      (dot operator: _ @elixir-font-operator-face)
      (stab_clause operator: _ @elixir-font-operator-face)
 
@@ -253,9 +270,11 @@
      (call target: (dot left: (atom) @elixir-font-module-face))
      (char) @elixir-font-constant-face
      [(atom) (quoted_atom)] @elixir-font-module-face
-     [(keyword) (quoted_keyword)] @elixir-font-string-special-symbol-face
+     [(keyword) (quoted_keyword)] @elixir-font-string-special-symbol-face)
 
-     (call
+   :language 'elixir
+   :feature 'call
+   `((call
       target: (identifier) @elixir-font-keyword-face
       (:match ,elixir--definition-keywords-re @elixir-font-keyword-face))
      (call
@@ -280,9 +299,11 @@
        (binary_operator
         operator: "|>"
         right: (identifier) @elixir-font-variable-face))
-      (:match ,elixir--definition-keywords-re @elixir-font-keyword-face))
+      (:match ,elixir--definition-keywords-re @elixir-font-keyword-face)))
 
-     (binary_operator operator: "|>" right: (identifier) @elixir-font-function-face)
+   :language 'elixir
+   :feature 'constant
+   `((binary_operator operator: "|>" right: (identifier) @elixir-font-function-face)
      ((identifier) @elixir-font-constant-builtin-face
       (:match ,elixir--builtin-keywords-re @elixir-font-constant-builtin-face))
      ((identifier) @elixir-font-comment-unused-face
@@ -290,31 +311,10 @@
      (identifier) @elixir-font-variable-face
      ["%"] @elixir-font-punctuation-face
      ["," ";"] @elixir-font-punctuation-delimiter-face
-     ["(" ")" "[" "]" "{" "}" "<<" ">>"] @elixir-font-punctuation-bracket-face
+     ["(" ")" "[" "]" "{" "}" "<<" ">>"] @elixir-font-punctuation-bracket-face)
 
-     ;; (charlist
-     ;;  [
-     ;;   quoted_end: _ @elixir-font-string-face
-     ;;   quoted_start: _ @elixir-font-string-face
-     ;;  (quoted_content) @elixir-font-string-face
-     ;;  (interpolation
-     ;;   "#{"
-     ;;   @elixir-font-string-escape-face
-     ;;   "}" @elixir-font-string-escape-face)
-     ;;  ])
-     ;; (string
-     ;;  [
-     ;;   quoted_end: _ @elixir-font-string-face
-     ;;   quoted_start: _ @elixir-font-string-face
-     ;;  (quoted_content) @elixir-font-string-face
-     ;;  (interpolation
-     ;;   "#{"
-     ;;   @elixir-font-string-escape-face
-     ;;   "}" @elixir-font-string-escape-face)
-     ;;  ])
-     )
    :language 'elixir
-   :feature 'moderate
+   :feature 'sigil
    :override t
    `(
      (sigil
@@ -332,8 +332,9 @@
       quoted_end: _ @elixir-font-string-regex-face
       (:match "^[rR]$" @elixir-font-sigil-name-face)) @elixir-font-string-regex-face
      )
+
    :language 'elixir
-   :feature 'full
+   :feature 'string-escape
    :override t
    `((escape_sequence) @elixir-font-string-escape-face)
    )

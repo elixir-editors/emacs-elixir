@@ -577,7 +577,12 @@ just return nil."
 
         ;; Font-lock.
         (setq-local treesit-font-lock-settings elixir--treesit-font-lock-settings)
-        (setq-local treesit-font-lock-feature-list '((minimal) (moderate) (full)))
+        (setq-local treesit-font-lock-feature-list
+              '(( comment string )
+                ( keyword unary-operator operator)
+                ( call constant )
+                ( sigil string-escape)
+                ( string-interpolation )))
 
         (setq-local treesit-imenu-function #'elixir--imenu-treesit-create-index)
 
