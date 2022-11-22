@@ -571,29 +571,25 @@ just return nil."
 
 (defun elixir--treesit-setup ()
   "Ensure tree-sitter can be used."
-  (if (and (<= 29 emacs-major-version))
-      (progn
-        (require 'elixir-tree-sitter)
+  (progn
+    (require 'elixir-tree-sitter)
 
-        ;; Font-lock.
-        (setq-local treesit-font-lock-settings elixir--treesit-font-lock-settings)
-        (setq-local treesit-font-lock-feature-list
-              '(( comment string )
-                ( keyword unary-operator operator)
-                ( call constant )
-                ( sigil string-escape)
-                ( string-interpolation )))
+    (setq-local treesit-mode-supported t)
+    (setq-local treesit-required-languages '(elixir))
+    (setq-local treesit-font-lock-settings elixir--treesit-font-lock-settings)
+    (setq-local treesit-font-lock-feature-list
+                '(( comment string )
+                  ( keyword unary-operator operator doc)
+                  ( call constant )
+                  ( sigil string-escape)
+                  ( string-interpolation )))
 
-        (setq-local treesit-imenu-function #'elixir--imenu-treesit-create-index)
-
-        ;; TODO: set to (treesit-ready-p 'elixir-mode 'elixir)
-        ;; but leaving nil so it assumes true while WIP
-        (cond
-         ((treesit-ready-p nil 'elixir)
-          (treesit-major-mode-setup))
-
-         (t
-          (message "Tree-sitter for Elixir isn't available"))))))
+    (setq-local treesit-imenu-function #'elixir--imenu-treesit-create-index)
+    (cond
+     ((treesit-ready-p 'elixir)
+      (treesit-major-mode-setup))
+     (t
+      (message "Tree-sitter for Elixir isn't available")))))
 
 ;;;###autoload
 (define-derived-mode elixir-mode prog-mode "Elixir"
@@ -602,14 +598,6 @@ just return nil."
 
 \\{elixir-mode-map}"
 
-  ;; (setq-local font-lock-defaults
-  ;;             '(elixir-font-lock-keywords
-  ;;               nil nil nil nil
-  ;;               (font-lock-syntactic-face-function
-  ;;                . elixir-font-lock-syntactic-face-function)))
-
-
-  (setq-local font-lock-keywords-only t)
   (setq-local comment-start "# ")
   (setq-local comment-end "")
   (setq-local comment-start-skip "#+ *")
@@ -617,21 +605,20 @@ just return nil."
 
   (setq-local syntax-propertize-function #'elixir-syntax-propertize-function)
 
-  ;; (setq-local imenu-generic-expression elixir-imenu-generic-expression)
+  (setq-local imenu-generic-expression elixir-imenu-generic-expression)
 
-  ;; (setq-local beginning-of-defun-function #'elixir-beginning-of-defun)
-  ;; (setq-local end-of-defun-function #'elixir-end-of-defun)
+  (setq-local beginning-of-defun-function #'elixir-beginning-of-defun)
+  (setq-local end-of-defun-function #'elixir-end-of-defun)
 
-  ;; (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules
-  ;;             :forward-token 'elixir-smie-forward-token
-  ;;             :backward-token 'elixir-smie-backward-token)
+  (smie-setup elixir-smie-grammar 'verbose-elixir-smie-rules
+              :forward-token 'elixir-smie-forward-token
+              :backward-token 'elixir-smie-backward-token)
   ;; https://github.com/elixir-editors/emacs-elixir/issues/363
   ;; http://debbugs.gnu.org/cgi/bugreport.cgi?bug=35496
-  ;; (setq-local smie-blink-matching-inners nil)
+  (setq-local smie-blink-matching-inners nil)
 
-  (setq-local font-lock-keywords-only t)
-
-  (elixir--treesit-setup))
+  (if (<= 29 emacs-major-version)
+      (elixir--treesit-setup)))
 
 ;; Invoke elixir-mode when appropriate
 
