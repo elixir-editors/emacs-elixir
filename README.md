@@ -19,7 +19,7 @@ Provides font-locking, indentation and navigation support for the
 - [Notes](#notes)
 - [Elixir Tooling Integration](#elixir-tooling-integration)
 - [Elixir Format](#elixir-format)
-- [Treesitter Support(#tree-sitter-support)
+- [Treesitter Support](#tree-sitter-support)
 - [History](#history)
 - [Contributing](#contributing)
 - [License](#license)
