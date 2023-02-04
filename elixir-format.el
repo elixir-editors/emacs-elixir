@@ -114,11 +114,12 @@ files in subdirectories."
       (setq our-elixir-format-arguments (append our-elixir-format-arguments elixir-format-arguments)))
     (setq our-elixir-format-arguments (append our-elixir-format-arguments (list tmpfile)))
 
-    (if (zerop (elixir-format--from-mix-root (elixir-format--mix-executable) (elixir-format--errbuff) our-elixir-format-arguments))
-        (elixir-format--call-format-command tmpfile)
-      (elixir-format--failed-to-format called-interactively-p))
-    (delete-file tmpfile)
-    (kill-buffer (elixir-format--outbuff))))
+    (unwind-protect
+        (if (zerop (elixir-format--from-mix-root (elixir-format--mix-executable) (elixir-format--errbuff) our-elixir-format-arguments))
+            (elixir-format--call-format-command tmpfile)
+          (elixir-format--failed-to-format called-interactively-p))
+      (delete-file tmpfile)
+      (kill-buffer (elixir-format--outbuff)))))
 
 (defun elixir-format--call-format-command (tmpfile)
   (if (zerop (call-process-region (point-min) (point-max) "diff" nil (elixir-format--outbuff) nil "-n" "-" tmpfile))
