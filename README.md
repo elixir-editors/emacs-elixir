@@ -19,6 +19,7 @@ Provides font-locking, indentation and navigation support for the
 - [Notes](#notes)
 - [Elixir Tooling Integration](#elixir-tooling-integration)
 - [Elixir Format](#elixir-format)
+- [Treesitter Support](#treesitter-support)
 - [History](#history)
 - [Contributing](#contributing)
 - [License](#license)
@@ -181,6 +182,9 @@ or you set `elixir-format-arguments` in a hook like this:
 In this example we use [Projectile](https://github.com/bbatsov/projectile) to determine if we are in a project and then set `elixir-format-arguments` accordingly.
 Please note that this code snippet may cause unhappiness if there is no `.formatter.exs` file available.
 
+## Treesitter Support
+
+There is a work-in-progress mode that uses Tree-Sitter instead of SMIE. If you are on Emacs 29.x you can try it out [wkirschbaum/elixir-ts-mode](https://github.com/wkirschbaum/elixir-ts-mode).
 
 ## History
 
