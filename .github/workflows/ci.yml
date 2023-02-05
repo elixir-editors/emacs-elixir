@@ -27,6 +27,7 @@ jobs:
       - name: Setup OTP + Elixir
         uses: erlef/setup-beam@v1
         with:
+          version-type: strict
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
 
