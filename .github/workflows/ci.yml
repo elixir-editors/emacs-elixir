@@ -11,12 +11,12 @@ on:
 jobs:
   test:
     name: test (Emacs ${{matrix.emacs_version}} | Elixir ${{matrix.elixir}} | Erlang/OTP ${{matrix.otp}})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         emacs_version: ['27.2', '26.3', '25.3', 'snapshot']
         otp: ['23.3']
-        elixir: ['1.9.4', '1.11.4', '1.13.3']
+        elixir: ['1.11.4', '1.12.3', '1.13.4', '1.14.3']
 
     steps:
       - name: Setup Emacs
@@ -25,8 +25,9 @@ jobs:
           version: ${{matrix.emacs_version}}
 
       - name: Setup OTP + Elixir
-        uses: erlef/setup-elixir@v1
+        uses: erlef/setup-beam@v1
         with:
+          version-type: strict
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
 
