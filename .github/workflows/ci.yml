@@ -11,7 +11,7 @@ on:
 jobs:
   test:
     name: test (Emacs ${{matrix.emacs_version}} | Elixir ${{matrix.elixir}} | Erlang/OTP ${{matrix.otp}})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         emacs_version: ['27.2', '26.3', '25.3', 'snapshot']
