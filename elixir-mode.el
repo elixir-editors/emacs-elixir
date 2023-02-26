@@ -444,6 +444,12 @@ is used to limit the scan."
     (,(elixir-rx (group code-point))
      1 font-lock-negation-char-face)))
 
+(defvar elixir-prettify-symbols-alist
+  '(("<-" . ?←) ("->" . ?→) ("=>" . ?⇒)
+    ("!=" . ?≠) ("<=" . ?≤) (">=" . ?≥)
+    ("|>" . ?▷))
+  "Alist of symbol prettifications for use with `prettify-symbols-mode'.")
+
 ;;;###autoload
 (defun elixir-mode-open-github ()
   "Elixir mode open GitHub page."
@@ -587,7 +593,10 @@ just return nil."
               :backward-token 'elixir-smie-backward-token)
   ;; https://github.com/elixir-editors/emacs-elixir/issues/363
   ;; http://debbugs.gnu.org/cgi/bugreport.cgi?bug=35496
-  (setq-local smie-blink-matching-inners nil))
+  (setq-local smie-blink-matching-inners nil)
+
+  ;; Prettify symbols
+  (setq prettify-symbols-alist elixir-prettify-symbols-alist))
 
 ;; Invoke elixir-mode when appropriate
 
