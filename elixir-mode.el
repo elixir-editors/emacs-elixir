@@ -597,8 +597,10 @@ just return nil."
   ;; http://debbugs.gnu.org/cgi/bugreport.cgi?bug=35496
   (setq-local smie-blink-matching-inners nil)
 
-  (add-hook 'before-save-hook elixir-before-save-hook nil t)
-  (add-hook 'after-save-hook elixir-after-save-hook nil t))
+  (when elixir-before-save-hook
+    (add-hook 'before-save-hook elixir-before-save-hook nil t))
+  (when elixir-after-save-hook
+    (add-hook 'after-save-hook elixir-after-save-hook nil t)))
 
 ;; Invoke elixir-mode when appropriate
 
