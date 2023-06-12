@@ -59,6 +59,14 @@
   "Hook that runs when switching to major mode"
   :type 'hook)
 
+(defcustom elixir-mode-before-save-hook nil
+  "Hook that runs before saving an elixir file."
+  :type 'hook)
+
+(defcustom elixir-mode-after-save-hook nil
+  "Hook that runs after saving an elixir file."
+  :type 'hook)
+
 (defvar elixir-mode-map
   (let ((map (make-sparse-keymap)))
     map)
@@ -587,7 +595,10 @@ just return nil."
               :backward-token 'elixir-smie-backward-token)
   ;; https://github.com/elixir-editors/emacs-elixir/issues/363
   ;; http://debbugs.gnu.org/cgi/bugreport.cgi?bug=35496
-  (setq-local smie-blink-matching-inners nil))
+  (setq-local smie-blink-matching-inners nil)
+
+  (add-hook 'before-save-hook elixir-before-save-hook nil t)
+  (add-hook 'after-save-hook elixir-after-save-hook nil t))
 
 ;; Invoke elixir-mode when appropriate
 
