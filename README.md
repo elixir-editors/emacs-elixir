@@ -219,10 +219,39 @@ One way to configure this with `eglot` and `use-packge` would be:
  (before-save . eglot-format))
 ```
 
+### Syntax highlighting for LiveView (and similar techniques for other syntaxes)
+
+When you need different major modes in the SAME buffer, Emacs do not provide a standard way. 
+There is an external package that can help here by adding more than one major mode called `poly-mode`.
+
+A possible configuration would be:
+
+``` elisp
+;; Assumes web-mode and elixir-mode are already set up
+;;
+(use-package polymode
+  :mode ("\.ex$" . poly-elixir-web-mode)
+  :config
+  (define-hostmode poly-elixir-hostmode :mode 'elixir-mode)
+  (define-innermode poly-liveview-expr-elixir-innermode
+    :mode 'web-mode
+    :head-matcher (rx line-start (* space) "~L" (= 3 (char "\"'")) line-end)
+    :tail-matcher (rx line-start (* space) (= 3 (char "\"'")) line-end)
+    :head-mode 'host
+    :tail-mode 'host
+    :allow-nested nil
+    :keep-in-mode 'host
+    :fallback-mode 'host)
+  (define-polymode poly-elixir-web-mode
+    :hostmode 'poly-elixir-hostmode
+    :innermodes '(poly-liveview-expr-elixir-innermode))
+  )
+(setq web-mode-engines-alist '(("elixir" . "\\.ex\\'")))
+```
+
 ## History
 
-This mode is based on the
-[Emacs mode by secondplanet](https://github.com/secondplanet/elixir-mode).
+This mode is based on the [Emacs mode by secondplanet](https://github.com/secondplanet/elixir-mode).
 
 ## Contributing
 
@@ -230,8 +259,7 @@ Please read [CONTRIBUTING.md](https://github.com/elixir-editors/emacs-elixir/blo
 
 ## License
 
-Copyright © 2011-2017 Samuel Tonini, Matt DeBoard, Andreas Fuchs, secondplanet and
-[contributors](https://github.com/elixir-editors/emacs-elixir/contributors).
+Copyright © 2011-2017 Samuel Tonini, Matt DeBoard, Andreas Fuchs, secondplanet and [contributors](https://github.com/elixir-editors/emacs-elixir/contributors).
 
 Distributed under the GNU General Public License, version 3
 
