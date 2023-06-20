@@ -1,37 +1,27 @@
 [![License GPL 3][badge-license]](http://www.gnu.org/licenses/gpl-3.0.txt)
 [![Build Status](https://github.com/elixir-editors/emacs-elixir/actions/workflows/ci.yml/badge.svg)](https://github.com/elixir-editors/emacs-elixir/actions)
+[![NonGNU ELPA](https://elpa.nongnu.org/nongnu/elixir-mode.svg)](https://elpa.nongnu.org/nongnu/elixir-mode.html)
 [![MELPA Stable](http://stable.melpa.org/packages/elixir-mode-badge.svg)](http://stable.melpa.org/#/elixir-mode)
 [![MELPA](http://melpa.org/packages/elixir-mode-badge.svg)](http://melpa.org/#/elixir-mode)
+
+> **WARNING**
+> There is a built-in Elixir mode with tree-sitter support from Emacs 30+ that can also be used with Emacs 29
+> This repository is for an older elixir-mode built with SMIE (Simple Minded Indentation Engine) which is not
+> as advanced as tree-sitter for a language like Elixir.
 
 # Elixir Mode
 
 Provides font-locking, indentation and navigation support for the
 [Elixir programming language.](http://elixir-lang.org/)
 
-- [Installation](#installation)
-  - [Via package.el](#via-packageel)
-  - [Via el-get](#via-el-get)
-  - [Manual](#manual)
-- [Usage](#usage)
-  - [Interactive Commands](#interactive-commands)
-  - [Configuration](#configuration)
-  - [Keymapping](#keymapping)
-- [Notes](#notes)
-- [Elixir Tooling Integration](#elixir-tooling-integration)
-- [Elixir Format](#elixir-format)
-- [Treesitter Support](#treesitter-support)
-- [History](#history)
-- [Contributing](#contributing)
-- [License](#license)
-
 ## Installation
+
+`elixir-mode` is available on [NON-GNU ELPA](https://elpa.nongnu.org/), 
+[MELPA STABLE](https://stable.melpa.org/) and [MELPA](https://melpa.org/).
 
 ### Via package.el
 
 `package.el` is the built-in package manager in Emacs.
-
-`elixir-mode` is available on the two major community maintained repositories -
-[MELPA STABLE](https://stable.melpa.org/) and [MELPA](https://melpa.org/).
 
 You can install `elixir-mode` with the following command:
 
@@ -52,20 +42,20 @@ If the installation doesn't work try refreshing the package list:
 Keep in mind that MELPA packages are built automatically from
 the `master` branch, meaning bugs might creep in there from time to
 time. Never-the-less, installing from MELPA is the recommended way of
-obtaining `Elixir-Mode`, as the `master` branch is normally quite stable and
-"stable" (tagged) builds are released somewhat infrequently.
+obtaining `Elixir-Mode`.
 
-With the most recent builds of Emacs, you can pin `Elixir-Mode` to always
-use MELPA Stable by adding this to your Emacs initialization:
+MELPA Stable contains packages released from our tags.
 
-### Manual
+### Via use-package
 
-You can install `Elixir-Mode` manually by placing `Elixir-Mode` on your `load-path` and
-`require` ing it. Many people favour the folder `~/.emacs.d/vendor`.
+Since Emacs 29, `use-package` is a built-in feature. For versions prior to 29 
+one can also install it from MELPA (and MELPA Stable).
 
-```el
-(add-to-list 'load-path "~/.emacs.d/vendor")
-(require 'elixir-mode)
+To install elixir-mode using `use-package` one can:
+
+``` elisp
+(use-package elixir-mode
+  :ensure t)
 ```
 
 ## Usage
@@ -141,20 +131,17 @@ This package is tested only with a single version of OTP and 3 versions of Elixi
 
 ## Elixir Tooling Integration
 
-If you looking for elixir tooling integration for Emacs, check: [alchemist.el](https://github.com/tonini/alchemist.el)
-
 You can use [web-mode.el](http://web-mode.org) to edit elixir templates (eex files).
 
 [mix.el](https://github.com/ayrat555/mix.el) provides a minor mode for integration with Mix, a build tool that ships with Elixir.
 
+[exunit.el](https://github.com/ananthakumaran/exunit.el) provides `ExUnit` integration.
 
 ## Elixir Format
 
-``` elisp
-M-x elixir-format
-```
+This mode can call mix for formatting code. When inside an elixir buffer, just type `M-x elixir-format`.
 
-### Add elixir-mode hook to run elixir format on file save
+To automate that, you can add this command to the `before-save` hook.
 
 ``` elisp
 ;; Create a buffer-local hook to run elixir-format on save, only when we enable elixir-mode.
@@ -180,11 +167,57 @@ or you set `elixir-format-arguments` in a hook like this:
 ```
 
 In this example we use [Projectile](https://github.com/bbatsov/projectile) to determine if we are in a project and then set `elixir-format-arguments` accordingly.
+
 Please note that this code snippet may cause unhappiness if there is no `.formatter.exs` file available.
 
-## Treesitter Support
+## Tips & Tricks
 
-There is a work-in-progress mode that uses Tree-Sitter instead of SMIE. If you are on Emacs 29.x you can try it out [wkirschbaum/elixir-ts-mode](https://github.com/wkirschbaum/elixir-ts-mode).
+### Prettify symbols
+
+Emacs supports [font ligatures](https://en.wikipedia.org/wiki/Ligature_(writing)). For enabling it for Elixir 
+you can add it to your configuration:
+
+``` elisp
+(add-hook
+ 'elixir-mode-hook
+ (lambda ()
+   (push '(">=" . ?\u2265) prettify-symbols-alist)
+   (push '("<=" . ?\u2264) prettify-symbols-alist)
+   (push '("!=" . ?\u2260) prettify-symbols-alist)
+   (push '("==" . ?\u2A75) prettify-symbols-alist)
+   (push '("=~" . ?\u2245) prettify-symbols-alist)
+   (push '("<-" . ?\u2190) prettify-symbols-alist)
+   (push '("->" . ?\u2192) prettify-symbols-alist)
+   (push '("<-" . ?\u2190) prettify-symbols-alist)
+   (push '("|>" . ?\u25B7) prettify-symbols-alist)))
+   
+;; Or if you use use-packge
+
+(use-package elixir-mode
+ :hook (elixir-mode . (lambda ()
+    (push '(">=" . ?\u2265) prettify-symbols-alist)
+    (push '("<=" . ?\u2264) prettify-symbols-alist)
+    (push '("!=" . ?\u2260) prettify-symbols-alist)
+    (push '("==" . ?\u2A75) prettify-symbols-alist)
+    (push '("=~" . ?\u2245) prettify-symbols-alist)
+    (push '("<-" . ?\u2190) prettify-symbols-alist)
+    (push '("->" . ?\u2192) prettify-symbols-alist)
+    (push '("<-" . ?\u2190) prettify-symbols-alist)
+    (push '("|>" . ?\u25B7) prettify-symbols-alist))))
+```
+
+### Formatting
+
+If you have issues with the formatter provided by this package, you can try
+using the format function of language servers. Elixir-ls supports this.
+
+One way to configure this with `eglot` and `use-packge` would be:
+
+``` elisp
+(use-package elixir-mode
+ :hook (elixir-mode . eglot-ensure)
+ (before-save . eglot-format))
+```
 
 ## History
 
