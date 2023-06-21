@@ -211,7 +211,7 @@ you can add it to your configuration:
 If you have issues with the formatter provided by this package, you can try
 using the format function of language servers. Elixir-ls supports this.
 
-One way to configure this with `eglot` and `use-packge` would be:
+One way to configure this with `eglot` and `use-package` would be:
 
 ``` elisp
 (use-package elixir-mode
