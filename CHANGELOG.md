@@ -1,4 +1,17 @@
-## v2.5.0 - Unreleased
+## v2.6.0 - Unreleased
+
+## v2.5.0 - 2023-06-26
+
+* [#505](https://github.com/elixir-editors/emacs-elixir/pull/505) - Update markdown, add Tips & Tricks
+* [#504](https://github.com/elixir-editors/emacs-elixir/pull/504) - Add guards to easymenu
+* [#502](https://github.com/elixir-editors/emacs-elixir/pull/502) - add H to list of sigil characters
+* [#499](https://github.com/elixir-editors/emacs-elixir/pull/499) - Fix CI 
+* [#498](https://github.com/elixir-editors/emacs-elixir/pull/498) - Delete -emacs-elixir-format files when elixir-format is called uninteractively 
+* [#496](https://github.com/elixir-editors/emacs-elixir/pull/496) - Add mention of Tree-Sitter WIP work
+* [#493](https://github.com/elixir-editors/emacs-elixir/pull/493) - Support ~H heex sigil
+* [#490](https://github.com/elixir-editors/emacs-elixir/pull/490) - chore(cleanup): remove Emacs 24 hack not supported anymore
+* [#489](https://github.com/elixir-editors/emacs-elixir/pull/489) - fix(tests): remove duplicated tests
+* [#487](https://github.com/elixir-editors/emacs-elixir/pull/487) - Bump otp and elixir versions for ci testing
 
 ## v2.4.0 - 2021-10-05
 * [#485](https://github.com/elixir-editors/emacs-elixir/pull/485) - Add require for cl-lib
