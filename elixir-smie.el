@@ -60,10 +60,6 @@
       'ppss-comment-or-string-start
     (lambda (parse-data) (nth 8 parse-data))))
 
-(defun elixir-smie-looking-around (back at)
-  "Check if looking backwards at BACK and forward at AT."
-  (and (looking-at-p at) (looking-back back)))
-
 ;; Declare variable that we need from the smie package
 (defvar smie--parent)
 
@@ -222,35 +218,7 @@
 
 (defun elixir-smie--semi-ends-match ()
   "Return non-nil if the current line concludes a match block."
-  (when (not (eobp))
-    (save-excursion
-      ;; Warning: Recursion.
-      ;; This is easy though.
-
-      ;; 1. If we're at a blank line, move forward a character. This takes us to
-      ;;    the next line.
-      ;; 2. If we're not at the end of the buffer, call this function again.
-      ;;    (Otherwise, return nil.)
-
-      ;; The point here is that we want to treat blank lines as a single semi-
-      ;; colon when it comes to detecting the end of match statements. This could
-      ;; also be handled by a `while' expression or some other looping mechanism.
-      (cl-flet ((self-call ()
-                           (if (< (point) (point-max))
-                               (elixir-smie--semi-ends-match)
-                             nil)))
-        (cond
-         ((and (eolp) (bolp))
-          (forward-char)
-          (self-call))
-         ((looking-at elixir-smie--spaces-til-eol-regexp)
-          (forward-char)
-          (self-call))
-         ;; And if we're NOT on a blank line, move to the end of the line, and see
-         ;; if we're looking back at a block operator.
-         (t (move-end-of-line 1)
-            (and (looking-back elixir-smie--block-operator-regexp)
-                 (not (looking-back ".+fn.+")))))))))
+  nil)
 
 (defun elixir-smie--same-line-as-parent (parent-pos child-pos)
   "Return non-nil if CHILD-POS is on same line as PARENT-POS."
@@ -858,38 +826,11 @@
     (forward-line -1)
     (current-indentation)))
 
-;; Add the custom function to handle indentation inside heredoc to the
-;; smie-indent-functions list. The indentation function will only be
-;; process inside an elixir-mode.
-(defun elixir-smie--indent-inside-heredoc ()
-  "Handle indentation inside Elixir heredocs.
-
-Rules:
-  1. If the previous line is empty, indent as the basic indentation
-     at the beginning of the heredoc.
-  2. If the previous line is not empty, indent as the previous line."
-  (if (eq major-mode 'elixir-mode)
-      (if (elixir-smie--heredoc-at-current-point-p)
-          (let ((indent
-                 (save-excursion
-                   (when (re-search-backward "^\\(\s+\\)\\(@doc\\|@moduledoc\\|.*\\)\"\"\"" nil t)
-                     (string-width (match-string 1))))))
-	    (cond
-	     ((elixir-smie--previous-line-empty-p)
-	      (goto-char indent))
-	     ((and (not (save-excursion (looking-at "\"\"\"")))
-		   (not (elixir-smie--previous-line-empty-p)))
-	      (goto-char (elixir-smie--previous-line-indentation)))
-	     (indent
-	      (goto-char indent)))))))
-
 (defun elixir-smie-empty-string-p (string)
   "Return non-nil if STRING is null, blank or whitespace only."
   (or (null string)
       (string= string "")
       (if (string-match-p "^\s+$" string) t)))
-
-(add-to-list 'smie-indent-functions 'elixir-smie--indent-inside-heredoc)
 
 (provide 'elixir-smie)
 
